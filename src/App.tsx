@@ -1,9 +1,13 @@
-const App = () => {
-  return (
-    <>
-    <h1>hello world</h1>
-    </>
-  )
-}
+import { useT } from "./assets/i18n";
 
-export default App
+const App = () => {
+  const t = useT();
+
+  return (
+    <div className="App">
+      <h1>{t("application.helloWorld.title")}</h1>
+    </div>
+  );
+};
+
+export default App;

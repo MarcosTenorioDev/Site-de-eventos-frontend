@@ -4,6 +4,7 @@ import Navbar from "./layout/Navbar";
 import Footer from "./layout/Footer";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/home/Home";
+import 'dotenv'
 
 function Layout({ children }: any) {
   return (
@@ -16,9 +17,6 @@ function Layout({ children }: any) {
 }
 
 const App = () => {
-  /*   const { showToast } = useToastContext();
-    const t = useT(); */
-
   return (
     <div className="App">
       <ToastContainer />

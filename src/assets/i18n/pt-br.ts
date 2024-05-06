@@ -1,7 +1,16 @@
 export class LanguageKeysPt {
   public application = {
-    helloWorld: {
-      title: "Hello world",
+    global: {
+      applicationName: "Obon"
+    },
+    components: {
+      navbar:{
+        createEvent:"Criar evento",
+        myEvents:"Meus eventos",
+        logout:"Sair da conta",
+        login:"Acessar conta",
+        register:"Cadastre-se"
+      }
     },
   };
   //exemplos para alternativas de uso abaixo

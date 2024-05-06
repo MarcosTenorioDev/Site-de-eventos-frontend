@@ -1,10 +1,19 @@
 export class LanguageKeysEn {
   public application = {
-    helloWorld: {
-      title: "Hello world",
+    global: {
+      applicationName: "Obon"
     },
-  };
+    components: {
+      navbar:{
+        createEvent:"Create event",
+        myEvents:"My events",
+        logout:"Logout",
+        login:"Login",
+        register:"Register"
+      }
+    },
 
+  };
   //alternativas de uso abaixo
   /* public WELCOME_HEADLINE = "Welcome to the app";
   

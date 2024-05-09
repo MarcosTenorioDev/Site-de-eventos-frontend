@@ -10,6 +10,9 @@ export class LanguageKeysEn {
         logout:"Logout",
         login:"Login",
         register:"Register"
+      },
+      clerkCustomProfile:{
+        title:"Additional user info"
       }
     },
 

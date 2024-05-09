@@ -1,7 +1,6 @@
 import {
   SignedOut,
   SignedIn,
-  UserButton,
   SignInButton,
   SignUpButton,
   SignOutButton,
@@ -12,6 +11,7 @@ import Hamburger from "hamburger-react";
 import { useState } from "react";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { useT } from "@/assets/i18n";
+import CustomClerkUserButton from "@/components/customClerkUserButton";
 
 const Navbar = () => {
   const t = useT();
@@ -48,7 +48,7 @@ const Navbar = () => {
               </Button>
             </nav>
             <div className="hidden lg:flex">
-              <UserButton />
+              <CustomClerkUserButton />
             </div>
           </div>
         </nav>
@@ -71,7 +71,7 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center flex-col mb-8 mt-4">
-              <UserButton showName={true} />
+              <CustomClerkUserButton showName={true} />
             </div>
             {/* Botoes de navegação */}
             <nav className="flex flex-col gap-5">
@@ -119,11 +119,12 @@ const Navbar = () => {
                 {t("application.components.navbar.createEvent")}
               </Button>
               <div className="text-white font-primary">
-                <Button variant={"secondary"}>
+                {/* TODO: Retirar botão em volta de SignInButton */}
+                <div className="h-9 px-4 py-2 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
                   <SignInButton mode="modal">
                     {t("application.components.navbar.login")}
                   </SignInButton>
-                </Button>
+                </div>
               </div>
               <div className="text-white font-primary">
                 <Button variant={"outline"}>
@@ -134,7 +135,7 @@ const Navbar = () => {
               </div>
             </nav>
             <div className="hidden lg:flex">
-              <UserButton />
+              <CustomClerkUserButton />
             </div>
           </div>
         </nav>

@@ -10,6 +10,9 @@ export class LanguageKeysPt {
         logout:"Sair da conta",
         login:"Acessar conta",
         register:"Cadastre-se"
+      },
+      clerkCustomProfile:{
+        title:"Informações adicionais"
       }
     },
   };

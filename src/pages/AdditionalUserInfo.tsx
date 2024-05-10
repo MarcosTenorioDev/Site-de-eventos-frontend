@@ -37,13 +37,13 @@ const AdditionalUserInfo = () => {
   ];
 
   const initialValues = {
-    nationalId: "",
+    nationalId2: "",
     phone: "",
   };
 
   //Buscar regex validadora de CPF com cálculo...
   const validationSchema = Yup.object({
-    nationalId: Yup.string().matches(
+    nationalId2: Yup.string().matches(
       /^[0-9]{3}.?[0-9]{3}.?[0-9]{3}-?[0-9]{2}/,
       "CPF inválido"
     ),
@@ -67,15 +67,14 @@ const AdditionalUserInfo = () => {
           className="text-sm text-[#0000ff] cursor-pointer hover:bg-gray-100 p-2 pt-1 h-8 rounded-md"
           onClick={() => setShowCard(!ShowCard)}
         >
-          Adicionar informações adicionais
+          {t("application.components.clerkCustomProfile.addAditionalInfo")}
         </p>
         {ShowCard ? (
           <Card className="w-full sm:w-[350px]">
             <CardHeader>
-              <CardTitle>Atualizar dados adicionais</CardTitle>
+              <CardTitle>{t("application.components.clerkCustomProfile.cardTitle")}</CardTitle>
               <CardDescription>
-                Adicione dados opcionais, para poder se inscrever em
-                determinados eventos.
+              {t("application.components.clerkCustomProfile.cardDescription")}
               </CardDescription>
             </CardHeader>
             <Formik
@@ -88,19 +87,19 @@ const AdditionalUserInfo = () => {
                   <div className="grid w-full items-center gap-4">
                     <div className="flex flex-col space-y-1.5">
                       <Input
-                        control="nationalId"
-                        placeholder="Insira seu CPF"
+                        control="nationalId2"
+                        placeholder={t("application.components.clerkCustomProfile.nationalId2Placeholder")}
                         mask={cpfMask}
-                        label="CPF"
+                        label={t("application.components.clerkCustomProfile.nationalId")}
                       />
-                      <Label htmlFor="phone">Telefone</Label>
+                      <Label htmlFor="phone">{t("application.components.clerkCustomProfile.phone")}</Label>
                       <Field
                         name="phone"
                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 bg-slate-200 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-primary focus-visible:ring-1 focus-visible:to-primary disabled:cursor-not-allowed disabled:opacity-50"
                         render={({ field, form }: any) => (
                           <PhoneInput
                             {...field}
-                            placeholder="Insira o seu número de telefone"
+                            placeholder={t("application.components.clerkCustomProfile.phonePlaceholder")}
                             country={"br"}
                             buttonStyle={{
                               borderRadius: "6px",
@@ -126,9 +125,9 @@ const AdditionalUserInfo = () => {
                 </CardContent>
                 <CardFooter className="flex justify-between">
                   <Button variant="outline" onClick={() => setShowCard(false)}>
-                    Cancel
+                  {t("application.components.button.cancel")}
                   </Button>
-                  <Button type="submit">Confirmar</Button>
+                  <Button type="submit">{t("application.components.button.confirm")}</Button>
                 </CardFooter>
               </Form>
             </Formik>

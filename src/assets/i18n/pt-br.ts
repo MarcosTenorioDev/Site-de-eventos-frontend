@@ -11,8 +11,19 @@ export class LanguageKeysPt {
         login:"Acessar conta",
         register:"Cadastre-se"
       },
+      button:{
+        confirm:"Confirmar",
+        cancel:"Cancelar"
+      },
       clerkCustomProfile:{
-        title:"Informações adicionais"
+        title:"Informações adicionais",
+        addAditionalInfo:"Adicionar informações adicionais",
+        cardTitle:"Atualizar dados adicionais",
+        cardDescription:"Adicione dados opcionais, para poder se inscrever em determinados eventos.",
+        nationalId2Placeholder:"Insira seu CPF",
+        nationalId2:"CPF",
+        phone:"Telefone",
+        phonePlaceholder:"Insira o seu número de telefone"
       }
     },
   };

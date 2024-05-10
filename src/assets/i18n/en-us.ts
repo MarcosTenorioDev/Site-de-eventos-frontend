@@ -8,14 +8,24 @@ export class LanguageKeysEn {
         createEvent:"Create event",
         myEvents:"My events",
         logout:"Logout",
-        login:"Login",
+        login:"Log in",
         register:"Register"
       },
+      button:{
+        confirm:"Confirm",
+        cancel:"Cancel"
+      },
       clerkCustomProfile:{
-        title:"Additional user info"
+        title:"Additional Information",
+        addAditionalInfo:"Add additional information",
+        cardTitle:"Update Additional Data",
+        cardDescription:"Add optional data to be able to register for certain events.",
+        nationalId2Placeholder:"Enter your CPF (Brazilian Taxpayer Registry)",
+        nationalId2:"CPF (Brazilian Taxpayer Registry)",
+        phone:"Phone",
+        phonePlaceholder:"Enter your phone number"
       }
     },
-
   };
   //alternativas de uso abaixo
   /* public WELCOME_HEADLINE = "Welcome to the app";

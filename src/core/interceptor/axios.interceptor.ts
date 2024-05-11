@@ -18,6 +18,16 @@ export class AxiosInterceptor {
   }
 
   private handleRequest(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
+    const cookies = document.cookie;
+    const getCookie = (name: string) => {
+      const value = `; ${cookies}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop()?.split(";").shift();
+    };
+    const token = getCookie("__session");
+    
+    config.headers.Authorization = token
+
     return config;
   }
 

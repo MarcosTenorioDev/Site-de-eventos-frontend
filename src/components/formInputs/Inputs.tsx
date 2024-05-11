@@ -3,7 +3,7 @@ import { Field, ErrorMessage } from "formik";
 import MaskedInput from "react-text-mask";
 
 //Input de texto default que pode receber uma máscara
-export const Input = (props: {control : string, label?: string, mask?: (string | RegExp)[], placeholder?: string}) => {
+export const Input = (props: {control : string, disabled?:boolean, label?: string, mask?: (string | RegExp)[], placeholder?: string}) => {
   return (
     <>
       <Label htmlFor={props.control}>{props.label}</Label>
@@ -12,6 +12,7 @@ export const Input = (props: {control : string, label?: string, mask?: (string |
           {({ field }: any) => (
             <MaskedInput
               {...field}
+              disabled={props.disabled}
               type="text"
               mask={props.mask}
               placeholder={props.placeholder}
@@ -21,6 +22,7 @@ export const Input = (props: {control : string, label?: string, mask?: (string |
         </Field>
       ) : (
         <Field
+        disabled={props.disabled}
           name={props.control}
           type="text"
           placeholder={props.placeholder}

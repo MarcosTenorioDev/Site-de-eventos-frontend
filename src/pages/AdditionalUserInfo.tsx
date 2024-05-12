@@ -36,6 +36,7 @@ const AdditionalUserInfo = () => {
     phone: "",
   });
   const [loadingComponent, setLoadingComponent] = useState<boolean>(true);
+  const [loadButton, setLoadButton] = useState<boolean>(false)
 
   useEffect(() => {
     try {
@@ -85,16 +86,19 @@ const AdditionalUserInfo = () => {
   //tratar erro corretamente com exibição de toast..
   const onSubmit = async (values: any) => {
     const payload = filterDataForm(values, formValuesNotSend);
+    setLoadButton(true)
 
     try{
      const data = await userService.patchUserAditionalInfo(payload)
      if (data){
       toast.showToast(t("application.components.clerkCustomProfile.toast.updateDataSucess"), ToastType.Success)
+      setLoadButton(false)
       return data
      }
      return
     }catch(err){
       console.log('deu erro')
+      setLoadButton(false)
     }
   };
 
@@ -199,8 +203,8 @@ const AdditionalUserInfo = () => {
                     >
                       {t("application.components.button.cancel")}
                     </Button>
-                    <Button type="submit">
-                      {t("application.components.button.confirm")}
+                    <Button type="submit" disabled={loadButton}>
+                      {loadButton ?  t("application.components.button.sending") : t("application.components.button.confirm")}
                     </Button>
                   </CardFooter>
                 </Form>

@@ -13,7 +13,8 @@ export class LanguageKeysPt {
       },
       button:{
         confirm:"Confirmar",
-        cancel:"Cancelar"
+        cancel:"Cancelar",
+        sending:"Enviando..."
       },
       clerkCustomProfile:{
         title:"Informações adicionais",

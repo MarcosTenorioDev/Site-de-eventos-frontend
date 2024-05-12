@@ -40,10 +40,10 @@ const Navbar = () => {
               />
             </div>
             <nav className="flex-1 px-10 justify-end gap-8 hidden lg:flex">
-              <Button variant={"secondary"} className="font-primary">
+              <Button variant={"link"} className="font-primary">
                 {t("application.components.navbar.createEvent")}
               </Button>
-              <Button variant={"secondary"} className="font-primary">
+              <Button variant={"link"} className="font-primary">
                 {t("application.components.navbar.myEvents")}
               </Button>
             </nav>

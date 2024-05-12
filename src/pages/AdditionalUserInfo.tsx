@@ -19,10 +19,15 @@ import { filterDataForm } from "@/core/services/helper.service";
 import UserService from "@/core/services/user.service";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToastContext } from "@/core/contexts/toasts.context";
+import { ToastType } from "@/core/contexts/toasts.context";
 
 const AdditionalUserInfo = () => {
   const t = useT();
   const userService = new UserService();
+  const toast = useToastContext();
+  const [disableNationalId2, setDisableNationalId2] = useState<boolean>(false);
+  const formValuesNotSend: string[] = []
   const [aditionalInfoForm, setAditionalInfoForm] = useState<{
     cpf: string;
     phone: string;
@@ -37,6 +42,10 @@ const AdditionalUserInfo = () => {
       userService.getUser().then((response) => {
         setAditionalInfoForm({ cpf: response.cpf, phone: response.phone });
         setLoadingComponent(false);
+        if(response.cpf){
+          setDisableNationalId2(true)
+          formValuesNotSend.includes('cpf') ? '' : formValuesNotSend.push("cpf")
+        }
       });
     } catch {
       setLoadingComponent(false);
@@ -60,22 +69,33 @@ const AdditionalUserInfo = () => {
   ];
 
   const initialValues = {
-    nationalId2: aditionalInfoForm.cpf || "",
+    cpf: aditionalInfoForm.cpf || "",
     phone: aditionalInfoForm.phone || "",
   };
 
   //Buscar regex validadora de CPF com cálculo...
   const validationSchema = Yup.object({
-    nationalId2: Yup.string().matches(
+    cpf: Yup.string().matches(
       /^[0-9]{3}.?[0-9]{3}.?[0-9]{3}-?[0-9]{2}/,
       "CPF inválido"
     ),
     phone: Yup.string(),
   });
 
+  //tratar erro corretamente com exibição de toast..
   const onSubmit = async (values: any) => {
-    const payload = filterDataForm(values);
-    console.log(payload);
+    const payload = filterDataForm(values, formValuesNotSend);
+
+    try{
+     const data = await userService.patchUserAditionalInfo(payload)
+     if (data){
+      toast.showToast(t("application.components.clerkCustomProfile.toast.updateDataSucess"), ToastType.Success)
+      return data
+     }
+     return
+    }catch(err){
+      console.log('deu erro')
+    }
   };
 
   const LoadingSkeleton = () => {
@@ -127,8 +147,8 @@ const AdditionalUserInfo = () => {
                     <div className="grid w-full items-center gap-4">
                       <div className="flex flex-col space-y-1.5">
                         <Input
-                          disabled={initialValues.nationalId2 ? true : false}
-                          control="nationalId2"
+                          disabled={disableNationalId2}
+                          control="cpf"
                           placeholder={t(
                             "application.components.clerkCustomProfile.nationalId2Placeholder"
                           )}

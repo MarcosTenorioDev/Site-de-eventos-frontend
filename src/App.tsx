@@ -19,7 +19,6 @@ function Layout({ children }: any) {
 const App = () => {
   return (
     <div className="App">
-      <ToastContainer />
       <BrowserRouter>
         <Routes>
           <Route

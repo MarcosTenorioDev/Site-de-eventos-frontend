@@ -4,23 +4,21 @@ class UserService {
   private axiosInterceptor: AxiosInterceptor = new AxiosInterceptor();
   private axios = this.axiosInterceptor.getAxiosInstance();
 
-
   constructor() {}
 
   //Ajustar função, não precisa de trycatch se os interceptors estiverem funcionando normalmente
-    async getUser() {
-    try {
-      const response = await this.axios.get(
-        `${import.meta.env.VITE_API_DEV_URL}/users`
-      );
-      return response.data;
-    } catch (error) {
-
-      /* throw error; */
-    }
+  async getUser() {
+    const response = await this.axios.get(`${import.meta.env.VITE_API_DEV_URL}/users`);
+    return response.data;
   }
 
-  putUserAditionalInfo() {}
+  async patchUserAditionalInfo(payload: object) {
+    const response = await this.axios.patch(
+      `${import.meta.env.VITE_API_DEV_URL}/users`,
+      payload
+    );
+    return response.data;
+  }
 }
 
 export default UserService;

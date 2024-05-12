@@ -23,7 +23,10 @@ export class LanguageKeysPt {
         nationalId2Placeholder:"Insira seu CPF",
         nationalId2:"CPF",
         phone:"Telefone",
-        phonePlaceholder:"Insira o seu número de telefone"
+        phonePlaceholder:"Insira o seu número de telefone",
+        toast:{
+          updateDataSucess:"Dados editados com sucesso"
+        }
       }
     },
   };

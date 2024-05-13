@@ -30,6 +30,11 @@ export class LanguageKeysPt {
         }
       }
     },
+    pages:{
+      home:{
+        searchPlaceholder:"Pesquise a festa, teatro, palestra e tudo o que você imaginar"
+      }
+    }
   };
   //exemplos para alternativas de uso abaixo
   /* public WELCOME_HEADLINE = "Bem vindo ao app";

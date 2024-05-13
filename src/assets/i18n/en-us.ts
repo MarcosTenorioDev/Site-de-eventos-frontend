@@ -23,9 +23,17 @@ export class LanguageKeysEn {
         nationalId2Placeholder:"Enter your CPF (Brazilian Taxpayer Registry)",
         nationalId2:"CPF (Brazilian Taxpayer Registry)",
         phone:"Phone",
-        phonePlaceholder:"Enter your phone number"
+        phonePlaceholder:"Enter your phone number",
+        "toast": {
+          "updateDataSucess": "Data edited successfully"
+        }
       }
     },
+    "pages": {
+      "home": {
+        "searchPlaceholder": "Search for parties, theater, lectures, and everything you can imagine"
+      }
+    }
   };
   //alternativas de uso abaixo
   /* public WELCOME_HEADLINE = "Welcome to the app";

@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { FilterIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import DefaultCard from "@/components/eventCards/DefaultCard";
+import banner from "@/assets/images/home/Banner.png";
 const Home = () => {
   const t = useT();
   const [api, setApi] = useState<CarouselApi>();
@@ -135,7 +136,7 @@ const Home = () => {
       <div className="flex flex-col items-center justify-center mt-4 sm:mt-8">
         <Carousel
           setApi={setApi}
-          className="w-full sm:w-10/12 md:w-8/12 lg:w-7/12 max-w-[1200px]"
+          className="w-full sm:w-11/12 md:w-10/12 lg:w-7/12 max-w-[1200px]"
           opts={{
             loop: true,
           }}
@@ -162,8 +163,8 @@ const Home = () => {
               );
             })}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
+          <CarouselPrevious className="hidden md:flex" />
+          <CarouselNext className="hidden md:flex" />
         </Carousel>
         <div className="py-2 text-center text-sm text-muted-foreground flex items-center justify-center">
           <div className="flex gap-[4px]">
@@ -190,8 +191,15 @@ const Home = () => {
       </div>
 
       <div className="w-full bg-primary-light py-10">
-        <div className="w-full bg-primary-dark h-12 text-white font-bold font-primary text-center flex items-center justify-center">
-          Transforme seus sonhos em realidade
+        <div className="w-full bg-primary-dark h-12 text-white font-light font-primary text-center flex items-center justify-center overflow-hidden relative text-nowrap">
+          <div className="animate-marquee">
+            <span>Transforme seus sonhos em realidade</span>
+            <span className="ml-8">Transforme seus sonhos em realidade</span>
+            <span className="ml-8">Transforme seus sonhos em realidade</span>
+            <span className="ml-8">Transforme seus sonhos em realidade</span>
+            <span className="ml-8">Transforme seus sonhos em realidade</span>
+            <span className="ml-8">Transforme seus sonhos em realidade</span>
+          </div>
         </div>
 
         <Formik
@@ -262,10 +270,12 @@ const Home = () => {
       </div>
 
       <div className="max-w-7xl mx-auto mt-20">
-        <h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">Mais recentes</h3>
+        <h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
+          Mais recentes
+        </h3>
         <Carousel
           setApi={setApi}
-          className="mx-auto xl:w-full w-10/12 max-w-7xl"
+          className="mx-auto w-11/12 xl:w-full sm:w-10/12 max-w-7xl"
           opts={{
             loop: false,
           }}
@@ -284,16 +294,18 @@ const Home = () => {
               );
             })}
           </CarouselContent>
-          <CarouselNext />
-          <CarouselPrevious />
+          <CarouselNext className="hidden sm:flex" />
+          <CarouselPrevious className="hidden sm:flex" />
         </Carousel>
       </div>
 
-      <div className="max-w-7xl mx-auto mt-20">
-        <h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">Festival</h3>
+      <div className="max-w-7xl mx-auto mb-20 mt-10">
+        <h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
+          Festival
+        </h3>
         <Carousel
           setApi={setApi}
-          className="mx-auto xl:w-full w-10/12 max-w-7xl"
+          className="mx-auto w-11/12 xl:w-full sm:w-10/12 max-w-7xl"
           opts={{
             loop: false,
           }}
@@ -312,8 +324,81 @@ const Home = () => {
               );
             })}
           </CarouselContent>
-          <CarouselNext />
-          <CarouselPrevious />
+          <CarouselNext className="hidden sm:flex" />
+          <CarouselPrevious className="hidden sm:flex" />
+        </Carousel>
+      </div>
+
+      <div className=" w-11/12 xl:w-full sm:w-10/12 max-w-7xl mx-auto bg-primary-light h-52 md:h-60 py-10 relative overflow-hidden flex items-center justify-end pr-4 md:pr-8 2xl:pr-14">
+        <img
+          src={banner}
+          alt="Imagem de duas pessoas curtindo um evento"
+          className=" absolute -top-50% -left-40 sm:-left-16 w-80 md:w-96 transition-transform duration-300 transform-gpu hover:scale-105 h-64 md:h-80"
+        />
+        <div className="text-right lg:text-left w-[50%]">
+          <h3 className="text-lg md:text-3xl lg:text-4xl xl:text-5xl font-semibold italic">
+            ENCONTRE OS EVENTOS <br /> QUE PROMETEM <br /> MARCAR SUA AGENDA!
+          </h3>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto mb-20 mt-10">
+        <h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
+          Eventos corporativos
+        </h3>
+        <Carousel
+          setApi={setApi}
+          className="mx-auto w-11/12 xl:w-full sm:w-10/12 max-w-7xl"
+          opts={{
+            loop: false,
+          }}
+        >
+          <CarouselContent className="p-4">
+            {data.map((card) => {
+              return (
+                <CarouselItem className="basis-auto">
+                  <DefaultCard
+                    address={card.address}
+                    img={card.img}
+                    date={card.date}
+                    title={card.title}
+                  />
+                </CarouselItem>
+              );
+            })}
+          </CarouselContent>
+          <CarouselNext className="hidden sm:flex" />
+          <CarouselPrevious className="hidden sm:flex" />
+        </Carousel>
+      </div>
+
+      <div className="max-w-7xl mx-auto mb-20 mt-10">
+        <h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
+          Para a criançada
+        </h3>
+        <Carousel
+          setApi={setApi}
+          className="mx-auto w-11/12 xl:w-full sm:w-10/12 max-w-7xl"
+          opts={{
+            loop: false,
+          }}
+        >
+          <CarouselContent className="p-4">
+            {data.map((card) => {
+              return (
+                <CarouselItem className="basis-auto">
+                  <DefaultCard
+                    address={card.address}
+                    img={card.img}
+                    date={card.date}
+                    title={card.title}
+                  />
+                </CarouselItem>
+              );
+            })}
+          </CarouselContent>
+          <CarouselNext className="hidden sm:flex" />
+          <CarouselPrevious className="hidden sm:flex" />
         </Carousel>
       </div>
     </>

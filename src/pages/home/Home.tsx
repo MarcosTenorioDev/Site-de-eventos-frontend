@@ -22,8 +22,10 @@ import { FilterIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import DefaultCard from "@/components/eventCards/DefaultCard";
 import banner from "@/assets/images/home/Banner.png";
+import CategoriesService from "@/core/services/categories.service";
 const Home = () => {
   const t = useT();
+  const categoriesService = new CategoriesService();
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
@@ -93,7 +95,9 @@ const Home = () => {
       title: "Eclese",
     },
   ];
-
+  const [categories, setCategories] = useState<
+    { value: string; label: string }[]
+  >([{ value: "", label: "Selecione uma opção" }]);
   const initialValues = {
     city: "",
     category: "",
@@ -129,6 +133,17 @@ const Home = () => {
     });
     setImagesBanner([banner1, banner2, banner1, banner2]);
     setCount(imagesBanner.length);
+    categoriesService.getCategories().then((results: any) => {
+      if (results) {
+        const categoriesResult = results.map((categorie: any) => {
+          return {
+            value:categorie.id,
+            label:categorie.description
+          }
+        })
+        setCategories([{ value: "", label: "Selecione uma opção" }, ...categoriesResult])
+      }
+    });
   }, [api]);
 
   return (
@@ -224,21 +239,7 @@ const Home = () => {
               </Select>
               <Select
                 control="category"
-                options={[
-                  { value: "", label: "Selecione uma opção" },
-                  {
-                    value: "Show",
-                    label: "Show",
-                  },
-                  {
-                    value: "Empreendedorismo",
-                    label: "Empreendedorismo",
-                  },
-                  {
-                    value: "Rave",
-                    label: "Rave",
-                  },
-                ]}
+                options={categories}
                 className="w-full max-w-80"
               >
                 Categoria

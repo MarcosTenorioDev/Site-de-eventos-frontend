@@ -1,16 +1,19 @@
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardFooter } from "../ui/card";
 
 const DefaultCard = (props: {
+  id:string;
   img: string;
   address: string;
   date: string;
   title: string;
 }) => {
-  const { img, address, date, title } = props;
+  const { img, address, date, title, id } = props;
+  const navigate = useNavigate()
   return (
     <>
       <Card className="aspect-[9/10] w-48 drop-shadow-md">
-        <CardContent className="p-0 h-full overflow-hidden">
+        <CardContent className="p-0 h-full overflow-hidden cursor-pointer" onClick={() => navigate(`/event/${id}`)}>
           <div className="w-full h-full bg-no-repeat bg-cover bg-center rounded-lg overflow-hidden relative">
             <img
               src={img}

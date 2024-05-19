@@ -148,7 +148,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center mt-4 sm:mt-8">
+      <div  className="flex flex-col items-center justify-center mt-4 sm:mt-8">
         <Carousel
           setApi={setApi}
           className="w-full sm:w-11/12 md:w-10/12 lg:w-7/12 max-w-[1200px]"
@@ -286,6 +286,7 @@ const Home = () => {
               return (
                 <CarouselItem className="basis-auto">
                   <DefaultCard
+                    id="00000000000000-0000000"
                     address={card.address}
                     img={card.img}
                     date={card.date}
@@ -316,6 +317,7 @@ const Home = () => {
               return (
                 <CarouselItem className="basis-auto">
                   <DefaultCard
+                  id="00000000000000-0000000"
                     address={card.address}
                     img={card.img}
                     date={card.date}
@@ -359,6 +361,7 @@ const Home = () => {
               return (
                 <CarouselItem className="basis-auto">
                   <DefaultCard
+                  id="00000000000000-0000000"
                     address={card.address}
                     img={card.img}
                     date={card.date}
@@ -389,6 +392,7 @@ const Home = () => {
               return (
                 <CarouselItem className="basis-auto">
                   <DefaultCard
+                  id="00000000000000-0000000"
                     address={card.address}
                     img={card.img}
                     date={card.date}

@@ -5,10 +5,10 @@ const DefaultCard = (props: {
   id:string;
   img: string;
   address: string;
-  date: string;
+  startDate: string;
   title: string;
 }) => {
-  const { img, address, date, title, id } = props;
+  const { img, address, startDate, title, id } = props;
   const navigate = useNavigate()
   return (
     <>
@@ -28,7 +28,7 @@ const DefaultCard = (props: {
             {address}
           </p>
           <p className="text-xs text-muted-foreground text-start w-full">
-            {date}
+            {startDate}
           </p>
         </CardFooter>
       </Card>

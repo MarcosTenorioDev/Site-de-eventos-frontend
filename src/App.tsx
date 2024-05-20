@@ -3,7 +3,7 @@ import Navbar from "./layout/Navbar";
 import Footer from "./layout/Footer";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/home/Home";
-import 'dotenv'
+import Event from "./pages/event/Event";
 
 function Layout({ children }: any) {
   return (
@@ -26,6 +26,15 @@ const App = () => {
               <Layout>
                 <Home />
               </Layout>
+            }
+          />
+          <Route
+            path="/event/:id"
+            element={
+              <>
+                <Navbar />
+                <Event />
+              </>
             }
           />
         </Routes>

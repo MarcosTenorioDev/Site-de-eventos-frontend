@@ -305,7 +305,7 @@ const Home = () => {
 											<DefaultCard
 												id={card.id}
 												address={card.location}
-												img={card.img}
+												img={card.assets[0].url}
 												startDate={formatDate(card.startDate)}
 												title={card.title}
 											/>

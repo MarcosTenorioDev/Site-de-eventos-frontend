@@ -90,7 +90,7 @@ const Home = () => {
 					{ value: "", label: "Selecione uma opção" },
 					...categoriesResult,
 				]);
-        const fetchCategoryEvents = async () => {
+				const fetchCategoryEvents = async () => {
 					for (const category of categoriesResult) {
 						const categoryLabel = category.label.toLowerCase();
 						if (categoryLabel.includes("festas e shows")) {
@@ -110,19 +110,26 @@ const Home = () => {
 							setSportsEvents(events);
 						}
 					}
-
 				};
-        
-					fetchCategoryEvents();
+
+				fetchCategoryEvents();
 			}
 		});
 		eventService.getRecentEvents().then((events: any) => {
 			setRecentEvents(events);
-      const images = events.map((events: any) => {
-        return events.assets[0]?.url
-      })
-      setImagesBanner(images);
-      setCount(images.length);
+
+			const images = events.map((event: any) => {
+				const mainAssets = event.assets?.find(
+					(asset: any) => asset.type === "main"
+				);
+				return mainAssets?.url;
+			});
+			const validImages = images.filter((url: any) => {
+				return url !== undefined;
+			});
+
+			setImagesBanner(validImages);
+			setCount(validImages.length);
 		});
 	}, []);
 
@@ -258,7 +265,7 @@ const Home = () => {
 						</h3>
 						<Carousel
 							setApi={setApi}
-							className="mx-auto w-11/12 sm:w-10/12 lg:border-4 xl:11/12 2xl:w-full max-w-7xl"
+							className="mx-auto w-11/12 sm:w-10/12 xl:11/12 2xl:w-full max-w-7xl"
 							opts={{
 								loop: false,
 							}}

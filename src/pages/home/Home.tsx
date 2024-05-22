@@ -8,8 +8,6 @@ import {
 	CarouselNext,
 } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
-import banner1 from "@/assets/mockImages/banner1.jpeg";
-import banner2 from "@/assets/mockImages/banner2.jpg";
 import Autoplay from "embla-carousel-autoplay";
 import { Input } from "@/components/ui/input";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
@@ -77,8 +75,6 @@ const Home = () => {
 		api.on("select", () => {
 			setCurrent(api.selectedScrollSnap() + 1);
 		});
-		setImagesBanner([banner1, banner2, banner1, banner2]);
-		setCount(imagesBanner.length);
 	}, [api]);
 
 	useEffect(() => {
@@ -122,6 +118,11 @@ const Home = () => {
 		});
 		eventService.getRecentEvents().then((events: any) => {
 			setRecentEvents(events);
+      const images = events.map((events: any) => {
+        return events.assets[0]?.url
+      })
+      setImagesBanner(images);
+      setCount(images.length);
 		});
 	}, []);
 

@@ -17,6 +17,7 @@ import { useState, useEffect } from "react";
 import { Field, Formik, Form } from "formik";
 import { Button } from "@/components/ui/button";
 import { MinusIcon, PlusIcon } from "@radix-ui/react-icons";
+import ageRatingIcon from "@/assets/icons/ageRatingIcon.svg";
 import {
 	AlertDialogHeader,
 	AlertDialogFooter,
@@ -172,47 +173,67 @@ const Event = () => {
 								</div>
 							</div>
 							<div className="flex flex-col gap-12 md:gap-4 md:flex-row w-full max-w-[1140px] justify-between mt-8 font-primary">
-								<Card className="w-full md:w-6/12">
+								<Card className="w-full md:w-6/12 h-min">
 									<CardHeader>{event.description}</CardHeader>
 									<CardContent className="">
-										<h3 className="mb-6 text-xl">Atrações</h3>
-										<Carousel
-											setApi={setApi}
-											className="w-10/12 mx-auto"
-											plugins={[
-												Autoplay({
-													delay: 3000,
-												}),
-											]}
-										>
-											<CarouselContent>
-												{attractions.map((attraction, index) => (
-													<CarouselItem
-														key={index}
-														className="flex items-center justify-center"
-													>
-														<Attraction
-															img={attraction.imageUrl}
-															title={attraction.name}
-															description={attraction.description}
-														/>
-													</CarouselItem>
-												))}
-											</CarouselContent>
-											<CarouselPrevious className="hidden md:flex" />
-											<CarouselNext className="hidden md:flex" />
-										</Carousel>
-										<div className="py-2 text-center text-sm text-muted-foreground flex items-center justify-center">
-											<div className="flex gap-[4px]">
-												{Array.from({ length: count }).map((_, index) => (
-													<div
-														key={index}
-														className={`w-2 h-2 rounded-full ${
-															index + 1 === current ? "bg-black" : "bg-gray-300"
-														}`}
-													></div>
-												))}
-											</div>
+										{attractions.length ? (
+											<>
+												<h3 className="mb-6 text-xl">Atrações</h3>
+
+												<Carousel
+													setApi={setApi}
+													className="w-10/12 mx-auto"
+													plugins={[
+														Autoplay({
+															delay: 3000,
+														}),
+													]}
+												>
+													<CarouselContent>
+														{attractions.map((attraction, index) => (
+															<CarouselItem
+																key={index}
+																className="flex items-center justify-center"
+															>
+																<Attraction
+																	img={attraction.imageUrl}
+																	title={attraction.name}
+																	description={attraction.description}
+																/>
+															</CarouselItem>
+														))}
+													</CarouselContent>
+													<CarouselPrevious className="hidden md:flex" />
+													<CarouselNext className="hidden md:flex" />
+												</Carousel>
+												<div className="py-2 text-center text-sm text-muted-foreground flex items-center justify-center">
+													<div className="flex gap-[4px]">
+														{Array.from({ length: count }).map((_, index) => (
+															<div
+																key={index}
+																className={`w-2 h-2 rounded-full ${
+																	index + 1 === current
+																		? "bg-black"
+																		: "bg-gray-300"
+																}`}
+															></div>
+														))}
+													</div>
+												</div>
+											</>
+										) : (
+											""
+										)}
+										<div>
+											<h3 className="font-bold text-xl">
+												Classificação etária
+											</h3>
+											<p className="flex items-center gap-3 font-semibold text-lg mt-2">
+												<i>
+													<img src={ageRatingIcon} alt="" className="w-7" />
+												</i>
+												{event.ageRating} Anos
+											</p>
 										</div>
 									</CardContent>
 								</Card>

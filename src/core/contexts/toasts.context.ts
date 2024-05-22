@@ -20,7 +20,7 @@ export const toastContext = createContext<toastContext>({
         break;
 
       case "error":
-        /* ToastService.showError(message) */
+        ToastService.showError(message)
         break;
 
       default:

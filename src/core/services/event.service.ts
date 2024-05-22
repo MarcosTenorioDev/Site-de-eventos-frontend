@@ -12,10 +12,16 @@ class EventsService {
     return response.data;
   }
 
-  async getEventByCategory(category: string){
-    const response = await this.axios.get(`${import.meta.env.VITE_API_DEV_URL}/events/${category}`);
+  async getRecentEvents(){
+    const response = await this.axios.get(`${import.meta.env.VITE_API_DEV_URL}/events/recent`);
     return response.data
   }
+
+  async getEventByCategory(categoryId:string){
+    const response = await this.axios.get(`${import.meta.env.VITE_API_DEV_URL}/events/category/${categoryId}`);
+    return response.data
+  }
+
 
 }
 

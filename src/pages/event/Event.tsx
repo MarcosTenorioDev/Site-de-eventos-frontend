@@ -1,4 +1,3 @@
-import banner1 from "@/assets/mockImages/banner1.jpeg";
 import {
 	Card,
 	CardContent,
@@ -34,7 +33,9 @@ import { Trash2Icon } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
 import EventsService from "@/core/services/event.service";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Params, useParams } from "react-router-dom";
+import { Params, useNavigate, useParams } from "react-router-dom";
+import { useToastContext } from "@/core/contexts/toasts.context";
+import { ToastType } from "@/core/contexts/toasts.context";
 
 const Event = () => {
 	const [api, setApi] = useState<CarouselApi>();
@@ -56,6 +57,8 @@ const Event = () => {
 	const [event, setEvent] = useState<any>();
 	const [endDate, setEndDate] = useState<Date | undefined>();
 	const { id }: Readonly<Params<string>> = useParams();
+	const navigate = useNavigate();
+	const toast = useToastContext();
 
 	useEffect(() => {
 		if (!api) {
@@ -69,32 +72,45 @@ const Event = () => {
 
 	useEffect(() => {
 		//criar tratamento de erro posteriormente (404?)
-		if(id){
+		if (id) {
 			eventService.getEventById(id).then((event) => {
-				console.log(event.assets[0].url);
+				if (!event) {
+					navigate("/");
+					toast.showToast(
+						"Não foi possível encontrar o evento solicitado",
+						ToastType.Error
+					);
+				}
 				setEvent(event);
 				setAttractions(event.attractions);
 				setCount(event.attractions.length);
-				setEndDate(new Date(event.endDate));
-				setTickets(event.ticketTypes);
+				setEndDate(new Date(event.startDate));
+				const tickets = event.ticketTypes.map(
+					(ticket: {
+						id: string;
+						description: string;
+						price: string;
+						quantity: number;
+					}) => ({
+						id: ticket.id,
+						description: ticket.description,
+						price: ticket.price,
+						quantity: 0,
+					})
+				);
+
+				setTickets(tickets);
 				return event;
 			});
 		}
-		
 	}, []);
 
-	const calculateTotal = (
-		tickets: {
-			id: string;
-			description: string;
-			price: string;
-			quantity: number;
-		}[]
-	) => {
-		const total = tickets.reduce((acc, ticket) => {
-			return acc + ticket.quantity * parseInt(ticket.price);
+	const calculateTotal = (tickets: typeof initialValues.tickets) => {
+		const newTotal = tickets.reduce((acc, ticket) => {
+			return acc + parseFloat(ticket.price) * ticket.quantity;
 		}, 0);
-		setTotal(total);
+
+		setTotal(newTotal);
 	};
 
 	const onSubmit = async (values: any) => {
@@ -230,17 +246,19 @@ const Event = () => {
 																		className="p-0"
 																		type="button"
 																		onClick={() => {
+																			const newQuantity = Math.max(
+																				ticket.quantity - 1,
+																				0
+																			);
 																			setFieldValue(
 																				`tickets[${index}].quantity`,
-																				Math.max(ticket.quantity - 1, 0)
+																				newQuantity
 																			);
 																			const updatedTickets = [
 																				...values.tickets,
 																			];
-																			updatedTickets[index].quantity = Math.max(
-																				ticket.quantity - 1,
-																				0
-																			);
+																			updatedTickets[index].quantity =
+																				newQuantity;
 																			calculateTotal(updatedTickets);
 																		}}
 																	>
@@ -251,32 +269,22 @@ const Event = () => {
 																		type="number"
 																		name={`tickets[${index}].quantity`}
 																		className="max-w-8 text-center"
-																		onChange={(e: any) => {
-																			const value = e.target.value;
-																			const updatedTickets = [
-																				...values.tickets,
-																			];
-																			updatedTickets[index].quantity = value;
-																			calculateTotal(updatedTickets);
-																		}}
 																	/>
 																	<Button
 																		variant={"ghost"}
 																		className="p-0"
 																		type="button"
 																		onClick={() => {
+																			const newQuantity = ticket.quantity + 1;
 																			setFieldValue(
 																				`tickets[${index}].quantity`,
-																				ticket.quantity + 1
+																				newQuantity
 																			);
 																			const updatedTickets = [
 																				...values.tickets,
 																			];
 																			updatedTickets[index].quantity =
-																				Math.max(
-																				ticket.quantity - 1,
-																				0
-																			);
+																				newQuantity;
 																			calculateTotal(updatedTickets);
 																		}}
 																	>
@@ -341,7 +349,9 @@ const Event = () => {
 
 													<div className="w-full">
 														<h3 className="text-md mt-4">Total</h3>
-														<h3 className="text-lg text-primary">R$ {total}</h3>
+														<h3 className="text-lg text-primary">
+															R$ {total.toFixed(2)}
+														</h3>
 													</div>
 													<Button
 														type="submit"
@@ -359,13 +369,15 @@ const Event = () => {
 								<div>
 									<h2 className="text-4xl font-semibold mb-5">Produtor</h2>
 									<img
-										src={banner1}
+										src={event.producers?.imageUrl}
 										alt=""
 										className="w-full aspect-video sm:w-48"
 									/>
 								</div>
 								<div className=" flex flex-col justify-end gap-5">
-									<h3 className="text-3xl font-semibold">{event.producer}</h3>
+									<h3 className="text-3xl font-semibold">
+										{event.producers?.name}
+									</h3>
 									<Button className="py-7">Entre em contato</Button>
 								</div>
 							</div>

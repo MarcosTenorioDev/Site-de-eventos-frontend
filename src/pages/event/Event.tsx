@@ -249,138 +249,150 @@ const Event = () => {
 												<CardHeader className="bg-primary-dark text-white font-primary rounded-t-sm p-3">
 													Ingressos
 												</CardHeader>
-												<CardContent className="p-4 min-w-64">
-													{values.tickets.map((ticket, index) => (
-														<div key={ticket.id} className="flex items-center">
-															<div className="w-full">
-																<p className="font-semibold text-lg">
-																	{ticket.description}
-																</p>
-																<p className="mb-2 text-sm text-primary">
-																	{ticket.price}
-																</p>
-															</div>
-															<div>
-																<div className="flex">
-																	<Button
-																		variant={"ghost"}
-																		className="p-0"
-																		type="button"
-																		onClick={() => {
-																			const newQuantity = Math.max(
-																				ticket.quantity - 1,
-																				0
-																			);
-																			setFieldValue(
-																				`tickets[${index}].quantity`,
-																				newQuantity
-																			);
-																			const updatedTickets = [
-																				...values.tickets,
-																			];
-																			updatedTickets[index].quantity =
-																				newQuantity;
-																			calculateTotal(updatedTickets);
-																		}}
-																	>
-																		<MinusIcon />
-																	</Button>
-																	<Field
-																		disabled={true}
-																		type="number"
-																		name={`tickets[${index}].quantity`}
-																		className="max-w-8 text-center"
-																	/>
-																	<Button
-																		variant={"ghost"}
-																		className="p-0"
-																		type="button"
-																		onClick={() => {
-																			const newQuantity = ticket.quantity + 1;
-																			setFieldValue(
-																				`tickets[${index}].quantity`,
-																				newQuantity
-																			);
-																			const updatedTickets = [
-																				...values.tickets,
-																			];
-																			updatedTickets[index].quantity =
-																				newQuantity;
-																			calculateTotal(updatedTickets);
-																		}}
-																	>
-																		<PlusIcon />
-																	</Button>
-																</div>
-															</div>
-														</div>
-													))}
-												</CardContent>
-												<CardFooter className="flex flex-col relative">
-													{hasPromo ? (
-														<>
-															<p className="text-primary flex items-center justify-center gap-4 border-2 p-2 w-full text-center rounded-full text-lg">
-																{values.promoCode} - 10%{" "}
-																<Trash2Icon
-																	className="text-destructive cursor-pointer"
-																	onClick={() => {
-																		setHasPromo(false);
-																		values.promoCode = "";
-																	}}
-																/>
-															</p>
-														</>
-													) : (
-														<AlertDialog>
-															<AlertDialogTrigger asChild>
-																<Button
-																	variant="outline"
-																	className="text-primary border-[1px] py-3 border-black border-opacity-15 hover:text-primary-dark text-sm sm:text-lg md:text-sm lg:text-lg"
+												{tickets.length ? (
+													<>
+														<CardContent className="p-4 min-w-64">
+															{values.tickets.map((ticket, index) => (
+																<div
+																	key={ticket.id}
+																	className="flex items-center"
 																>
-																	Adicionar código promocional{" "}
-																	<PlusIcon className="ml-2" />
-																</Button>
-															</AlertDialogTrigger>
-															<AlertDialogContent>
-																<AlertDialogHeader>
-																	<AlertDialogTitle className="text-lg">
-																		Adicionar Código promocional
-																	</AlertDialogTitle>
-																</AlertDialogHeader>
-																<AlertDialogDescription className="text-lg">
-																	<Input
-																		control="promoCode"
-																		placeholder="Insira seu código promocional"
-																	/>
-																</AlertDialogDescription>
-																<AlertDialogFooter>
-																	<AlertDialogCancel className="text-lg">
-																		Cancel
-																	</AlertDialogCancel>
-																	<AlertDialogAction
-																		className="text-lg"
-																		onClick={() => setHasPromo(true)}
-																	>
-																		Continue
-																	</AlertDialogAction>
-																</AlertDialogFooter>
-															</AlertDialogContent>
-														</AlertDialog>
-													)}
+																	<div className="w-full">
+																		<p className="font-semibold text-lg">
+																			{ticket.description}
+																		</p>
+																		<p className="mb-2 text-sm text-primary">
+																			R$ {ticket.price}
+																		</p>
+																	</div>
+																	<div>
+																		<div className="flex">
+																			<Button
+																				variant={"ghost"}
+																				className="p-0"
+																				type="button"
+																				onClick={() => {
+																					const newQuantity = Math.max(
+																						ticket.quantity - 1,
+																						0
+																					);
+																					setFieldValue(
+																						`tickets[${index}].quantity`,
+																						newQuantity
+																					);
+																					const updatedTickets = [
+																						...values.tickets,
+																					];
+																					updatedTickets[index].quantity =
+																						newQuantity;
+																					calculateTotal(updatedTickets);
+																				}}
+																			>
+																				<MinusIcon />
+																			</Button>
+																			<Field
+																				disabled={true}
+																				type="number"
+																				name={`tickets[${index}].quantity`}
+																				className="max-w-8 text-center"
+																			/>
+																			<Button
+																				variant={"ghost"}
+																				className="p-0"
+																				type="button"
+																				onClick={() => {
+																					const newQuantity =
+																						ticket.quantity + 1;
+																					setFieldValue(
+																						`tickets[${index}].quantity`,
+																						newQuantity
+																					);
+																					const updatedTickets = [
+																						...values.tickets,
+																					];
+																					updatedTickets[index].quantity =
+																						newQuantity;
+																					calculateTotal(updatedTickets);
+																				}}
+																			>
+																				<PlusIcon />
+																			</Button>
+																		</div>
+																	</div>
+																</div>
+															))}
+														</CardContent>
+														<CardFooter className="flex flex-col relative">
+															{hasPromo ? (
+																<>
+																	<p className="text-primary flex items-center justify-center gap-4 border-2 p-2 w-full text-center rounded-full text-lg">
+																		{values.promoCode} - 10%{" "}
+																		<Trash2Icon
+																			className="text-destructive cursor-pointer"
+																			onClick={() => {
+																				setHasPromo(false);
+																				values.promoCode = "";
+																			}}
+																		/>
+																	</p>
+																</>
+															) : (
+																<AlertDialog>
+																	<AlertDialogTrigger asChild>
+																		<Button
+																			variant="outline"
+																			className="text-primary border-[1px] py-3 border-black border-opacity-15 hover:text-primary-dark text-sm sm:text-lg md:text-sm lg:text-lg"
+																		>
+																			Adicionar código promocional{" "}
+																			<PlusIcon className="ml-2" />
+																		</Button>
+																	</AlertDialogTrigger>
+																	<AlertDialogContent>
+																		<AlertDialogHeader>
+																			<AlertDialogTitle className="text-lg">
+																				Adicionar Código promocional
+																			</AlertDialogTitle>
+																		</AlertDialogHeader>
+																		<AlertDialogDescription className="text-lg">
+																			<Input
+																				control="promoCode"
+																				placeholder="Insira seu código promocional"
+																			/>
+																		</AlertDialogDescription>
+																		<AlertDialogFooter>
+																			<AlertDialogCancel className="text-lg">
+																				Cancel
+																			</AlertDialogCancel>
+																			<AlertDialogAction
+																				className="text-lg"
+																				onClick={() => setHasPromo(true)}
+																			>
+																				Continue
+																			</AlertDialogAction>
+																		</AlertDialogFooter>
+																	</AlertDialogContent>
+																</AlertDialog>
+															)}
 
-													<div className="w-full">
-														<h3 className="text-md mt-4">Total</h3>
-														<h3 className="text-lg text-primary">
-															R$ {total.toFixed(2)}
-														</h3>
-													</div>
-													<Button
-														type="submit"
-														className="absolute -bottom-5 mx-auto text-lg"
-													>
-														Inscrever-se
-													</Button>
-												</CardFooter>
+															<div className="w-full">
+																<h3 className="text-md mt-4">Total</h3>
+																<h3 className="text-lg text-primary">
+																	R$ {total.toFixed(2)}
+																</h3>
+															</div>
+															<Button
+																type="submit"
+																className="absolute -bottom-5 mx-auto text-lg"
+															>
+																Inscrever-se
+															</Button>
+														</CardFooter>
+													</>
+												) : (
+													<CardContent className="p-4 w-64 mx-auto text-center">
+														<h3 className="w-full font-bold text-muted-foreground text-xl"> Oops... Parece que ainda não há ingressos disponíveis para venda</h3>
+													</CardContent>
+												)}
 											</Card>
 										</Form>
 									)}

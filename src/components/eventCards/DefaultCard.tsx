@@ -23,11 +23,13 @@ const DefaultCard = (props: {
           </div>
         </CardContent>
         <CardFooter className="p-4 font-primary w-48 text-black rounded-lg overflow-hidden rounded-t-none drop-shadow-md flex flex-col">
-          <p className="text-md font-medium text-start w-full">{title}</p>
-          <p className="text-xs text-muted-foreground text-start w-full">
+          <p className="text-md font-medium text-start w-full overflow-hidden text-ellipsis whitespace-nowrap">
+            {title}
+          </p>
+          <p className="text-xs text-muted-foreground text-start w-full overflow-hidden text-ellipsis whitespace-nowrap">
             {address}
           </p>
-          <p className="text-xs text-muted-foreground text-start w-full">
+          <p className="text-xs text-muted-foreground text-start w-full overflow-hidden text-ellipsis whitespace-nowrap">
             {startDate}
           </p>
         </CardFooter>

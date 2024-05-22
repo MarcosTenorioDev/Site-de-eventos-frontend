@@ -8,8 +8,6 @@ import {
 	CarouselNext,
 } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
-import banner1 from "@/assets/mockImages/banner1.jpeg";
-import banner2 from "@/assets/mockImages/banner2.jpg";
 import Autoplay from "embla-carousel-autoplay";
 import { Input } from "@/components/ui/input";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
@@ -38,68 +36,9 @@ const Home = () => {
 		undefined
 	);
 	const [recentEvents, setRecentEvents] = useState<any>();
-	const data = [
-		{
-			img: banner1,
-			address: "Rua da batalha, 85, Jordão Alto - Rec",
-			date: "20 de abril de 2024",
-			title: "Eclese",
-		},
-		{
-			img: banner2,
-			address: "Rua da batalha, 85, Jordão Alto - Rec",
-			date: "20 de abril de 2024",
-			title: "Eclese",
-		},
-		{
-			img: banner1,
-			address: "Rua da batalha, 85, Jordão Alto - Rec",
-			date: "20 de abril de 2024",
-			title: "Eclese",
-		},
-		{
-			img: banner2,
-			address: "Rua da batalha, 85, Jordão Alto - Rec",
-			date: "20 de abril de 2024",
-			title: "Eclese",
-		},
-		{
-			img: banner1,
-			address: "Rua da batalha, 85, Jordão Alto - Rec",
-			date: "20 de abril de 2024",
-			title: "Eclese",
-		},
-		{
-			img: banner2,
-			address: "Rua da batalha, 85, Jordão Alto - Rec",
-			date: "20 de abril de 2024",
-			title: "Eclese",
-		},
-		{
-			img: banner1,
-			address: "Rua da batalha, 85, Jordão Alto - Rec",
-			date: "20 de abril de 2024",
-			title: "Eclese",
-		},
-		{
-			img: banner2,
-			address: "Rua da batalha, 85, Jordão Alto - Rec",
-			date: "20 de abril de 2024",
-			title: "Eclese",
-		},
-		{
-			img: banner1,
-			address: "Rua da batalha, 85, Jordão Alto - Rec",
-			date: "20 de abril de 2024",
-			title: "Eclese",
-		},
-		{
-			img: banner2,
-			address: "Rua da batalha, 85, Jordão Alto - Rec",
-			date: "20 de abril de 2024",
-			title: "Eclese",
-		},
-	];
+	const [festivalEvents, setFestivalEvents] = useState<any>();
+	const [theaterEvents, setTheaterEvents] = useState<any>();
+	const [sportsEvents, setSportsEvents] = useState<any>();
 	const [categories, setCategories] = useState<
 		{ value: string; label: string }[]
 	>([{ value: "", label: "Selecione uma opção" }]);
@@ -136,8 +75,9 @@ const Home = () => {
 		api.on("select", () => {
 			setCurrent(api.selectedScrollSnap() + 1);
 		});
-		setImagesBanner([banner1, banner2, banner1, banner2]);
-		setCount(imagesBanner.length);
+	}, [api]);
+
+	useEffect(() => {
 		categoriesService.getCategories().then((results: any) => {
 			if (results) {
 				const categoriesResult = results.map((categorie: any) => {
@@ -150,16 +90,48 @@ const Home = () => {
 					{ value: "", label: "Selecione uma opção" },
 					...categoriesResult,
 				]);
+				const fetchCategoryEvents = async () => {
+					for (const category of categoriesResult) {
+						const categoryLabel = category.label.toLowerCase();
+						if (categoryLabel.includes("festas e shows")) {
+							const events = await eventService.getEventByCategory(
+								category.value
+							);
+							setFestivalEvents(events);
+						} else if (categoryLabel.includes("stand up comedy")) {
+							const events = await eventService.getEventByCategory(
+								category.value
+							);
+							setTheaterEvents(events);
+						} else if (categoryLabel.includes("esportes")) {
+							const events = await eventService.getEventByCategory(
+								category.value
+							);
+							setSportsEvents(events);
+						}
+					}
+				};
+
+				fetchCategoryEvents();
 			}
 		});
-	}, [api]);
-
-	useEffect(() => {
-		eventService.getEventByCategory("recent").then((events: any) => {
+		eventService.getRecentEvents().then((events: any) => {
 			setRecentEvents(events);
+
+			const images = events.map((event: any) => {
+				const mainAssets = event.assets?.find(
+					(asset: any) => asset.type === "main"
+				);
+				return mainAssets?.url;
+			});
+			const validImages = images.filter((url: any) => {
+				return url !== undefined;
+			});
+
+			setImagesBanner(validImages);
+			setCount(validImages.length);
 		});
-	},[]);
-		
+	}, []);
 
 	return (
 		<>
@@ -286,18 +258,18 @@ const Home = () => {
 			</div>
 
 			<div className="max-w-7xl mx-auto mt-20">
-				<h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
-					Mais recentes
-				</h3>
-				<Carousel
-					setApi={setApi}
-					className="mx-auto w-11/12 xl:w-full sm:w-10/12 max-w-7xl"
-					opts={{
-						loop: false,
-					}}
-				>
-					{recentEvents ? (
-						<>
+				{recentEvents?.length ? (
+					<>
+						<h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
+							Mais recentes
+						</h3>
+						<Carousel
+							setApi={setApi}
+							className="mx-auto w-11/12 sm:w-10/12 xl:11/12 2xl:w-full max-w-7xl"
+							opts={{
+								loop: false,
+							}}
+						>
 							<CarouselContent className="p-4">
 								{recentEvents.map((card: any) => {
 									return (
@@ -315,42 +287,48 @@ const Home = () => {
 							</CarouselContent>
 							<CarouselNext className="hidden sm:flex" />
 							<CarouselPrevious className="hidden sm:flex" />
-						</>
-					) : (
-						<></>
-					)}
-				</Carousel>
+						</Carousel>
+					</>
+				) : (
+					<></>
+				)}
 			</div>
 
 			<div className="max-w-7xl mx-auto mb-20 mt-10">
-				<h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
-					Festival
-				</h3>
-				<Carousel
-					setApi={setApi}
-					className="mx-auto w-11/12 xl:w-full sm:w-10/12 max-w-7xl"
-					opts={{
-						loop: false,
-					}}
-				>
-					<CarouselContent className="p-4">
-						{data.map((card, index) => {
-							return (
-								<CarouselItem className="basis-auto" key={index}>
-									<DefaultCard
-										id="00000000000000-0000000"
-										address={card.address}
-										img={card.img}
-										startDate={card.date}
-										title={card.title}
-									/>
-								</CarouselItem>
-							);
-						})}
-					</CarouselContent>
-					<CarouselNext className="hidden sm:flex" />
-					<CarouselPrevious className="hidden sm:flex" />
-				</Carousel>
+				{festivalEvents?.length ? (
+					<>
+						<h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
+							Festival
+						</h3>
+						<Carousel
+							setApi={setApi}
+							className="mx-auto w-11/12 xl:11/12 sm:w-10/12 2xl:w-full max-w-7xl"
+							opts={{
+								loop: false,
+							}}
+						>
+							<CarouselContent className="p-4">
+								{festivalEvents.map((card: any) => {
+									return (
+										<CarouselItem className="basis-auto" key={card.id}>
+											<DefaultCard
+												id={card.id}
+												address={card.location}
+												img={card.assets[0]?.url}
+												startDate={formatDate(card.startDate)}
+												title={card.title}
+											/>
+										</CarouselItem>
+									);
+								})}
+							</CarouselContent>
+							<CarouselNext className="hidden sm:flex" />
+							<CarouselPrevious className="hidden sm:flex" />
+						</Carousel>
+					</>
+				) : (
+					<></>
+				)}
 			</div>
 
 			<div className=" w-11/12 xl:w-full sm:w-10/12 max-w-7xl mx-auto bg-primary-light h-52 md:h-60 py-10 relative overflow-hidden flex items-center justify-end pr-4 md:pr-8 2xl:pr-14">
@@ -367,65 +345,77 @@ const Home = () => {
 			</div>
 
 			<div className="max-w-7xl mx-auto mb-20 mt-10">
-				<h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
-					Eventos corporativos
-				</h3>
-				<Carousel
-					setApi={setApi}
-					className="mx-auto w-11/12 xl:w-full sm:w-10/12 max-w-7xl"
-					opts={{
-						loop: false,
-					}}
-				>
-					<CarouselContent className="p-4">
-						{data.map((card, index) => {
-							return (
-								<CarouselItem className="basis-auto" key={index}>
-									<DefaultCard
-										id="00000000000000-0000000"
-										address={card.address}
-										img={card.img}
-										startDate={card.date}
-										title={card.title}
-									/>
-								</CarouselItem>
-							);
-						})}
-					</CarouselContent>
-					<CarouselNext className="hidden sm:flex" />
-					<CarouselPrevious className="hidden sm:flex" />
-				</Carousel>
+				{theaterEvents?.length ? (
+					<>
+						<h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
+							Teatros e espetáculos
+						</h3>
+						<Carousel
+							setApi={setApi}
+							className="mx-auto w-11/12 xl:11/12 sm:w-10/12 2xl:w-full max-w-7xl"
+							opts={{
+								loop: false,
+							}}
+						>
+							<CarouselContent className="p-4">
+								{theaterEvents.map((card: any) => {
+									return (
+										<CarouselItem className="basis-auto" key={card.id}>
+											<DefaultCard
+												id={card.id}
+												address={card.location}
+												img={card.assets[0]?.url}
+												startDate={formatDate(card.startDate)}
+												title={card.title}
+											/>
+										</CarouselItem>
+									);
+								})}
+							</CarouselContent>
+							<CarouselNext className="hidden sm:flex" />
+							<CarouselPrevious className="hidden sm:flex" />
+						</Carousel>
+					</>
+				) : (
+					<></>
+				)}
 			</div>
 
 			<div className="max-w-7xl mx-auto mb-20 mt-10">
-				<h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
-					Para a criançada
-				</h3>
-				<Carousel
-					setApi={setApi}
-					className="mx-auto w-11/12 xl:w-full sm:w-10/12 max-w-7xl"
-					opts={{
-						loop: false,
-					}}
-				>
-					<CarouselContent className="p-4">
-						{data.map((card, index) => {
-							return (
-								<CarouselItem className="basis-auto" key={index}>
-									<DefaultCard
-										id="00000000000000-0000000"
-										address={card.address}
-										img={card.img}
-										startDate={card.date}
-										title={card.title}
-									/>
-								</CarouselItem>
-							);
-						})}
-					</CarouselContent>
-					<CarouselNext className="hidden sm:flex" />
-					<CarouselPrevious className="hidden sm:flex" />
-				</Carousel>
+				{sportsEvents?.length ? (
+					<>
+						<h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
+							Esportes
+						</h3>
+						<Carousel
+							setApi={setApi}
+							className="mx-auto w-11/12 xl:11/12 sm:w-10/12 2xl:w-full max-w-7xl"
+							opts={{
+								loop: false,
+							}}
+						>
+							<CarouselContent className="p-4">
+								{sportsEvents.map((card: any) => {
+									return (
+										<CarouselItem className="basis-auto" key={card.id}>
+											<DefaultCard
+												id={card.id}
+												address={card.location}
+												img={card.assets[0]?.url}
+												startDate={formatDate(card.startDate)}
+												title={card.title}
+											/>
+										</CarouselItem>
+									);
+								})}
+							</CarouselContent>
+							<CarouselNext className="hidden sm:flex" />
+							<CarouselPrevious className="hidden sm:flex" />
+						</Carousel>
+					</>
+				) : (
+					<></>
+				)}
 			</div>
 		</>
 	);

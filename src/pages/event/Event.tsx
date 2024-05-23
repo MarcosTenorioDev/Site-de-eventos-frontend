@@ -146,7 +146,7 @@ const Event = () => {
 					<div className="flex flex-col items-center justify-center mt-4 sm:mt-8 w-full my-56">
 						<div className="flex flex-col justify-start items-center w-full">
 							<img
-								src={event.assets[0].url}
+								src={event.assets[0]?.url}
 								alt="banner do evento"
 								className="object-cover w-full h-full rounded-xl max-w-[1140px] max-h-[500px] aspect-video"
 							/>

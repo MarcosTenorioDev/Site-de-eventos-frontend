@@ -260,7 +260,7 @@ const Home = () => {
 			<div className="max-w-7xl mx-auto mt-20">
 				{recentEvents?.length ? (
 					<>
-						<h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
+						<h3 className="text-xl mx-auto w-11/12 xl:11/12 sm:w-10/12 2xl:w-full max-w-7xl mb-3 text-primary-dark font-primary font-normal">
 							Mais recentes
 						</h3>
 						<Carousel
@@ -297,7 +297,7 @@ const Home = () => {
 			<div className="max-w-7xl mx-auto mb-20 mt-10">
 				{festivalEvents?.length ? (
 					<>
-						<h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
+						<h3 className="text-xl mx-auto w-11/12 xl:11/12 sm:w-10/12 2xl:w-full max-w-7xl mb-3 text-primary-dark font-primary font-normal">
 							Festival
 						</h3>
 						<Carousel
@@ -347,7 +347,7 @@ const Home = () => {
 			<div className="max-w-7xl mx-auto mb-20 mt-10">
 				{theaterEvents?.length ? (
 					<>
-						<h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
+						<h3 className="text-xl mx-auto w-11/12 xl:11/12 sm:w-10/12 2xl:w-full max-w-7xl mb-3 text-primary-dark font-primary font-normal">
 							Teatros e espetáculos
 						</h3>
 						<Carousel
@@ -384,7 +384,7 @@ const Home = () => {
 			<div className="max-w-7xl mx-auto mb-20 mt-10">
 				{sportsEvents?.length ? (
 					<>
-						<h3 className="text-xl mx-auto xl:w-full w-10/12 mb-3 text-primary-dark font-primary font-normal">
+						<h3 className="text-xl mx-auto w-11/12 xl:11/12 sm:w-10/12 2xl:w-full max-w-7xl mb-3 text-primary-dark font-primary font-normal">
 							Esportes
 						</h3>
 						<Carousel

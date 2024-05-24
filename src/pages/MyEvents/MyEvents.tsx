@@ -7,14 +7,22 @@ import {
 } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
 import MyEventsCards from "@/components/eventCards/MyEventsCards";
+import EventsService from "@/core/services/event.service";
 
 const MyEvents = () => {
 	const [myEvents, setMyEvents] = useState<any[]>([]);
 	const [activeTab, setActiveTab] = useState("available");
+	const eventsService = new EventsService()
 
 	useEffect(() => {
+		eventsService.getUserEvents().then((event:any) => {
+			console.log(event)
+		}).catch((err:any) => {
+			console.error(err)
+		})
+		
 		setMyEvents([
-			/* {
+			{
 				id: "3ff5b679-b651-4204-86ef-3e6d1bbbe920",
 				title: "Rave Subaquática",
 				addressId: "c718bd49-13ad-4604-bf59-7f3bb3599ac1",
@@ -329,7 +337,7 @@ const MyEvents = () => {
 						isActive: true,
 					},
 				},
-			}, */
+			},
 		]);
 	}, []);
 

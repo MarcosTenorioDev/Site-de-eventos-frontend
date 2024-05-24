@@ -40,8 +40,8 @@ const AdditionalUserInfo = () => {
 
   useEffect(() => {
     try {
-      userService.getUser().then((response) => {
-        setAditionalInfoForm({ cpf: response.cpf, phone: response.phone });
+      userService.getUser().then((response:any) => {
+        setAditionalInfoForm({ cpf: response.cpf ? response.cpf : '', phone: response.phone ? response.phone : '' });
         setLoadingComponent(false);
         if(response.cpf){
           setDisableNationalId2(true)

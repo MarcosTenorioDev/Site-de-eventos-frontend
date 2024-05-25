@@ -4,7 +4,7 @@ import Footer from "./layout/Footer";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/home/Home";
 import Event from "./pages/event/Event";
-import MyEvents from "./pages/MyEvents/MyEvents";
+import MyTickets from "./pages/MyTickets/MyTickets";
 
 function Layout({ children }: any) {
 	return (
@@ -39,11 +39,11 @@ const App = () => {
 						}
 					/>
 					<Route
-						path="/myevents"
+						path="/mytickets"
 						element={
 							<>
 								<Layout>
-									<MyEvents />
+									<MyTickets />
 								</Layout>
 							</>
 						}

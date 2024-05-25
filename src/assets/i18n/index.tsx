@@ -11,15 +11,15 @@ const LangUpdaterContext = React.createContext<
 >(undefined);
 
 function getLanguageKeys(lang: string): LanguageKeysPt | LanguageKeysEn {
-  switch (lang) {
+  /* switch (lang) {
     case "pt-br":
       return new LanguageKeysPt();
     case "en-us":
       return new LanguageKeysEn();
     default:
       //default português
-      return new LanguageKeysPt();
-  }
+  } */
+  return new LanguageKeysPt();
 }
 
 const LangProvider: any = ({ children }: any) => {

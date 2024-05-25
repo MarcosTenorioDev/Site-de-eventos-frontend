@@ -9,7 +9,8 @@ export class LanguageKeysPt {
         myEvents:"Meus eventos",
         logout:"Sair da conta",
         login:"Acessar conta",
-        register:"Cadastre-se"
+        register:"Cadastre-se",
+        myTickets:"Meus ingressos"
       },
       button:{
         confirm:"Confirmar",

@@ -10,7 +10,7 @@ const LangUpdaterContext = React.createContext<
   React.Dispatch<React.SetStateAction<string>> | undefined
 >(undefined);
 
-function getLanguageKeys(lang: string): LanguageKeysPt | LanguageKeysEn {
+function getLanguageKeys(): LanguageKeysPt | LanguageKeysEn {
   /* switch (lang) {
     case "pt-br":
       return new LanguageKeysPt();
@@ -28,7 +28,7 @@ const LangProvider: any = ({ children }: any) => {
   const value = useMemo(() => {
     return {
       lang,
-      keys: getLanguageKeys(lang),
+      keys: getLanguageKeys(),
     };
   }, [lang]);
 

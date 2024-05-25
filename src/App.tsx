@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/home/Home";
 import Event from "./pages/event/Event";
 import MyTickets from "./pages/MyTickets/MyTickets";
+import MyEvents from "./pages/myEvents/MyEvents";
 
 function Layout({ children }: any) {
 	return (
@@ -44,6 +45,16 @@ const App = () => {
 							<>
 								<Layout>
 									<MyTickets />
+								</Layout>
+							</>
+						}
+					/>
+					<Route
+						path="/myevents"
+						element={
+							<>
+								<Layout>
+									<MyEvents />
 								</Layout>
 							</>
 						}

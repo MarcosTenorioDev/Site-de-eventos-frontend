@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
 	Carousel,
 	CarouselContent,
@@ -5,22 +6,30 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui/carousel";
-import { useState, useEffect } from "react";
-import MyTicketsCards from "@/components/ticketsCards/TicketsCards";
+import MyEventsCards from "@/components/eventCards/MyEventsCards";
 import EventsService from "@/core/services/event.service";
+import {
+	Tabs,
+	TabsList,
+	TabsTrigger,
+	TabsContent,
+} from "@/components/tabs/Tabs";
+import bannerEffect from "@/assets/images/myEvents/bannerEffect.svg";
 
-const MyTickets = () => {
+const MyEvents = () => {
 	const [myEvents, setMyEvents] = useState<any[]>([]);
-	const [activeTab, setActiveTab] = useState("available");
-	const eventsService = new EventsService()
+	const eventsService = new EventsService();
 
 	useEffect(() => {
-		eventsService.getUserEvents().then((event:any) => {
-			console.log(event)
-		}).catch((err:any) => {
-			console.error(err)
-		})
-		
+		eventsService
+			.getUserEvents()
+			.then((event: any) => {
+				console.log(event);
+			})
+			.catch((err: any) => {
+				console.error(err);
+			});
+
 		setMyEvents([
 			{
 				id: "3ff5b679-b651-4204-86ef-3e6d1bbbe920",
@@ -57,7 +66,7 @@ const MyTickets = () => {
 					},
 				},
 			},
-			                                         
+
 			{
 				id: "5e661ed6-b03b-4a55-a2fc-ca810361e21f",
 				title: "Baile de Carnaval",
@@ -301,7 +310,7 @@ const MyTickets = () => {
 						quantity: 4,
 						isActive: true,
 					},
-				}
+				},
 			},
 			{
 				id: "4415409a-c268-47d2-b35d-046c3863d306",
@@ -341,114 +350,215 @@ const MyTickets = () => {
 		]);
 	}, []);
 
-	const toggleTab = (tab: string) => {
-		setActiveTab(tab);
+	const filterEvents = (status: string) => {
+		const now = new Date();
+		return myEvents.filter((event) => {
+			const eventStartDate = new Date(event.startDate);
+			switch (status) {
+				case "all":
+					return true;
+				case "cancelled":
+					return event.ticket.status === "cancelled";
+				case "completed":
+					return eventStartDate <= now;
+				case "ongoing":
+					return eventStartDate > now;
+				case "scheduled":
+					return eventStartDate > now && event.ticket.status === "active";
+				default:
+					return true;
+			}
+		});
 	};
-
-	const ongoingEvents = myEvents?.filter(
-		(event) => new Date(event.startDate) > new Date()
-	);
-	const pastEvents = myEvents?.filter(
-		(event) => new Date(event.startDate) <= new Date()
-	);
 
 	return (
 		<div className="max-w-7xl mx-auto text-center min-h-screen">
-			<h1 className="text-4xl font-normal py-10">Meus Ingressos</h1>
-
-			<div className="flex justify-center mb-6">
-				<button
-					className={`mr-4 pb-2 border-b-2 ${
-						activeTab === "available"
-							? "border-blue-600 font-bold"
-							: "border-transparent"
-					}`}
-					onClick={() => toggleTab("available")}
-				>
-					Disponíveis
-				</button>
-				<button
-					className={`pb-2 border-b-2 ${
-						activeTab === "completed"
-							? "border-blue-600 font-bold"
-							: "border-transparent"
-					}`}
-					onClick={() => toggleTab("completed")}
-				>
-					Encerrados
-				</button>
+			<div
+				className="w-11/12 xl:w-full sm:w-10/12 max-w-7xl mx-auto bg-primary-dark h-52 md:h-60 relative overflow-hidden flex items-center justify-end mt-10 bg-contain bg-center bg-no-repeat"
+				style={{ backgroundImage: `url(${bannerEffect})` }}
+			>
+				
 			</div>
+			<h1 className="text-4xl font-normal pt-10 pb-4 text-start">
+				Meus Eventos
+			</h1>
 
-			<div className="transition-all duration-700 ease-in-out">
-				{activeTab === "available" && (
-					<div className="transition-opacity duration-700 ease-in-out">
-						{ongoingEvents?.length ? (
-							<Carousel
-								className="mx-auto w-11/12 sm:w-10/12 xl:11/12 2xl:w-full max-w-7xl"
-								opts={{
-									loop: false,
-								}}
-							>
-								<CarouselContent className="p-4 flex">
-									{ongoingEvents.map((card: any) => (
-										<CarouselItem className="basis-auto" key={card.id}>
-											<MyTicketsCards
-												id={card.id}
-												address={card.address}
-												img={card.assets[0]?.url}
-												startDate={card.startDate}
-												title={card.title}
-												ticket={card.ticket}
-											/>
-										</CarouselItem>
-									))}
-								</CarouselContent>
-								<CarouselNext className="hidden sm:flex" />
-								<CarouselPrevious className="hidden sm:flex" />
-							</Carousel>
-						) : (
-							<p className="text-2xl font-semibold text-muted-foreground">
-								Oops... Parece que você não tem nenhum evento disponível.
-							</p>
-						)}
-					</div>
-				)}
-				{activeTab === "completed" && (
-					<div className="transition-opacity duration-700 ease-in-out">
-						{pastEvents?.length ? (
-							<Carousel
-								className="mx-auto w-11/12 sm:w-10/12 xl:11/12 2xl:w-full max-w-7xl"
-								opts={{
-									loop: false,
-								}}
-							>
-								<CarouselContent className="p-4">
-									{pastEvents.map((card: any) => (
-										<CarouselItem className="basis-auto" key={card.id}>
-											<MyTicketsCards
-												id={card.id}
-												address={card.address}
-												img={card.assets[0]?.url}
-												startDate={card.startDate}
-												title={card.title}
-												ticket={card.ticket}
-											/>
-										</CarouselItem>
-									))}
-								</CarouselContent>
-								<CarouselNext className="hidden sm:flex" />
-								<CarouselPrevious className="hidden sm:flex" />
-							</Carousel>
-						) : (
-							<p className="text-2xl font-semibold text-muted-foreground">
-								Oops... Parece que você não tem nenhum evento Encerrado.
-							</p>
-						)}
-					</div>
-				)}
-			</div>
+			<Tabs defaultValue="all">
+				<TabsList className="justify-between max-w-5xl items-center gap-0">
+					<TabsTrigger value="all" className="flex-1 justify-center mx-0">
+						Todos
+					</TabsTrigger>
+					<TabsTrigger value="cancelled" className="flex-1 justify-center mx-0">
+						Cancelados
+					</TabsTrigger>
+					<TabsTrigger value="completed" className="flex-1 justify-center mx-0">
+						Encerrados
+					</TabsTrigger>
+					<TabsTrigger value="ongoing" className="flex-1 justify-center mx-0">
+						Em Andamento
+					</TabsTrigger>
+					<TabsTrigger value="scheduled" className="flex-1 justify-center mx-0">
+						Agendados
+					</TabsTrigger>
+				</TabsList>
+
+				<TabsContent value="all">
+					{filterEvents("all").length ? (
+						<Carousel
+							className="mx-auto w-11/12 sm:w-10/12 xl:11/12 2xl:w-full max-w-7xl"
+							opts={{
+								loop: false,
+							}}
+						>
+							<CarouselContent className="p-4 flex">
+								{filterEvents("all").map((card: any) => (
+									<CarouselItem className="basis-auto" key={card.id}>
+										<MyEventsCards
+											id={card.id}
+											address={card.address}
+											img={card.assets[0]?.url}
+											startDate={card.startDate}
+											title={card.title}
+										/>
+									</CarouselItem>
+								))}
+							</CarouselContent>
+							<CarouselNext className="hidden sm:flex" />
+							<CarouselPrevious className="hidden sm:flex" />
+						</Carousel>
+					) : (
+						<p className="text-2xl font-semibold text-muted-foreground">
+							Oops... Parece que você não tem nenhum evento nessa categoria.
+						</p>
+					)}
+				</TabsContent>
+
+				<TabsContent value="cancelled">
+					{filterEvents("cancelled").length ? (
+						<Carousel
+							className="mx-auto w-11/12 sm:w-10/12 xl:11/12 2xl:w-full max-w-7xl"
+							opts={{
+								loop: false,
+							}}
+						>
+							<CarouselContent className="p-4 flex">
+								{filterEvents("cancelled").map((card: any) => (
+									<CarouselItem className="basis-auto" key={card.id}>
+										<MyEventsCards
+											id={card.id}
+											address={card.address}
+											img={card.assets[0]?.url}
+											startDate={card.startDate}
+											title={card.title}
+										/>
+									</CarouselItem>
+								))}
+							</CarouselContent>
+							<CarouselNext className="hidden sm:flex" />
+							<CarouselPrevious className="hidden sm:flex" />
+						</Carousel>
+					) : (
+						<p className="text-2xl font-semibold text-muted-foreground">
+							Oops... Parece que você não tem nenhum evento nessa categoria.
+						</p>
+					)}
+				</TabsContent>
+
+				<TabsContent value="completed">
+					{filterEvents("completed").length ? (
+						<Carousel
+							className="mx-auto w-11/12 sm:w-10/12 xl:11/12 2xl:w-full max-w-7xl"
+							opts={{
+								loop: false,
+							}}
+						>
+							<CarouselContent className="p-4 flex">
+								{filterEvents("completed").map((card: any) => (
+									<CarouselItem className="basis-auto" key={card.id}>
+										<MyEventsCards
+											id={card.id}
+											address={card.address}
+											img={card.assets[0]?.url}
+											startDate={card.startDate}
+											title={card.title}
+										/>
+									</CarouselItem>
+								))}
+							</CarouselContent>
+							<CarouselNext className="hidden sm:flex" />
+							<CarouselPrevious className="hidden sm:flex" />
+						</Carousel>
+					) : (
+						<p className="text-2xl font-semibold text-muted-foreground">
+							Oops... Parece que você não tem nenhum evento nessa categoria.
+						</p>
+					)}
+				</TabsContent>
+
+				<TabsContent value="ongoing">
+					{filterEvents("ongoing").length ? (
+						<Carousel
+							className="mx-auto w-11/12 sm:w-10/12 xl:11/12 2xl:w-full max-w-7xl"
+							opts={{
+								loop: false,
+							}}
+						>
+							<CarouselContent className="p-4 flex">
+								{filterEvents("ongoing").map((card: any) => (
+									<CarouselItem className="basis-auto" key={card.id}>
+										<MyEventsCards
+											id={card.id}
+											address={card.address}
+											img={card.assets[0]?.url}
+											startDate={card.startDate}
+											title={card.title}
+										/>
+									</CarouselItem>
+								))}
+							</CarouselContent>
+							<CarouselNext className="hidden sm:flex" />
+							<CarouselPrevious className="hidden sm:flex" />
+						</Carousel>
+					) : (
+						<p className="text-2xl font-semibold text-muted-foreground">
+							Oops... Parece que você não tem nenhum evento nessa categoria.
+						</p>
+					)}
+				</TabsContent>
+
+				<TabsContent value="scheduled">
+					{filterEvents("scheduled").length ? (
+						<Carousel
+							className="mx-auto w-11/12 sm:w-10/12 xl:11/12 2xl:w-full max-w-7xl"
+							opts={{
+								loop: false,
+							}}
+						>
+							<CarouselContent className="p-4 flex">
+								{filterEvents("scheduled").map((card: any) => (
+									<CarouselItem className="basis-auto" key={card.id}>
+										<MyEventsCards
+											id={card.id}
+											address={card.address}
+											img={card.assets[0]?.url}
+											startDate={card.startDate}
+											title={card.title}
+										/>
+									</CarouselItem>
+								))}
+							</CarouselContent>
+							<CarouselNext className="hidden sm:flex" />
+							<CarouselPrevious className="hidden sm:flex" />
+						</Carousel>
+					) : (
+						<p className="text-2xl font-semibold text-muted-foreground">
+							Oops... Parece que você não tem nenhum evento nessa categoria.
+						</p>
+					)}
+				</TabsContent>
+			</Tabs>
 		</div>
 	);
 };
 
-export default MyTickets;
+export default MyEvents;

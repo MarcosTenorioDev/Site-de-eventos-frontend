@@ -22,6 +22,7 @@ export const Input = (props: {
 	label?: string;
 	mask?: (string | RegExp)[];
 	placeholder?: string;
+	type?: string
 }) => {
 	return (
 		<>
@@ -32,7 +33,7 @@ export const Input = (props: {
 						<MaskedInput
 							{...field}
 							disabled={props.disabled}
-							type="text"
+							type={props.type ? props.type : "text"}
 							mask={props.mask}
 							placeholder={props.placeholder}
 							className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-primary focus-visible:ring-1 focus-visible:to-primary disabled:cursor-not-allowed disabled:opacity-50"
@@ -43,7 +44,7 @@ export const Input = (props: {
 				<Field
 					disabled={props.disabled}
 					name={props.control}
-					type="text"
+					type={props.type ? props.type : "text"}
 					placeholder={props.placeholder}
 					className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-primary focus-visible:ring-1 focus-visible:to-primary disabled:cursor-not-allowed disabled:opacity-50"
 				/>

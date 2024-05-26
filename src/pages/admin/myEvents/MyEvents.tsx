@@ -16,10 +16,12 @@ import {
 } from "@/components/tabs/Tabs";
 import { PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const MyEvents = () => {
 	const [myEvents, setMyEvents] = useState<any[]>([]);
 	const eventsService = new EventsService();
+	const navigate = useNavigate()
 
 	useEffect(() => {
 		eventsService
@@ -386,7 +388,7 @@ const MyEvents = () => {
 			</div>
 			<div className="flex flex-col sm:flex-row justify-between items-center pt-10 pb-4">
 				<h1 className="text-4xl font-normal text-start">Meus Eventos</h1>
-				<Button className="hidden sm:flex">
+				<Button className="hidden sm:flex" onClick={() => navigate('event/create')}>
 					Criar evento <PlusIcon />
 				</Button>
 			</div>
@@ -565,7 +567,7 @@ const MyEvents = () => {
 					)}
 				</TabsContent>
 			</Tabs>
-			<Button className="sm:hidden my-10">
+			<Button className="sm:hidden my-10" onClick={() => navigate('event/create')}>
 				Criar evento <PlusIcon />
 			</Button>
 		</div>

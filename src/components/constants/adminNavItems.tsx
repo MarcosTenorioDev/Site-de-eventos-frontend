@@ -1,11 +1,17 @@
 import { NavItem } from "@/types/navbarTypes";
-import { HomeIcon } from "lucide-react";
+import { HomeIcon, InfoIcon } from "lucide-react";
 
 export const NavItems: NavItem[] = [
     {
       title: "Meus eventos",
       icon: HomeIcon,
       href: "/managment",
+      color: "text-primary",
+    },  
+    {
+      title: "Informações gerais",
+      icon: InfoIcon,
+      href: "/managment/event",
       color: "text-primary",
     },  
 ];

@@ -6,7 +6,7 @@ import CustomClerkUserButton from "@/components/customClerkUserButton";
 import { Button } from "@/components/ui/button";
 
 export default function Header() {
-    const navigate = useNavigate()
+	const navigate = useNavigate();
 	return (
 		<div className="supports-backdrop-blur:bg-background/60 fixed left-0 right-0 top-0 z-20 border-b bg-background/95 backdrop-blur">
 			<nav className="flex h-16 items-center justify-between px-10">
@@ -28,7 +28,7 @@ export default function Header() {
 					<Button
 						variant={"link"}
 						className="hidden items-center justify-between gap-2 md:flex text-primary"
-                        onClick={() => navigate('/')}
+						onClick={() => navigate("/")}
 					>
 						<h1 className="text-md font-semibold">Área do Participante</h1>
 					</Button>

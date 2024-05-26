@@ -10,10 +10,12 @@ import { NavItems } from "@/components/constants/adminNavItems";
 import CustomClerkUserButton from "@/components/customClerkUserButton";
 import { SignOutButton } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export const MobileSidebar = () => {
 	const [open, setOpen] = useState(false);
 	const [isMounted, setIsMounted] = useState(false);
+	const navigate = useNavigate()
 
 	useEffect(() => {
 		setIsMounted(true);
@@ -57,6 +59,7 @@ export const MobileSidebar = () => {
 						<Button
 							variant={"outline"}
 							className="w-full text-primary border-primary hover:text-primary"
+							onClick={() => navigate('/')}
 						>
 							Área do participante
 						</Button>

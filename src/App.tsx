@@ -6,6 +6,7 @@ import Home from "./pages/home/Home";
 import Event from "./pages/event/Event";
 import MyTickets from "./pages/MyTickets/MyTickets";
 import MyEvents from "./pages/myEvents/MyEvents";
+import { LayoutAdmin } from "./layout/sidebarComponents";
 
 function Layout({ children }: any) {
 	return (
@@ -49,16 +50,16 @@ const App = () => {
 							</>
 						}
 					/>
-					<Route
-						path="/myevents"
-						element={
-							<>
-								<Layout>
+					<Route path="/managment">
+						<Route
+							path=""
+							element={
+								<LayoutAdmin>
 									<MyEvents />
-								</Layout>
-							</>
-						}
-					/>
+								</LayoutAdmin>
+							}
+						/>
+					</Route>
 				</Routes>
 			</BrowserRouter>
 		</div>

@@ -14,7 +14,8 @@ import {
 	TabsTrigger,
 	TabsContent,
 } from "@/components/tabs/Tabs";
-import bannerEffect from "@/assets/images/myEvents/bannerEffect.svg";
+import { PlusIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const MyEvents = () => {
 	const [myEvents, setMyEvents] = useState<any[]>([]);
@@ -372,33 +373,40 @@ const MyEvents = () => {
 	};
 
 	return (
-		<div className="max-w-7xl mx-auto text-center min-h-screen">
-			<div
-				className="w-11/12 xl:w-full sm:w-10/12 max-w-7xl mx-auto bg-primary-dark h-52 md:h-60 relative overflow-hidden flex items-center justify-end mt-10 bg-contain bg-center bg-no-repeat"
-				style={{ backgroundImage: `url(${bannerEffect})` }}
-			>
-				
+		<div className="max-w-[1980px] mx-auto text-center min-h-screen px-8 md:px-20">
+			<div className="w-11/12 xl:w-full sm:w-10/12 max-w-[1980px] mx-auto bg-primary-dark h-52 md:h-60 flex-col overflow-hidden flex items-end justify-end mt-10 bg-contain bg-center bg-no-repeat relative">
+				<div className="text-white text-4xl flex items-start justify-start w-11/12 h-2/6 font-bold gap-5">
+					<span>#</span>
+					<h3 className="pt-6">Obon</h3>
+				</div>
+				<div className="bg-primary-light w-11/12 h-4/6 text-start flex items-center justify-center ">
+					<h2 className="w-11/12 text-lg sm:text-xl sm:font-semibold lg:text-4xl xl:text-5xl font-normal">A escolha dos melhores, para eventos inesquecíveis</h2>
+				</div>
+				<h3 className="absolute text-7xl top-0 sm:text-8xl lg:text-[148px] text-primary-light opacity-35 lg:-top-5 z-0">Obon</h3>
 			</div>
-			<h1 className="text-4xl font-normal pt-10 pb-4 text-start">
-				Meus Eventos
-			</h1>
+			<div className="flex flex-col sm:flex-row justify-between items-center pt-10 pb-4">
+				<h1 className="text-4xl font-normal text-start">Meus Eventos</h1>
+				<Button className="hidden sm:flex">
+					Criar evento <PlusIcon />
+				</Button>
+			</div>
 
 			<Tabs defaultValue="all">
-				<TabsList className="justify-between max-w-5xl items-center gap-0">
+				<TabsList className="justify-between max-w-7xl items-center gap-0 overflow-x-auto h-12">
 					<TabsTrigger value="all" className="flex-1 justify-center mx-0">
-						Todos
+						Todos ({filterEvents("all").length})
 					</TabsTrigger>
 					<TabsTrigger value="cancelled" className="flex-1 justify-center mx-0">
-						Cancelados
+						Cancelados ({filterEvents("cancelled").length})
 					</TabsTrigger>
 					<TabsTrigger value="completed" className="flex-1 justify-center mx-0">
-						Encerrados
+						Encerrados ({filterEvents("completed").length})
 					</TabsTrigger>
 					<TabsTrigger value="ongoing" className="flex-1 justify-center mx-0">
-						Em Andamento
+						Em Andamento ({filterEvents("ongoing").length})
 					</TabsTrigger>
 					<TabsTrigger value="scheduled" className="flex-1 justify-center mx-0">
-						Agendados
+						Agendados ({filterEvents("scheduled").length})
 					</TabsTrigger>
 				</TabsList>
 
@@ -557,6 +565,9 @@ const MyEvents = () => {
 					)}
 				</TabsContent>
 			</Tabs>
+			<Button className="sm:hidden my-10">
+				Criar evento <PlusIcon />
+			</Button>
 		</div>
 	);
 };

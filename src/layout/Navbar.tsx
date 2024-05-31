@@ -134,7 +134,7 @@ const Navbar = () => {
 						</div>
 						<nav className="px-3 flex-1 w-full justify-end gap-8 hidden sm:flex">
 							<Button variant={"link"} className="font-primary">
-								{t("application.components.navbar.createEvent")}
+								Criar eventos
 							</Button>
 							<div className="text-white font-primary">
 								{/* TODO: Retirar botão em volta de SignInButton */}
@@ -193,7 +193,7 @@ const Navbar = () => {
 								</div>
 							</div>
 							<Button variant={"linkSecondary"} className="font-primary mt-3">
-								{t("application.components.navbar.createEvent")}
+								Criar eventos
 							</Button>
 						</nav>
 						<div className="mt-auto">

@@ -22,6 +22,7 @@ export const Input = (props: {
 	label?: string;
 	mask?: (string | RegExp)[];
 	placeholder?: string;
+	type?: string;
 }) => {
 	return (
 		<>
@@ -32,7 +33,7 @@ export const Input = (props: {
 						<MaskedInput
 							{...field}
 							disabled={props.disabled}
-							type="text"
+							type={props.type ? props.type : "text"}
 							mask={props.mask}
 							placeholder={props.placeholder}
 							className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-primary focus-visible:ring-1 focus-visible:to-primary disabled:cursor-not-allowed disabled:opacity-50"
@@ -43,7 +44,7 @@ export const Input = (props: {
 				<Field
 					disabled={props.disabled}
 					name={props.control}
-					type="text"
+					type={props.type ? props.type : "text"}
 					placeholder={props.placeholder}
 					className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-primary focus-visible:ring-1 focus-visible:to-primary disabled:cursor-not-allowed disabled:opacity-50"
 				/>
@@ -79,14 +80,18 @@ export const Select = (props: {
 	control: string;
 	options: { value: string; label: string }[];
 	className?: string;
+	labelClassName?: string;
 	info?: string;
 	children: any;
 }) => {
-	const { control, options, className, info } = props;
+	const { control, options, className, info, labelClassName } = props;
 
 	return (
 		<div className={`flex flex-col w-full`}>
-			<label htmlFor={control} className={`font-primary font-medium`}>
+			<label
+				htmlFor={control}
+				className={cn("font-primary font-medium", labelClassName)}
+			>
 				{props.children}
 			</label>
 			<Field
@@ -136,16 +141,36 @@ export const Select = (props: {
 export const DateRangePicker = (props: {
 	control: string;
 	children: any;
-	className: string;
-	onSelect: any;
+	className?: string;
+	onSelect?: any;
+	buttonClassName?: string;
+	labelClassName?: string;
+	defaultStartDate?: {
+		from: Date;
+		to: Date;
+	};
 }) => {
-	const { control, children, className, onSelect } = props;
+	const {
+		control,
+		children,
+		className,
+		onSelect,
+		buttonClassName,
+		labelClassName,
+		defaultStartDate,
+	} = props;
 
-	const [date, setDate] = useState<DateRange | undefined>({
-		from: new Date(2022, 0, 20),
-		to: addDays(new Date(2022, 0, 20), 20),
-	});
-
+	const [date, setDate] = useState<DateRange | undefined>(
+		defaultStartDate
+			? {
+					from: defaultStartDate.from,
+					to: defaultStartDate.to,
+			  }
+			: {
+					from: new Date(),
+					to: addDays(new Date(), 20),
+			  }
+	);
 	const handleDateChange = (newDate: DateRange | undefined) => {
 		setDate(newDate);
 		onSelect(newDate);
@@ -153,7 +178,10 @@ export const DateRangePicker = (props: {
 
 	return (
 		<div className={cn("grid w-full", className)}>
-			<label htmlFor={control} className={`font-primary font-medium`}>
+			<label
+				htmlFor={control}
+				className={cn("font-primary font-medium", labelClassName)}
+			>
 				{children}
 			</label>
 			<Popover>
@@ -163,7 +191,8 @@ export const DateRangePicker = (props: {
 						variant={"outline"}
 						className={cn(
 							"justify-start text-left font-medium font-primary bg-white h-12 focus:ring-primary",
-							!date && "text-muted-foreground"
+							!date && "text-muted-foreground",
+							buttonClassName
 						)}
 					>
 						<CalendarIcon className="mr-2 h-4 w-4" />
@@ -190,6 +219,47 @@ export const DateRangePicker = (props: {
 						onSelect={handleDateChange}
 						numberOfMonths={2}
 					/>
+				</PopoverContent>
+			</Popover>
+		</div>
+	);
+};
+
+export const DatePicker = (props: {
+	className?: string;
+	placeHolder: string;
+	label?: string;
+	control: string;
+	onSelect?: (date: Date | undefined) => void; 
+}) => {
+	const { className, placeHolder, label, control, onSelect } = props;
+	const [date, setDate] = useState<Date | undefined>(); 
+
+	const handleDateChange = (selectedDate: Date | undefined) => {
+		setDate(selectedDate); 
+		if (onSelect) {
+			onSelect(selectedDate); 
+		}
+	};
+
+	return (
+		<div className={cn('grid w-full', className)}>
+			<Label htmlFor={control}>{label}</Label>
+			<Popover>
+				<PopoverTrigger asChild>
+					<Button
+						variant={'outline'}
+						className={cn(
+							'w-full justify-start text-left font-normal',
+							!date && 'text-muted-foreground'
+						)}
+					>
+						<CalendarIcon className='mr-2 h-4 w-4' />
+						{date ? format(date, 'dd, LLL, y') : <span>{placeHolder}</span>}
+					</Button>
+				</PopoverTrigger>
+				<PopoverContent className='w-auto p-0'>
+					<Calendar mode='single' selected={date} onSelect={handleDateChange} initialFocus />
 				</PopoverContent>
 			</Popover>
 		</div>

@@ -6,10 +6,10 @@ import {
 	CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
-import MyEventsCards from "@/components/eventCards/MyEventsCards";
+import MyTicketsCards from "@/components/ticketsCards/TicketsCards";
 import EventsService from "@/core/services/event.service";
 
-const MyEvents = () => {
+const MyTickets = () => {
 	const [myEvents, setMyEvents] = useState<any[]>([]);
 	const [activeTab, setActiveTab] = useState("available");
 	const eventsService = new EventsService()
@@ -354,7 +354,7 @@ const MyEvents = () => {
 
 	return (
 		<div className="max-w-7xl mx-auto text-center min-h-screen">
-			<h1 className="text-4xl font-normal py-10">Meus eventos</h1>
+			<h1 className="text-4xl font-normal py-10">Meus Ingressos</h1>
 
 			<div className="flex justify-center mb-6">
 				<button
@@ -392,7 +392,7 @@ const MyEvents = () => {
 								<CarouselContent className="p-4 flex">
 									{ongoingEvents.map((card: any) => (
 										<CarouselItem className="basis-auto" key={card.id}>
-											<MyEventsCards
+											<MyTicketsCards
 												id={card.id}
 												address={card.address}
 												img={card.assets[0]?.url}
@@ -425,7 +425,7 @@ const MyEvents = () => {
 								<CarouselContent className="p-4">
 									{pastEvents.map((card: any) => (
 										<CarouselItem className="basis-auto" key={card.id}>
-											<MyEventsCards
+											<MyTicketsCards
 												id={card.id}
 												address={card.address}
 												img={card.assets[0]?.url}
@@ -451,4 +451,4 @@ const MyEvents = () => {
 	);
 };
 
-export default MyEvents;
+export default MyTickets;

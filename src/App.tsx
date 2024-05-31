@@ -4,7 +4,11 @@ import Footer from "./layout/Footer";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/home/Home";
 import Event from "./pages/event/Event";
-import MyEvents from "./pages/MyEvents/MyEvents";
+import MyTickets from "./pages/MyTickets/MyTickets";
+import MyEvents from "./pages/admin/myEvents/MyEvents";
+import { LayoutAdmin } from "./layout/sidebarComponents";
+import EventInfo from "./pages/admin/eventInfo/EventInfo";
+import CreateEvent from "./pages/admin/createEvent/CreateEvent";
 
 function Layout({ children }: any) {
 	return (
@@ -39,15 +43,49 @@ const App = () => {
 						}
 					/>
 					<Route
-						path="/myevents"
+						path="/mytickets"
 						element={
 							<>
 								<Layout>
-									<MyEvents />
+									<MyTickets />
 								</Layout>
 							</>
 						}
 					/>
+					<Route path="/managment">
+						<Route
+							path=""
+							element={
+								<LayoutAdmin>
+									<MyEvents />
+								</LayoutAdmin>
+							}
+						/>
+						<Route
+							path="event/:id"
+							element={
+								<LayoutAdmin>
+									<EventInfo />
+								</LayoutAdmin>
+							}
+						/>
+						<Route
+							path="event"
+							element={
+								<LayoutAdmin>
+									<EventInfo />
+								</LayoutAdmin>
+							}
+						/>
+						<Route
+							path="event/create"
+							element={
+								<LayoutAdmin>
+									<CreateEvent />
+								</LayoutAdmin>
+							}
+						/>
+					</Route>
 				</Routes>
 			</BrowserRouter>
 		</div>

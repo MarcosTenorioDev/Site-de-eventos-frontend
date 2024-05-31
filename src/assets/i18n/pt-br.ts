@@ -5,11 +5,12 @@ export class LanguageKeysPt {
     },
     components: {
       navbar:{
-        createEvent:"Criar evento",
+        createEvent:"Área do organizador",
         myEvents:"Meus eventos",
         logout:"Sair da conta",
         login:"Acessar conta",
-        register:"Cadastre-se"
+        register:"Cadastre-se",
+        myTickets:"Meus ingressos"
       },
       button:{
         confirm:"Confirmar",

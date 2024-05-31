@@ -42,15 +42,15 @@ const Navbar = () => {
 						<nav className="flex-1 px-10 justify-end gap-8 hidden lg:flex">
 							<Link
 								className="font-primary h-9 px-4 py-2 text-secondary underline-offset-4 hover:underline inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-								to={"/"}
+								to={"/managment"}
 							>
 								{t("application.components.navbar.createEvent")}
 							</Link>
 							<Link
 								className="font-primary h-9 px-4 py-2 text-secondary underline-offset-4 hover:underline inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-								to={"/myevents"}
+								to={"/mytickets"}
 							>
-								{t("application.components.navbar.myEvents")}
+								{t("application.components.navbar.myTickets")}
 							</Link>
 						</nav>
 						<div className="hidden lg:flex">
@@ -83,7 +83,7 @@ const Navbar = () => {
 						<nav className="flex flex-col gap-5">
 							<Link
 								className="h-9 px-4 py-2 bg-primary text-primary-foreground shadow hover:opacity-90 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-								to={"/"}
+								to={"/managment"}
 								onClick={() => {
 									setIsMenuOpen(false);
 								}}
@@ -92,12 +92,12 @@ const Navbar = () => {
 							</Link>
 							<Link
 								className="h-9 px-4 py-2 bg-primary text-primary-foreground shadow hover:opacity-90 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-								to={"/myevents"}
+								to={"/mytickets"}
 								onClick={() => {
 									setIsMenuOpen(false);
 								}}
 							>
-								{t("application.components.navbar.myEvents")}
+								{t("application.components.navbar.myTickets")}
 							</Link>
 						</nav>
 						<div className="mt-auto">

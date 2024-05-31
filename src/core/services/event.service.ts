@@ -27,6 +27,11 @@ class EventsService {
     return response.data
   }
 
+  async postEvent(event:any){
+    const response = await this.axios.post(`${import.meta.env.VITE_API_DEV_URL}/events`, event)
+    return response
+  }
+
 }
 
 export default EventsService;

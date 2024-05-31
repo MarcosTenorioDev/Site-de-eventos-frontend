@@ -3,6 +3,7 @@ export function filterDataForm(data: any, valuesToExclude?: any[]) {
 		if (
 			data[key] === null ||
 			data[key] === "" ||
+			data[key] === undefined ||
 			(valuesToExclude && valuesToExclude.includes(key))
 		) {
 			delete data[key];

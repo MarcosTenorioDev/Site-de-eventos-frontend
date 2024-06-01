@@ -1,4 +1,5 @@
 import {
+	AddressPicker,
 	DatePicker,
 	DateRangePicker,
 	Input,
@@ -7,6 +8,7 @@ import {
 import { Step, type StepItem, Stepper, useStepper } from "@/components/stepper";
 import { Button } from "@/components/ui/button";
 import { ToastType, useToastContext } from "@/core/contexts/toasts.context";
+import { Address } from "@/core/interfaces/Address";
 import CategoriesService from "@/core/services/categories.service";
 import EventsService from "@/core/services/event.service";
 import ProducerService from "@/core/services/producer.service";
@@ -235,7 +237,7 @@ const FirstStep = ({ setEventId }: any) => {
 		),
 		creatorId: Yup.string(),
 		producerId: Yup.string().required("Produtor é obrigatório"),
-		addressId: Yup.string(),
+		addressId: Yup.string().required("Endereço é obrigatório"),
 	});
 
 	const onSubmit = (values: any) => {
@@ -263,13 +265,12 @@ const FirstStep = ({ setEventId }: any) => {
 			additionalDetails: values.additionalDetails,
 			creatorId: userId,
 			producerId: values.producerId,
-			addressId: "5e9b9f70-2962-4d79-9774-13b5497d12e7",
+			addressId: values.addressId,
 		};
 		setIsLoading(true);
 		eventsService
 			.postEvent(payload)
 			.then((response: any) => {
-				console.log(payload)
 				setIsLoading(false);
 				setEventId(response.data.id);
 				toast.showToast("Evento criado com sucesso! 🎉", ToastType.Success);
@@ -495,7 +496,19 @@ const FirstStep = ({ setEventId }: any) => {
 								label="Detalhes adicionais"
 							/>
 						</div>
-						<button></button>
+						<div className="flex flex-col text-start ">
+							<Field name="addressId">
+								{({ form }: any) => (
+									<AddressPicker
+										onAddressSave={(address: Address) => {
+											console.log(address.id);
+											form.values.addressId = address.id;
+										}}
+										control="addressId"
+									/>
+								)}
+							</Field>
+						</div>
 						<ButtonsNavigation />
 					</Form>
 				</Formik>

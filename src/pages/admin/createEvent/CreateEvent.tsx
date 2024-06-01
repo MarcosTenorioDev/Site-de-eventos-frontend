@@ -27,7 +27,7 @@ const steps = [
 export default function CreateEvent() {
 	const [eventId, setEventId] = useState("");
 	return (
-		<div className="max-w-[1980px] mx-auto text-center min-h-screen px-8 md:px-20 py-10 ">
+		<div className="max-w-[1980px] mx-auto text-center min-h-screen px-2 sm:px-8 md:px-20 py-10 ">
 			<Stepper initialStep={0} steps={steps}>
 				{steps.map((stepProps, index) => {
 					if (index === 0) {
@@ -142,7 +142,7 @@ const FirstStep = ({ setEventId }: any) => {
 		{ value: "Híbrido", label: "Híbrido" },
 	];
 	const eventStatus = [
-		{ value: "", label: "Selecione o status inicial do seu evento" },
+		{ value: "", label: "Selecione uma opção" },
 		{ value: "Ativo", label: "Ativo" },
 		{ value: "Inativo", label: "Inativo" },
 		{ value: "Pré-venda", label: "Pré-venda" },
@@ -285,7 +285,7 @@ const FirstStep = ({ setEventId }: any) => {
 			});
 	};
 	return (
-		<div className="flex flex-col w-full px-10 max-w-4xl">
+		<div className="flex flex-col w-full px-5 sm:px-10 max-w-4xl">
 			{isLoading ? (
 				<>
 					<h1>Loading...</h1>

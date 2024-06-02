@@ -6,14 +6,31 @@ import {
 	Select,
 } from "@/components/formInputs/Inputs";
 import { Step, type StepItem, Stepper, useStepper } from "@/components/stepper";
+import TicketsTypesCards from "@/components/ticketsCards/TicketsTypesCards";
 import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+} from "@/components/ui/card";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { ToastType, useToastContext } from "@/core/contexts/toasts.context";
 import { Address } from "@/core/interfaces/Address";
 import CategoriesService from "@/core/services/categories.service";
 import EventsService from "@/core/services/event.service";
 import ProducerService from "@/core/services/producer.service";
+import TicketTypeService from "@/core/services/ticketType.service";
 import UserService from "@/core/services/user.service";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { TicketIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
@@ -46,7 +63,7 @@ export default function CreateEvent() {
 						return (
 							<Step key={stepProps.label} {...stepProps}>
 								<div
-									className="h-[80%] flex items-center justify-center my-2 border text-primary rounded-md py-20"
+									className="h-[80%] flex items-center justify-center my-2 border text-primary rounded-md py-10 px-5"
 									key={stepProps.label}
 								>
 									<SecondStep eventId={eventId} />
@@ -81,8 +98,15 @@ const ButtonsNavigation = () => {
 		hasCompletedAllSteps,
 		isLastStep,
 		isOptionalStep,
+		currentStep,
+		nextStep
 	} = useStepper();
 	const navigate = useNavigate();
+	const handleNextStep= () => {
+		if(currentStep.description === "Ingressos (opcional)"){
+			nextStep()
+		}
+	}
 	return (
 		<>
 			<div className="w-full flex justify-end gap-2 mt-10">
@@ -106,7 +130,7 @@ const ButtonsNavigation = () => {
 						>
 							Voltar
 						</Button>
-						<Button size="sm" type="submit">
+						<Button size="sm" type="submit" onClick={handleNextStep}>
 							{isLastStep ? "Enviar" : isOptionalStep ? "Avançar" : "Próximo"}
 						</Button>
 					</>
@@ -520,10 +544,221 @@ const FirstStep = ({ setEventId }: any) => {
 const SecondStep = (props: { eventId: string }) => {
 	const { eventId } = props;
 	console.log(eventId);
+	const ticketTypeService = new TicketTypeService();
+	const toast = useToastContext();
+	const [tickets, setTickets] = useState<TicketType[]>([]);
+	const initialValues = {
+		eventId: eventId,
+		description: "",
+		price: 0,
+		quantity: 0,
+		salesStartDate: "",
+		salesEndDate: "",
+		isActive: false,
+	};
+
+	const validationSchema = Yup.object({
+		description: Yup.string().required("Descrição é obrigatória"),
+		price: Yup.number().required("Preço é obrigatório"),
+		quantity: Yup.number().required("Quantidade é obrigatória"),
+		salesStartDate: Yup.string().required(
+			"Inicio de venda dos ingressos é obrigatório"
+		),
+		salesEndDate: Yup.string().required("Descrição é obrigatória"),
+		isActive: Yup.boolean(),
+	});
+
+	const onSubmit = async (values: TicketTypeCreate) => {
+		const payload = {
+			eventId: eventId,
+			description: values.description,
+			price: values.price,
+			quantity: values.quantity,
+			salesStartDate: values.salesStartDate,
+			salesEndDate: values.salesEndDate,
+			isActive: values.isActive ? values.isActive : false,
+		};
+		try {
+			await ticketTypeService.postTicketType(payload).then((result: any) => {
+				toast.showToast("ticket criado com sucesso", ToastType.Success)
+				setTickets((prevTickets) => [...prevTickets, result]);
+			});
+		} catch {
+			toast.showToast("Houve um erro ao criar o ticket para o evento selecionado", ToastType.Error)
+		}
+		console.log(values);
+	};
+
 	return (
-		<div className="flex flex-col">
-			<h1>2 step</h1>
-			<h2>{eventId}</h2>
+		<div className="flex flex-col w-full">
+			<h1 className="text-3xl">Hora de criar os ingressos do seu evento!</h1>
+			<Card className="mt-5">
+				<CardHeader className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 justify-center items-center">
+					{tickets ? (
+						<>
+							{tickets.map((ticket: TicketType) => {
+								return (
+									<TicketsTypesCards
+										id={ticket.id}
+										description={ticket.description}
+										price={ticket.price}
+										quantity={ticket.quantity}
+										salesEndDate={ticket.salesEndDate}
+										salesStartDate={ticket.salesStartDate}
+										key={ticket.id}
+									/>
+								);
+							})}
+						</>
+					) : (
+						<h3 className="text-3xl text-muted-foreground opacity-80">
+							Oops... parece que você ainda não tem nenhum ingresso criado para
+							o seu evento!{" "}
+						</h3>
+					)}
+				</CardHeader>
+				<CardDescription></CardDescription>
+				<CardFooter className="justify-end items-center pb-0 p-4">
+					<Dialog>
+						<DialogTrigger asChild>
+							<Button
+								variant="outline"
+								className="p-6 h-14 flex items-center justify-center gap-5 w-min"
+							>
+								<h2 className="text-primary font-semibold text-xl text-nowrap pb-1">
+									Criar ingresso
+								</h2>
+								<TicketIcon className="text-primary w-8 h-8" />
+							</Button>
+						</DialogTrigger>
+						<DialogContent className="sm:max-w-[425px]">
+							<DialogHeader>
+								<DialogTitle>Criar ingresso</DialogTitle>
+							</DialogHeader>
+							<Formik
+								initialValues={initialValues}
+								validationSchema={validationSchema}
+								onSubmit={onSubmit}
+							>
+								<Form className="text-start flex flex-col gap-3">
+									<div>
+										<Input
+											control="description"
+											label="Descrição do ingresso"
+											placeholder="Descrição do ingresso"
+											type="text"
+										/>
+									</div>
+									<div>
+										<Input
+											control="price"
+											label="Valor do ingresso"
+											placeholder="Valor do ingresso ex: 200.00"
+											type="number"
+										/>
+									</div>
+
+									<div>
+										<Input
+											control="quantity"
+											label="Quantidade do ingressos disponíveis"
+											placeholder="Quantidade de ingressos a ser criado"
+											type="number"
+										/>
+									</div>
+
+									<div>
+										<Field name="salesStartDate">
+											{({ field, form }: any) => (
+												<DatePicker
+													{...field}
+													placeHolder="Início da liberação de compra dos ingressos"
+													control="salesStartDate"
+													label="Início da data da venda"
+													className="w-full"
+													onSelect={(value: any) => {
+														form.values.salesStartDate = value;
+													}}
+												/>
+											)}
+										</Field>
+										<ErrorMessage name="salesStartDate">
+											{(message) => (
+												<div className="flex items-center">
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														fill="none"
+														viewBox="0 0 14 14"
+														className="cl-internal-1sany6l w-4"
+													>
+														<path
+															fill="red"
+															fillRule="evenodd"
+															d="M13.4 7A6.4 6.4 0 1 1 .6 7a6.4 6.4 0 0 1 12.8 0Zm-5.6 3.2a.8.8 0 1 1-1.6 0 .8.8 0 0 1 1.6 0ZM7 3a.8.8 0 0 0-.8.8V7a.8.8 0 0 0 1.6 0V3.8A.8.8 0 0 0 7 3Z"
+															clipRule="evenodd"
+														></path>
+													</svg>
+													<p className="text-red-500 font-medium ml-1 text-sm">
+														{message}
+													</p>
+												</div>
+											)}
+										</ErrorMessage>
+									</div>
+
+									<div>
+										<Field name="salesEndDate">
+											{({ field, form }: any) => (
+												<DatePicker
+													{...field}
+													placeHolder="Fim da liberação de compra dos ingressos"
+													control="salesEndDate"
+													label="Fim da data da venda"
+													className="w-full"
+													onSelect={(value: any) => {
+														form.values.salesEndDate = value;
+													}}
+												/>
+											)}
+										</Field>
+										<ErrorMessage name="salesEndDate">
+											{(message) => (
+												<div className="flex items-center">
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														fill="none"
+														viewBox="0 0 14 14"
+														className="cl-internal-1sany6l w-4"
+													>
+														<path
+															fill="red"
+															fillRule="evenodd"
+															d="M13.4 7A6.4 6.4 0 1 1 .6 7a6.4 6.4 0 0 1 12.8 0Zm-5.6 3.2a.8.8 0 1 1-1.6 0 .8.8 0 0 1 1.6 0ZM7 3a.8.8 0 0 0-.8.8V7a.8.8 0 0 0 1.6 0V3.8A.8.8 0 0 0 7 3Z"
+															clipRule="evenodd"
+														></path>
+													</svg>
+													<p className="text-red-500 font-medium ml-1 text-sm">
+														{message}
+													</p>
+												</div>
+											)}
+										</ErrorMessage>
+									</div>
+
+									<div className="flex gap-2 mt-2">
+										<Label className="pb-1">Ativo</Label>
+										<Field name="isActive" type="checkbox" />
+									</div>
+
+									<div className="flex w-full justify-end">
+										<Button type="submit">Criar ingresso</Button>
+									</div>
+								</Form>
+							</Formik>
+						</DialogContent>
+					</Dialog>
+				</CardFooter>
+			</Card>
 			<ButtonsNavigation />
 		</div>
 	);

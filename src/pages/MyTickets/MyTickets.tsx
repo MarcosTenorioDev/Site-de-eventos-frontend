@@ -7,12 +7,11 @@ import {
 } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
 import MyTicketsCards from "@/components/ticketsCards/TicketsCards";
-import EventsService from "@/core/services/event.service";
 
 const MyTickets = () => {
 	const [myEvents, setMyEvents] = useState<any[]>([]);
 	const [activeTab, setActiveTab] = useState("available");
-	const eventsService = new EventsService()
+	/* const eventsService = new EventsService() */
 
 	useEffect(() => {
 /* 		eventsService.getUserEvents().then((event:any) => {

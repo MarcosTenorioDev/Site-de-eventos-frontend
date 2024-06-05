@@ -1,7 +1,20 @@
 type TicketType = {
+	id:string;
 	eventId?: string;
 	description: string;
-	price?: string;
+	price?: number;
 	quantity: number;
-	isActive: true;
+	salesStartDate:string;
+	salesEndDate:string;
+	isActive: boolean;
+};
+
+type TicketTypeCreate = {
+	eventId: string;
+	description: string;
+	price: number;
+	quantity: number;
+	salesStartDate:string;
+	salesEndDate:string;
+	isActive: boolean;
 };

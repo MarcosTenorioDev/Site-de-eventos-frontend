@@ -140,7 +140,7 @@ const Event = () => {
 	};
 
 	return (
-		<div className="px-4 lg:px-0">
+		<div className="px-4 lg:px-0">{/*  */}
 			{event ? (
 				<>
 					<div className="flex flex-col items-center justify-center mt-4 sm:mt-8 w-full my-56">

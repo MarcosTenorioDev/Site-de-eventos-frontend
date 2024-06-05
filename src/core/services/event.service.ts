@@ -22,8 +22,8 @@ class EventsService {
     return response.data
   }
 
-  async getUserEvents(){
-    const response = await this.axios.get(`${import.meta.env.VITE_API_DEV_URL}/users/events`)
+  async getEventByCreatorId(id:string){
+    const response = await this.axios.get(`${import.meta.env.VITE_API_DEV_URL}/events/creator/${id}`)
     return response.data
   }
 

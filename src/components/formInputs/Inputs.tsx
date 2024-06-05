@@ -373,7 +373,6 @@ export const AddressPicker = (props: {
 		try {
 			const result = await addressService.postAddress(payload);
 			if (result && result.id) {
-				console.log("endereço criado com sucesso", result);
 				onAddressSave(result);
 				setAddress(result);
 			}

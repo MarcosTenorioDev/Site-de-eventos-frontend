@@ -25,14 +25,12 @@ const MyEvents = () => {
 	const eventsService = new EventsService();
 	const userService = new UserService();
 	const navigate = useNavigate();
-	const toast= useToastContext()
-
+	const toast = useToastContext();
 
 	useEffect(() => {
 		userService
 			.getUser()
 			.then((user: any) => {
-				console.log(user);
 				eventsService
 					.getEventByCreatorId(user.id)
 					.then((events: any) => {
@@ -43,8 +41,11 @@ const MyEvents = () => {
 					});
 			})
 			.catch((err) => {
-				console.error(err)
-				toast.showToast("Oops... parece que não conseguimos recuperar os seus dados, por favor contate o suporte técnico!", ToastType.Error)
+				console.error(err);
+				toast.showToast(
+					"Oops... parece que não conseguimos recuperar os seus dados, por favor contate o suporte técnico!",
+					ToastType.Error
+				);
 			});
 	}, []);
 

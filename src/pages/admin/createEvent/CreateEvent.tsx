@@ -1,3 +1,4 @@
+import Attraction from "@/components/attractions/attraction";
 import {
 	AddressPicker,
 	DatePicker,
@@ -10,10 +11,18 @@ import TicketsTypesCards from "@/components/ticketsCards/TicketsTypesCards";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
+	CardContent,
 	CardDescription,
 	CardFooter,
 	CardHeader,
 } from "@/components/ui/card";
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselPrevious,
+	CarouselNext,
+} from "@/components/ui/carousel";
 import {
 	Dialog,
 	DialogContent,
@@ -29,11 +38,25 @@ import EventsService from "@/core/services/event.service";
 import ProducerService from "@/core/services/producer.service";
 import TicketTypeService from "@/core/services/ticketType.service";
 import UserService from "@/core/services/user.service";
+import Autoplay from "embla-carousel-autoplay";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { TicketIcon } from "lucide-react";
+import { MinusIcon, PlusIcon, TicketIcon, XCircleIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import ageRatingIcon from "@/assets/icons/ageRatingIcon.svg";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import AssetsService from "@/core/services/assets.service";
 
 const steps = [
 	{ label: "Etapa 1", description: "Informações gerais" },
@@ -75,15 +98,20 @@ export default function CreateEvent() {
 						return (
 							<Step key={stepProps.label} {...stepProps}>
 								<div
-									className="h-[80%] flex items-center justify-center my-2 border text-primary rounded-md py-20"
+									className="h-[80%] flex items-center justify-center my-2 border text-primary rounded-md py-10"
 									key={stepProps.label}
 								>
-									<ThirdStep />
+									<ThirdStep eventId={eventId} />
 								</div>
 							</Step>
 						);
+					} else {
+						return (
+							<div className="h-[80%] flex items-center justify-center my-2 border text-primary rounded-md py-10">
+								<SucessStep />;
+							</div>
+						);
 					}
-					<h2>terminou</h2>;
 				})}
 			</Stepper>
 		</div>
@@ -99,14 +127,17 @@ const ButtonsNavigation = () => {
 		isLastStep,
 		isOptionalStep,
 		currentStep,
-		nextStep
+		nextStep,
 	} = useStepper();
 	const navigate = useNavigate();
-	const handleNextStep= () => {
-		if(currentStep.description === "Ingressos (opcional)"){
-			nextStep()
+	const handleNextStep = () => {
+		if (currentStep.description === "Ingressos (opcional)") {
+			nextStep();
 		}
-	}
+		if (currentStep.description === "Layout (opcional)") {
+			nextStep();
+		}
+	};
 	return (
 		<>
 			<div className="w-full flex justify-end gap-2 mt-10">
@@ -265,7 +296,6 @@ const FirstStep = ({ setEventId }: any) => {
 	});
 
 	const onSubmit = (values: any) => {
-		console.log("chegou aqui");
 		if (!userId) {
 			toast.showToast(
 				"Oops... parece que houve um erro ao criar seu evento, por favor contate o suporte técnico",
@@ -525,7 +555,6 @@ const FirstStep = ({ setEventId }: any) => {
 								{({ form }: any) => (
 									<AddressPicker
 										onAddressSave={(address: Address) => {
-											console.log(address.id);
 											form.values.addressId = address.id;
 										}}
 										control="addressId"
@@ -543,7 +572,6 @@ const FirstStep = ({ setEventId }: any) => {
 
 const SecondStep = (props: { eventId: string }) => {
 	const { eventId } = props;
-	console.log(eventId);
 	const ticketTypeService = new TicketTypeService();
 	const toast = useToastContext();
 	const [tickets, setTickets] = useState<TicketType[]>([]);
@@ -580,13 +608,15 @@ const SecondStep = (props: { eventId: string }) => {
 		};
 		try {
 			await ticketTypeService.postTicketType(payload).then((result: any) => {
-				toast.showToast("ticket criado com sucesso", ToastType.Success)
+				toast.showToast("ticket criado com sucesso", ToastType.Success);
 				setTickets((prevTickets) => [...prevTickets, result]);
 			});
 		} catch {
-			toast.showToast("Houve um erro ao criar o ticket para o evento selecionado", ToastType.Error)
+			toast.showToast(
+				"Houve um erro ao criar o ticket para o evento selecionado",
+				ToastType.Error
+			);
 		}
-		console.log(values);
 	};
 
 	return (
@@ -764,11 +794,354 @@ const SecondStep = (props: { eventId: string }) => {
 	);
 };
 
-const ThirdStep = () => {
+const ThirdStep = (props: { eventId: string }) => {
+	const { eventId } = props;
+	const [imageBanner, setImageBanner] = useState<string>("");
+	const eventService = new EventsService();
+	const assetsService = new AssetsService();
+	const toast = useToastContext();
+	const [event, setEvent] = useState<any>();
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+
+	const [attractions, setAttractions] = useState<
+		{ id: string; description: string; imageUrl: string; name: string }[]
+	>([]);
+	const [tickets, setTickets] = useState<
+		{ id: string; description: string; price: string; quantity: number }[]
+	>([]);
+	const [endDate, setEndDate] = useState<Date | undefined>();
+	const [assetId, setAssetId] = useState<string>("");
+	const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setIsLoading(true);
+		const file = event.target.files?.[0];
+		if (file) {
+			const formData = new FormData();
+			formData.append("image", file);
+
+			assetsService
+				.uploadAssets(formData)
+				.then((response: { url: string }) => {
+					/* console.log("Arquivo enviado com sucesso", response); */
+					const payload = {
+						eventId: eventId,
+						type: "main",
+						url: response.url,
+						description: "banner",
+					};
+					assetsService
+						.postAssets(payload)
+						.then((assetCreate: any) => {
+							setAssetId(assetCreate.id);
+							setIsLoading(false);
+						})
+						.catch(() => {
+							toast.showToast("Erro ao enviar arquivo", ToastType.Error);
+							setImageBanner("");
+							setIsLoading(false);
+						});
+				})
+				.catch((error) => {
+					console.error("Erro ao enviar arquivo", error);
+					toast.showToast("Erro ao enviar arquivo", ToastType.Error);
+					setImageBanner("");
+					setIsLoading(false);
+				});
+
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				setImageBanner(reader.result as string);
+			};
+			reader.readAsDataURL(file);
+		}
+	};
+	const removeImageUpload = () => {
+		assetsService
+			.deleteAssetById(assetId)
+			.then((response: any) => {
+				console.log("deletado com sucesso");
+			})
+			.catch(() => {
+				console.log("Erro ao deletar asset");
+			});
+		/* console.log(assetId); */
+	};
+
+	useEffect(() => {
+		if (eventId) {
+			eventService.getEventById(eventId).then((event) => {
+				setEvent(event);
+				setAttractions(event.attractions);
+				setEndDate(new Date(event.startDate));
+				const tickets = event.ticketTypes.map(
+					(ticket: {
+						id: string;
+						description: string;
+						price: string;
+						quantity: number;
+					}) => ({
+						id: ticket.id,
+						description: ticket.description,
+						price: ticket.price,
+						quantity: 0,
+					})
+				);
+				setTickets(tickets);
+				return event;
+			});
+		}
+	}, []);
+
 	return (
-		<>
-			<h1>3 step</h1>
-			<ButtonsNavigation />
-		</>
+		<div className="flex flex-col w-full px-5 sm:px-10 max-w-4xl">
+			{event ? (
+				<>
+					<h1 className="text-3xl mb-5">
+						Já estamos no final, revise a sua tela de evento antes de prosseguir
+					</h1>
+					{imageBanner ? (
+						<div className="relative">
+							<img
+								src={imageBanner}
+								alt="banner do evento"
+								className="object-cover w-full h-full rounded-xl max-w-[1140px] max-h-[500px] aspect-video"
+							></img>
+							{isLoading ? (
+								<div className="object-cover w-full absolute top-0 bg-gray-400 bg-opacity-30 h-full rounded-xl max-w-[1140px] max-h-[500px] aspect-video z-20">
+									<p className="text-black h-full w-full flex justify-center items-center text-2xl font-semibold">
+										Carregando...
+									</p>
+								</div>
+							) : (
+								<></>
+							)}
+
+							<Button
+								className="absolute top-0 right-0 text-white w-max h-max hover:bg-slate-300 hover:bg-opacity-15 hover:text-white z-10"
+								variant={"ghost"}
+								onClick={() => setImageBanner("")}
+							>
+								<XCircleIcon className="w-10 h-10" />
+							</Button>
+						</div>
+					) : (
+						<>
+							<div className="flex items-center justify-center w-full h-full max-w-[1140px] max-h-[500px] aspect-video border-2 border-dashed border-gray-500 rounded-xl hover:border-gray-900 transition-colors duration-300 p-10">
+								<label className="flex flex-col items-center justify-center w-full h-full cursor-pointer">
+									<span className="text-gray-500">
+										Parece que você ainda não tem uma imagem para o seu evento,
+										por favor selecione uma imagem
+									</span>
+									<input
+										type="file"
+										accept="image/*"
+										className="hidden"
+										onChange={handleImageUpload}
+									/>
+								</label>
+							</div>
+						</>
+					)}
+
+					<div className="flex w-full max-w-[1140px] justify-start mt-5">
+						<Card className="p-5 rounded-3xl shadow-md shadow-gray-500 hover:shadow-lg hover:shadow-gray-500 w-min text-center font-primary">
+							<div>
+								<p className="text-3xl text-primary font-semibold">
+									{endDate?.getDate()}
+								</p>
+								<p className="text-3xl text-primary font-semibold opacity-50">
+									{endDate?.toLocaleString("default", { month: "short" })}
+								</p>
+								<p className="text-xl text-primary font-semibold opacity-50">
+									{endDate?.toLocaleString("default", { weekday: "short" })}
+								</p>
+								<p className="text-3xl text-primary font-semibold opacity-50">
+									{endDate?.getHours()}h
+								</p>
+							</div>
+						</Card>
+						<div className="flex justify-center items-start flex-col px-8 font-primary text-xl">
+							<p className="mb-1">{event.location}</p>
+							<p>{event.format}</p>
+						</div>
+					</div>
+					<div className="flex flex-col lg:flex-row gap-10 mt-14">
+						<Card className="w-full h-min">
+							<CardHeader>{event.description}</CardHeader>
+							<CardContent>
+								{attractions.length ? (
+									<>
+										<h3 className="mb-6 text-xl">Atrações</h3>
+
+										<Carousel
+											className="w-10/12 mx-auto"
+											plugins={[
+												Autoplay({
+													delay: 3000,
+												}),
+											]}
+										>
+											<CarouselContent>
+												{attractions.map((attraction, index) => (
+													<CarouselItem
+														key={index}
+														className="flex items-center justify-center"
+													>
+														<Attraction
+															img={attraction.imageUrl}
+															title={attraction.name}
+															description={attraction.description}
+														/>
+													</CarouselItem>
+												))}
+											</CarouselContent>
+											<CarouselPrevious className="hidden md:flex" />
+											<CarouselNext className="hidden md:flex" />
+										</Carousel>
+									</>
+								) : (
+									""
+								)}
+								<div>
+									<h3 className="font-bold text-xl">Classificação etária</h3>
+									<p className="flex items-center gap-3 font-semibold text-lg mt-2">
+										<i>
+											<img src={ageRatingIcon} alt="" className="w-7" />
+										</i>
+										{event.ageRating} Anos
+									</p>
+								</div>
+							</CardContent>
+						</Card>
+						<Card className="min-w-[280px] md:min-w-[330px] h-fit">
+							<CardHeader className="bg-primary-dark text-white font-primary rounded-t-sm p-3">
+								Ingressos
+							</CardHeader>
+							{tickets.length ? (
+								<>
+									<div className="flex flex-col justify-between">
+										<CardContent className="p-4 min-w-64 text-start">
+											{tickets.map((ticket, index) => (
+												<div key={ticket.id} className="flex items-center">
+													<div className="w-full">
+														<p className="font-semibold text-lg">
+															{ticket.description}
+														</p>
+														<p className="mb-2 text-sm text-primary">
+															R$ {ticket.price}
+														</p>
+													</div>
+													<div>
+														<div className="flex">
+															<Button
+																disabled={true}
+																variant={"ghost"}
+																className="p-0"
+																type="button"
+																onClick={() => {}}
+															>
+																<MinusIcon />
+															</Button>
+															<input
+																disabled={true}
+																type="number"
+																name={`tickets[${index}].quantity`}
+																className="max-w-8 text-center"
+															/>
+															<Button
+																disabled={true}
+																variant={"ghost"}
+																className="p-0"
+																type="button"
+															>
+																<PlusIcon />
+															</Button>
+														</div>
+													</div>
+												</div>
+											))}
+										</CardContent>
+										<CardFooter className="flex flex-col relative">
+											<AlertDialog>
+												<AlertDialogTrigger asChild>
+													<Button
+														variant="outline"
+														className="text-primary border-[1px] py-3 border-black border-opacity-15 hover:text-primary-dark text-sm sm:text-lg md:text-sm lg:text-lg"
+													>
+														Adicionar código promocional{" "}
+														<PlusIcon className="ml-2" />
+													</Button>
+												</AlertDialogTrigger>
+												<AlertDialogContent>
+													<AlertDialogHeader>
+														<AlertDialogTitle className="text-lg">
+															Adicionar Código promocional
+														</AlertDialogTitle>
+													</AlertDialogHeader>
+													<AlertDialogDescription className="text-lg">
+														<input
+															className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-primary focus-visible:ring-1 focus-visible:to-primary disabled:cursor-not-allowed disabled:opacity-50"
+															placeholder="Insira seu código promocional"
+														/>
+													</AlertDialogDescription>
+													<AlertDialogFooter>
+														<AlertDialogCancel className="text-lg">
+															Cancel
+														</AlertDialogCancel>
+														<AlertDialogAction className="text-lg">
+															Continue
+														</AlertDialogAction>
+													</AlertDialogFooter>
+												</AlertDialogContent>
+											</AlertDialog>
+											<Button
+												type="submit"
+												className="absolute -bottom-5 mx-auto text-lg"
+											>
+												Inscrever-se
+											</Button>
+										</CardFooter>
+									</div>
+								</>
+							) : (
+								<CardContent className="p-4 w-64 mx-auto text-center">
+									<h3 className="w-full font-bold text-muted-foreground text-xl">
+										{" "}
+										Oops... Parece que ainda não há ingressos disponíveis para
+										venda
+									</h3>
+								</CardContent>
+							)}
+						</Card>
+					</div>
+					<div className="flex flex-col sm:flex-row justify-center items-center w-full max-w-[1140px] sm:justify-start text-center mt-12 sm:mt-8 font-primary gap-8">
+						<div>
+							<h2 className="text-4xl font-semibold mb-5">Produtor</h2>
+							<img
+								src={event.producers?.imageUrl}
+								alt=""
+								className="w-full aspect-video sm:w-48"
+							/>
+						</div>
+						<div className=" flex flex-col justify-end gap-5">
+							<h3 className="text-3xl font-semibold">
+								{event.producers?.name}
+							</h3>
+							<Button className="py-7">Entre em contato</Button>
+						</div>
+					</div>
+					<ButtonsNavigation />
+				</>
+			) : (
+				<></>
+			)}
+		</div>
+	);
+};
+
+const SucessStep = () => {
+	return (
+		<div className="h-40 flex items-center justify-center my-2 border bg-secondary text-primary rounded-md">
+			<h1 className="text-xl">Parabéns! O seu evento está pronto!🎉</h1>
+		</div>
 	);
 };

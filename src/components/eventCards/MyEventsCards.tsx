@@ -30,7 +30,7 @@ const MyEventsCards = (props: {
 						{title}
 					</p>
 					<p className="text-xs text-muted-foreground text-start w-full overflow-hidden text-ellipsis whitespace-nowrap">
-						{address.street}
+						{address ?.street}
 					</p>
 					<p className="text-xs text-muted-foreground text-start w-full overflow-hidden text-ellipsis whitespace-nowrap">
 						{formatDate(startDate)}

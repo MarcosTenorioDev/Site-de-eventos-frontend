@@ -15,11 +15,11 @@ const MyTickets = () => {
 	const eventsService = new EventsService()
 
 	useEffect(() => {
-		eventsService.getUserEvents().then((event:any) => {
+/* 		eventsService.getUserEvents().then((event:any) => {
 			console.log(event)
 		}).catch((err:any) => {
 			console.error(err)
-		})
+		}) */
 		
 		setMyEvents([
 			{

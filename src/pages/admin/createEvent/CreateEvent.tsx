@@ -810,7 +810,7 @@ const ThirdStep = (props: { eventId: string }) => {
 		{ id: string; description: string; price: string; quantity: number }[]
 	>([]);
 	const [endDate, setEndDate] = useState<Date | undefined>();
-	const [assetId, setAssetId] = useState<string>("");
+	const [/* assetId */, setAssetId] = useState<string>("");
 	const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setIsLoading(true);
 		const file = event.target.files?.[0];
@@ -854,7 +854,7 @@ const ThirdStep = (props: { eventId: string }) => {
 			reader.readAsDataURL(file);
 		}
 	};
-	const removeImageUpload = () => {
+/* 	const removeImageUpload = () => {
 		assetsService
 			.deleteAssetById(assetId)
 			.then((response: any) => {
@@ -863,8 +863,7 @@ const ThirdStep = (props: { eventId: string }) => {
 			.catch(() => {
 				console.log("Erro ao deletar asset");
 			});
-		/* console.log(assetId); */
-	};
+	}; */
 
 	useEffect(() => {
 		if (eventId) {

@@ -129,7 +129,7 @@ const MyEvents = () => {
 										<MyEventsCards
 											id={card.id}
 											address={card.Address}
-											img={card.assets[0]?.url}
+											img={card.assets ? card.assets[0].url : ""}
 											startDate={card.startDate}
 											title={card.title}
 										/>
@@ -160,7 +160,7 @@ const MyEvents = () => {
 										<MyEventsCards
 											id={card.id}
 											address={card.address}
-											img={card.assets[0]?.url}
+											img={card.assets ? card.assets[0].url : ""}
 											startDate={card.startDate}
 											title={card.title}
 										/>
@@ -191,7 +191,7 @@ const MyEvents = () => {
 										<MyEventsCards
 											id={card.id}
 											address={card.address}
-											img={card.assets[0]?.url}
+											img={card.assets ? card.assets[0].url : ""}
 											startDate={card.startDate}
 											title={card.title}
 										/>
@@ -222,7 +222,7 @@ const MyEvents = () => {
 										<MyEventsCards
 											id={card.id}
 											address={card.address}
-											img={card.assets[0]?.url}
+											img={card.assets ? card.assets[0].url : ""}
 											startDate={card.startDate}
 											title={card.title}
 										/>
@@ -253,7 +253,7 @@ const MyEvents = () => {
 										<MyEventsCards
 											id={card.id}
 											address={card.address}
-											img={card.assets[0]?.url}
+											img={card.assets ? card.assets[0].url : ""}
 											startDate={card.startDate}
 											title={card.title}
 										/>

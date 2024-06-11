@@ -9,7 +9,7 @@ import {
 	DialogTrigger,
 } from "../ui/dialog";
 import QRCode from "qrcode.react";
-import { Ticket } from "@/core/interfaces/Ticket";
+import { TicketCard } from "@/core/interfaces/Ticket";
 import { Address } from "@/core/interfaces/Address";
 
 const MyTicketsCards = (props: {
@@ -18,7 +18,7 @@ const MyTicketsCards = (props: {
 	address: Address;
 	startDate: string;
 	title: string;
-	ticket: Ticket;
+	ticket: TicketCard;
 }) => {
 	const { img, address, startDate, title, ticket } = props;
 	const formatedStartDate = new Date(startDate);
@@ -43,7 +43,7 @@ const MyTicketsCards = (props: {
 										className="rounded-lg aspect-square w-36 mx-auto object-cover"
 									/>
 									<DialogTitle className="mx-auto text-xl">{title}</DialogTitle>
-									<DialogDescription>
+									<div>
 										<div className="flex w-full max-w-[1140px] justify-start mt-5">
 											<Card className="p-5 rounded-3xl shadow-md shadow-gray-500 hover:shadow-lg hover:shadow-gray-500 w-min text-center font-primary">
 												<div>
@@ -67,14 +67,12 @@ const MyTicketsCards = (props: {
 											</Card>
 											<div className="flex flex-col justify-center items-start pl-4 sm:pl-8 font-primary text-sm">
 												<h4 className="mb-1 text-start text-black font-semibold">
-													{address.street}, {address.city}
+													{address.street}, {address.city} Nº {address.number}
 												</h4>
+												{/* Remover mock quando a API estiver retornando corretamente */}
+												<h4 className="mb-1 text-green-500">{"ativo"}</h4>
 												<h4 className="mb-1 text-black font-semibold">
-													{address.number}
-												</h4>
-												<h4 className="mb-1 text-green-500">{ticket.status}</h4>
-												<h4 className="mb-1 text-black font-semibold">
-													{ticket.ticketType.description} - {ticket.ticketType.quantity}x
+													{ticket?.ticketType?.description}
 												</h4>
 											</div>
 										</div>
@@ -84,7 +82,7 @@ const MyTicketsCards = (props: {
 										<div className="flex justify-center py-4">
 											<QRCode value="teste" />
 										</div>
-									</DialogDescription>
+									</div>
 								</DialogHeader>
 							</DialogContent>
 						</Dialog>

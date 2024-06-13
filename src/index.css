@@ -79,4 +79,9 @@
 		-webkit-appearance: none;
 		margin: 0;
 	}
+	a {
+		color: inherit;
+		text-decoration: underline; /* Remove a linha sublinhada padrão */
+		font-weight: 600
+	  }
 }

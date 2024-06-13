@@ -55,6 +55,8 @@ import {
 } from "@/components/ui/dialog";
 import AddressService from "@/core/services/address.service";
 import { Address } from "@/core/interfaces/Address";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const Event = () => {
 	const [api, setApi] = useState<CarouselApi>();
@@ -123,11 +125,11 @@ const Event = () => {
 						quantity: 0,
 					})
 				);
-				
-				addressService.getAddressById(event.addressId).then((address:any) => {
-					setAddress(address)
-				})
-				
+
+				addressService.getAddressById(event.addressId).then((address: any) => {
+					setAddress(address);
+				});
+
 				setTickets(tickets);
 				return event;
 			});
@@ -231,7 +233,7 @@ const Event = () => {
 							<img
 								src={event.assets[0]?.url}
 								alt="banner do evento"
-								className="object-cover w-full h-full rounded-xl max-w-[1140px] max-h-[500px] aspect-video mt-4 sm:mt-8 lg:mt-20 shadow-md shadow-black hover:shadow-md hover:shadow-black" 
+								className="object-cover w-full h-full rounded-xl max-w-[1140px] max-h-[500px] aspect-video mt-4 sm:mt-8 lg:mt-20 shadow-md shadow-black hover:shadow-md hover:shadow-black"
 							/>
 							<div className="flex flex-col sm:flex-row sm:justify-start text-center sm:text-start px-0 w-full max-w-[1140px] justify-center items-center mt-5 rounded-lg shadow-sm shadow-gray-400 bg-white sm:px-10 py-5">
 								<div className="flex justify-start items-center gap-3 sm:flex-col sm:gap-0 sm:items-center sm:justify-start">
@@ -251,14 +253,22 @@ const Event = () => {
 
 								<div className="flex justify-center items-start flex-col px-8 font-primary text-xl text-center sm:text-start">
 									<div>
-									<p className="mb-1 w-full text-3xl font-semibold text-gray-600">{event.title} - {event.format}</p>
-									<p className="flex sm:gap-2 items-start"><MapPinIcon className="h-8 w-8 min-h-6 min-w-6" /> {address?.street} {address?.number} - {address?.neighborhood} - {address?.city}</p>
+										<p className="mb-1 w-full text-3xl font-semibold text-gray-600">
+											{event.title} - {event.format}
+										</p>
+										<p className="flex sm:gap-2 items-start">
+											<MapPinIcon className="h-8 w-8 min-h-6 min-w-6" />{" "}
+											{address?.street} {address?.number} -{" "}
+											{address?.neighborhood} - {address?.city}
+										</p>
 									</div>
 								</div>
 							</div>
 							<div className="flex flex-col gap-12 md:gap-4 md:flex-row w-full max-w-[1140px] justify-between mt-8 font-primary">
-								<Card className="w-full md:w-6/12 h-min">
-									<CardHeader>{event.description}</CardHeader>
+								<Card className="w-full md:w-8/12 h-min">
+									<ReactMarkdown className="p-5" remarkPlugins={[remarkGfm]}>
+										{event.description}
+									</ReactMarkdown>
 									<CardContent className="">
 										{attractions.length ? (
 											<>

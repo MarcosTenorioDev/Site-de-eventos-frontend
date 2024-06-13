@@ -221,7 +221,7 @@ const Event = () => {
 			{event ? (
 				<div>
 					<div
-						className="absolute inset-0 bg-cover bg-no-repeat blur-[10px] -z-10 mt-[70px] bg-[100% 100%] max-h-[700px] shadow-md shadow-gray-500 hover:shadow-lg hover:shadow-gray-500"
+						className="absolute -inset-5 bg-cover bg-no-repeat blur-[10px] -z-10 mt-[70px] bg-[100% 100%] max-h-[700px]"
 						style={{
 							backgroundImage: `url(${event.assets[0]?.url})`,
 						}}

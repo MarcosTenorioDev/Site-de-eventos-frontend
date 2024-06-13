@@ -30,7 +30,7 @@ import {
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/formInputs/Inputs";
-import { Trash2Icon } from "lucide-react";
+import { MapPinIcon, Trash2Icon } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
 import EventsService from "@/core/services/event.service";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -53,6 +53,8 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import AddressService from "@/core/services/address.service";
+import { Address } from "@/core/interfaces/Address";
 
 const Event = () => {
 	const [api, setApi] = useState<CarouselApi>();
@@ -79,6 +81,7 @@ const Event = () => {
 	const purchaseOrderService = new PurchaseOrderService();
 	const userService = new UserService();
 	const toastService = useToastContext();
+	const addressService = new AddressService();
 	const [selectedTickets, setSelectedTickets] =
 		useState<{ description: string; quantity: number }[]>();
 	useEffect(() => {
@@ -90,6 +93,7 @@ const Event = () => {
 			setCurrent(api.selectedScrollSnap() + 1);
 		});
 	}, [api]);
+	const [address, setAddress] = useState<Address>()
 
 	useEffect(() => {
 		//criar tratamento de erro posteriormente (404?)
@@ -119,7 +123,11 @@ const Event = () => {
 						quantity: 0,
 					})
 				);
-
+				
+				addressService.getAddressById(event.addressId).then((address:any) => {
+					setAddress(address)
+				})
+				
 				setTickets(tickets);
 				return event;
 			});
@@ -138,7 +146,6 @@ const Event = () => {
 
 		setTotal(newTotal);
 	};
-
 
 	const getTicketsSelected = (
 		tickets: { description: string; quantity: number }[]
@@ -212,34 +219,41 @@ const Event = () => {
 	return (
 		<div className="px-4 lg:px-0">
 			{event ? (
-				<>
-					<div className="flex flex-col items-center justify-center mt-4 sm:mt-8 w-full my-56">
+				<div>
+					<div
+						className="absolute inset-0 bg-cover bg-no-repeat blur-[10px] -z-10 mt-[70px] bg-[100% 100%] max-h-[700px] shadow-md shadow-gray-500 hover:shadow-lg hover:shadow-gray-500"
+						style={{
+							backgroundImage: `url(${event.assets[0]?.url})`,
+						}}
+					/>
+					<div className="flex flex-col items-center justify-center w-full">
 						<div className="flex flex-col justify-start items-center w-full">
 							<img
 								src={event.assets[0]?.url}
 								alt="banner do evento"
-								className="object-cover w-full h-full rounded-xl max-w-[1140px] max-h-[500px] aspect-video"
+								className="object-cover w-full h-full rounded-xl max-w-[1140px] max-h-[500px] aspect-video mt-4 sm:mt-8 lg:mt-20 shadow-md shadow-black hover:shadow-md hover:shadow-black" 
 							/>
-							<div className="flex w-full max-w-[1140px] justify-start mt-5">
-								<Card className="p-5 rounded-3xl shadow-md shadow-gray-500 hover:shadow-lg hover:shadow-gray-500 w-min text-center font-primary">
+							<div className="flex flex-col sm:flex-row sm:justify-start text-center sm:text-start px-0 w-full max-w-[1140px] justify-center items-center mt-5 rounded-lg shadow-sm shadow-gray-400 bg-white sm:px-10 py-5">
+								<div className="flex justify-start items-center gap-3 sm:flex-col sm:gap-0 sm:items-center sm:justify-start">
+									<p className="text-3xl text-primary font-semibold">
+										{endDate?.getDate()}
+									</p>
+									<p className="text-3xl text-primary font-semibold opacity-50">
+										{endDate?.toLocaleString("default", { month: "short" })}
+									</p>
+									<p className="text-xl text-primary font-semibold opacity-50">
+										{endDate?.toLocaleString("default", { weekday: "short" })}
+									</p>
+									<p className="text-3xl text-primary font-semibold opacity-50">
+										{endDate?.getHours()}h
+									</p>
+								</div>
+
+								<div className="flex justify-center items-start flex-col px-8 font-primary text-xl text-center sm:text-start">
 									<div>
-										<p className="text-3xl text-primary font-semibold">
-											{endDate?.getDate()}
-										</p>
-										<p className="text-3xl text-primary font-semibold opacity-50">
-											{endDate?.toLocaleString("default", { month: "short" })}
-										</p>
-										<p className="text-xl text-primary font-semibold opacity-50">
-											{endDate?.toLocaleString("default", { weekday: "short" })}
-										</p>
-										<p className="text-3xl text-primary font-semibold opacity-50">
-											{endDate?.getHours()}h
-										</p>
+									<p className="mb-1 w-full text-3xl font-semibold text-gray-600">{event.title} - {event.format}</p>
+									<p className="flex sm:gap-2 items-start"><MapPinIcon className="h-8 w-8 min-h-6 min-w-6" /> {address?.street} {address?.number} - {address?.neighborhood} - {address?.city}</p>
 									</div>
-								</Card>
-								<div className="flex justify-center items-start flex-col px-8 font-primary text-xl">
-									<p className="mb-1">{event.location}</p>
-									<p>{event.format}</p>
 								</div>
 							</div>
 							<div className="flex flex-col gap-12 md:gap-4 md:flex-row w-full max-w-[1140px] justify-between mt-8 font-primary">
@@ -452,9 +466,7 @@ const Event = () => {
 															</div>
 															<SignedIn>
 																<Dialog>
-																	<DialogTrigger
-																		asChild																
-																	>
+																	<DialogTrigger asChild>
 																		<Button
 																			onClick={() =>
 																				getTicketsSelected(values.tickets)
@@ -492,16 +504,18 @@ const Event = () => {
 																						Data de início:{" "}
 																						{formatDate(event.startDate)}
 																					</h3>
-																					{selectedTickets?.map((ticket, index) => {
-																						return (
-																							<>
-																								<h3 key={index}>
-																									{ticket.description} -{" "}
-																									{ticket.quantity}x
-																								</h3>
-																							</>
-																						);
-																					})}
+																					{selectedTickets?.map(
+																						(ticket, index) => {
+																							return (
+																								<>
+																									<h3 key={index}>
+																										{ticket.description} -{" "}
+																										{ticket.quantity}x
+																									</h3>
+																								</>
+																							);
+																						}
+																					)}
 
 																					<h3>Valor total: R$ {total}</h3>
 																				</div>
@@ -579,7 +593,7 @@ const Event = () => {
 							</div>
 						</div>
 					</div>
-				</>
+				</div>
 			) : (
 				loadingComponent()
 			)}

@@ -1,5 +1,6 @@
 import { Params } from "react-router-dom";
 import { AxiosInterceptor } from "../interceptor/axios.interceptor";
+import { IrecentEvents } from "../interfaces/Event.interface";
 
 class EventsService {
   private axiosInterceptor: AxiosInterceptor = new AxiosInterceptor();
@@ -12,7 +13,7 @@ class EventsService {
     return response.data;
   }
 
-  async getRecentEvents(){
+  async getRecentEvents(): Promise<IrecentEvents[]>{
     const response = await this.axios.get(`${import.meta.env.VITE_API_DEV_URL}/events/recent`);
     return response.data
   }

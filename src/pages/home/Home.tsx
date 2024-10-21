@@ -102,12 +102,12 @@ const Home = () => {
 	}, [api]);
 
 	useEffect(() => {
-		categoriesService.getCategories().then((results: any) => {
+		categoriesService.getCategories().then((results) => {
 			if (results) {
-				const categoriesResult = results.map((categorie: any) => {
+				const categoriesResult = results.map((categorie) => {
 					return {
 						value: categorie.id,
-						label: categorie.description,
+						label: categorie.name,
 					};
 				});
 				setCategories([
@@ -139,19 +139,18 @@ const Home = () => {
 				fetchCategoryEvents();
 			}
 		});
-		eventService.getRecentEvents().then((events: any) => {
+		eventService.getRecentEvents().then((events) => {
 			setRecentEvents(events);
 			setIsLoadingComponent(false)
-			const images = events.map((event: any) => {
+			const images = events.map((event) => {
 				const mainAssets = event.assets?.find(
-					(asset: any) => asset.type === "main"
+					(asset) => asset.type === "image"
 				);
 				return mainAssets?.url;
 			});
 			const validImages = images.filter((url: any) => {
-				return url !== undefined;
+				return typeof url === "string";
 			});
-
 			setImagesBanner(validImages);
 			setCount(validImages.length);
 		}).catch((err) => {

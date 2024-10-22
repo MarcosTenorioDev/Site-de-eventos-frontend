@@ -6,5 +6,4 @@ export type User = {
     email: string;
     phone: string | null;
     cpf: string | null;
-    role: "";
 }

@@ -53,10 +53,10 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import AddressService from "@/core/services/address.service";
-import { Address } from "@/core/interfaces/Address";
+import { IAddress } from "@/core/interfaces/Address";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { IEventById } from "@/core/interfaces/Event.interface";
 
 const Event = () => {
 	const [api, setApi] = useState<CarouselApi>();
@@ -73,7 +73,7 @@ const Event = () => {
 		promoCode: "",
 	};
 	const eventService = new EventsService();
-	const [event, setEvent] = useState<any>();
+	const [event, setEvent] = useState<IEventById>();
 	const [endDate, setEndDate] = useState<Date | undefined>();
 	const { id }: Readonly<Params<string>> = useParams();
 	const navigate = useNavigate();
@@ -83,7 +83,6 @@ const Event = () => {
 	const purchaseOrderService = new PurchaseOrderService();
 	const userService = new UserService();
 	const toastService = useToastContext();
-	const addressService = new AddressService();
 	const [selectedTickets, setSelectedTickets] =
 		useState<{ description: string; quantity: number }[]>();
 	useEffect(() => {
@@ -95,52 +94,49 @@ const Event = () => {
 			setCurrent(api.selectedScrollSnap() + 1);
 		});
 	}, [api]);
-	const [address, setAddress] = useState<Address>()
+	const [address, setAddress] = useState<IAddress>();
 
 	useEffect(() => {
 		//criar tratamento de erro posteriormente (404?)
 		if (id) {
-			eventService.getEventById(id).then((event) => {
-				if (!event) {
+			eventService
+				.getEventById(id)
+				.then((event) => {
+					setEvent(event);
+					setAttractions(event.attractions);
+					setCount(event.attractions.length);
+					setEndDate(new Date(event.startDate));
+					const tickets = event.ticketTypes.map(
+						(ticket: {
+							id: string;
+							description: string;
+							price: string;
+							quantity: number;
+						}) => ({
+							id: ticket.id,
+							description: ticket.description,
+							price: ticket.price,
+							quantity: 0,
+						})
+					);
+					setAddress(event.Address);
+					setTickets(tickets);
+					return event;
+				})
+				.catch(() => {
 					navigate("/");
 					toast.showToast(
 						"Não foi possível encontrar o evento solicitado",
 						ToastType.Error
 					);
-				}
-				setEvent(event);
-				setAttractions(event.attractions);
-				setCount(event.attractions.length);
-				setEndDate(new Date(event.startDate));
-				const tickets = event.ticketTypes.map(
-					(ticket: {
-						id: string;
-						description: string;
-						price: string;
-						quantity: number;
-					}) => ({
-						id: ticket.id,
-						description: ticket.description,
-						price: ticket.price,
-						quantity: 0,
-					})
-				);
-
-				addressService.getAddressById(event.addressId).then((address: any) => {
-					setAddress(address);
 				});
-
-				setTickets(tickets);
-				return event;
-			});
-			userService.getUser().then((user: any) => {
-				if (user) {
-					setUser(user);
-				}
-			});
 		}
+		userService.getUser().then((user) => {
+			if (user) {
+				setUser(user);
+			}
+		});
 	}, []);
-
 	const calculateTotal = (tickets: typeof initialValues.tickets) => {
 		const newTotal = tickets.reduce((acc, ticket) => {
 			return acc + parseFloat(ticket.price) * ticket.quantity;
@@ -585,13 +581,13 @@ const Event = () => {
 									)}
 								</Formik>
 							</div>
-							<div className="flex flex-col sm:flex-row justify-center items-center w-full max-w-[1140px] sm:justify-start text-center mt-12 sm:mt-8 font-primary gap-8">
+							<div className="flex flex-col sm:flex-row justify-center items-center w-full max-w-[1140px] sm:justify-start text-center mt-12 sm:mt-8 font-primary gap-8 mb-16">
 								<div>
-									<h2 className="text-4xl font-semibold mb-5">Produtor</h2>
+									<h2 className="text-4xl font-semibold mb-5 text-center">Produtor</h2>
 									<img
 										src={event.producers?.imageUrl}
 										alt=""
-										className="w-full aspect-video sm:w-48"
+										className="w-full aspect-video sm:w-48 mx-auto"
 									/>
 								</div>
 								<div className=" flex flex-col justify-end gap-5">

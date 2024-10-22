@@ -1,4 +1,3 @@
-import { AxiosResponse } from "axios";
 import { AxiosInterceptor } from "../interceptor/axios.interceptor";
 import { ICategory } from "../interfaces/Categories.interface";
 

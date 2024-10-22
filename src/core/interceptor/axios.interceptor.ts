@@ -1,4 +1,5 @@
 import axios, {
+	AxiosError,
 	AxiosInstance,
 	AxiosResponse,
 	InternalAxiosRequestConfig,
@@ -46,7 +47,7 @@ export class AxiosInterceptor {
 		return response;
 	}
 
-	private handleResponseError(error: any) {
+	private handleResponseError(error: AxiosError) {
 		console.log("handle response error");
 		Promise.reject(error);
 	}

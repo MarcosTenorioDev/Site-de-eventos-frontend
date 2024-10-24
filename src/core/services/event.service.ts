@@ -1,6 +1,6 @@
 import { Params } from "react-router-dom";
 import { AxiosInterceptor } from "../interceptor/axios.interceptor";
-import { IEventById, IrecentEvents } from "../interfaces/Event.interface";
+import { IEventById, IEventsCreated, IrecentEvents } from "../interfaces/Event.interface";
 
 class EventsService {
   private axiosInterceptor: AxiosInterceptor = new AxiosInterceptor();
@@ -23,8 +23,8 @@ class EventsService {
     return response.data
   }
 
-  async getEventByCreatorId(id:string){
-    const response = await this.axios.get(`${import.meta.env.VITE_API_DEV_URL}/events/creator/${id}`)
+  async getEventByCreatorId(): Promise<IEventsCreated[]>{
+    const response = await this.axios.get(`${import.meta.env.VITE_API_DEV_URL}/events/created`)
     return response.data
   }
 

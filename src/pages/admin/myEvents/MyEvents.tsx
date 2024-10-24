@@ -17,28 +17,20 @@ import {
 import { PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import UserService from "@/core/services/user.service";
 import { ToastType, useToastContext } from "@/core/contexts/toasts.context";
+import { IEventsCreated } from "@/core/interfaces/Event.interface";
 
 const MyEvents = () => {
-	const [myEvents, setMyEvents] = useState<any[]>([]);
+	const [myEvents, setMyEvents] = useState<IEventsCreated[]>([]);
 	const eventsService = new EventsService();
-	const userService = new UserService();
 	const navigate = useNavigate();
 	const toast = useToastContext();
 
 	useEffect(() => {
-		userService
-			.getUser()
-			.then((user: any) => {
-				eventsService
-					.getEventByCreatorId(user.id)
-					.then((events: any) => {
-						setMyEvents(events);
-					})
-					.catch((err: any) => {
-						console.error(err);
-					});
+		eventsService
+			.getEventByCreatorId()
+			.then((events) => {
+				setMyEvents(events);
 			})
 			.catch((err) => {
 				console.error(err);

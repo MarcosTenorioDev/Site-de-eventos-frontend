@@ -1,12 +1,12 @@
 import { formatDate } from "@/core/services/helper.service";
 import { Card, CardContent, CardFooter } from "../ui/card";
-import { Address } from "@/core/interfaces/Address";
+import { IAddress } from "@/core/interfaces/Address";
 import { useNavigate } from "react-router-dom";
 
 const MyEventsCards = (props: {
 	id: string;
 	img: string;
-	address: Address;
+	address: IAddress;
 	startDate: string;
 	title: string;
 }) => {

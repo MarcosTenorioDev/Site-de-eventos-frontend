@@ -1,5 +1,5 @@
 import { AxiosInterceptor } from "../interceptor/axios.interceptor";
-import { Address } from "../interfaces/Address";
+import { IAddress } from "../interfaces/Address";
 
 class AddressService {
 	private axiosInterceptor: AxiosInterceptor = new AxiosInterceptor();
@@ -7,14 +7,14 @@ class AddressService {
 
 	constructor() {}
 
-	async getAddressById(id: string): Promise<Address> {
+	async getAddressById(id: string): Promise<IAddress> {
 		const response = await this.axios.get(
 			`${import.meta.env.VITE_API_DEV_URL}/address/${id}`
 		);
 		return response.data;
 	}
 
-	async postAddress(payload: Address): Promise<Address | any> {
+	async postAddress(payload: IAddress): Promise<IAddress> {
 		const response = await this.axios.post(
 			`${import.meta.env.VITE_API_DEV_URL}/address`,
 			payload

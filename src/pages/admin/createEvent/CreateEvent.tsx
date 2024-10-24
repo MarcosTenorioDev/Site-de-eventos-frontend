@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { ToastType, useToastContext } from "@/core/contexts/toasts.context";
-import { Address } from "@/core/interfaces/Address";
+import { IAddress } from "@/core/interfaces/Address";
 import CategoriesService from "@/core/services/categories.service";
 import EventsService from "@/core/services/event.service";
 import ProducerService from "@/core/services/producer.service";
@@ -309,7 +309,7 @@ const FirstStep = ({ setEventId }: any) => {
 			capacity: values.capacity,
 			categoryId: values.categoryId,
 			status: values.status,
-			startDate: values.startDate,
+			startDate: values.startDate, 
 			endDate: values.endDate,
 			salesStartDate: values.salesStartDate,
 			showStartDate: values.showStartDate,
@@ -554,7 +554,7 @@ const FirstStep = ({ setEventId }: any) => {
 							<Field name="addressId">
 								{({ form }: any) => (
 									<AddressPicker
-										onAddressSave={(address: Address) => {
+										onAddressSave={(address: IAddress) => {
 											form.values.addressId = address.id;
 										}}
 										control="addressId"

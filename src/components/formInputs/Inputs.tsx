@@ -28,7 +28,7 @@ import {
 	DialogTrigger,
 } from "../ui/dialog";
 import AddressService from "@/core/services/address.service";
-import { Address } from "@/core/interfaces/Address";
+import { IAddress } from "@/core/interfaces/Address";
 import { formatCep } from "@/core/services/helper.service";
 import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
 //Input de texto default que pode receber uma máscara
@@ -296,7 +296,7 @@ export const DatePicker = (props: {
 };
 
 export const AddressPicker = (props: {
-	onAddressSave: (address: Address) => void;
+	onAddressSave: (address: IAddress) => void;
 	control: string;
 }) => {
 	const { onAddressSave, control } = props;
@@ -310,7 +310,7 @@ export const AddressPicker = (props: {
 		state: "",
 		zipCode: "",
 	};
-	const [address, setAddress] = useState<Address>();
+	const [address, setAddress] = useState<IAddress>();
 
 	const validationSchema = Yup.object({
 		street: Yup.string().required("Rua é obrigatória"),

@@ -17,7 +17,7 @@ const MyEventsCards = (props: {
 	const navigate = useNavigate();
 	return (
 		<>
-			<Card className="aspect-video flex-grow drop-shadow-md">
+			<Card className="aspect-video flex-grow drop-shadow-md pb-0">
 				<CardContent className="p-0 w-full aspect-video overflow-hidden">
 					<div className="w-full aspect-video rounded-lg overflow-hidden relative">
 						<img
@@ -28,7 +28,7 @@ const MyEventsCards = (props: {
 					</div>
 				</CardContent>
 
-				<CardFooter className=" font-primary w-full text-black rounded-lg overflow-hidden rounded-t-none drop-shadow-md flex flex-col">
+				<CardFooter className=" font-primary w-full text-black rounded-lg overflow-hidden rounded-t-none drop-shadow-md flex flex-col pb-2">
 					<p className="text-md font-medium text-start flex items-center w-60 h-14 line-clamp-2 self-start">
 						{title}
 					</p>

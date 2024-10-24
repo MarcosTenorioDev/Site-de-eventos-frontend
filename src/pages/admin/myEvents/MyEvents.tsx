@@ -12,12 +12,14 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { ToastType, useToastContext } from "@/core/contexts/toasts.context";
 import { IEventsCreated } from "@/core/interfaces/Event.interface";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const MyEvents = () => {
 	const [myEvents, setMyEvents] = useState<IEventsCreated[]>([]);
 	const eventsService = new EventsService();
 	const navigate = useNavigate();
 	const toast = useToastContext();
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		eventsService
@@ -31,6 +33,9 @@ const MyEvents = () => {
 					"Oops... parece que não conseguimos recuperar os seus dados, por favor contate o suporte técnico!",
 					ToastType.Error
 				);
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
 	}, []);
 
@@ -53,6 +58,22 @@ const MyEvents = () => {
 					return true;
 			}
 		});
+	};
+
+	const LoadingComponent = () => {
+		return (
+			<>
+			<div className="flex-wrap grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7 mt-10 px-10">
+				<Skeleton className="w-full h-60 bg-gray-300" />
+				<Skeleton className="w-full h-60 bg-gray-300" />
+				<Skeleton className="w-full h-60 bg-gray-300" />
+			</div>
+			<div className="flex-wrap grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7 mt-10 px-10">
+				<Skeleton className="w-full h-60 bg-gray-300" />
+				<Skeleton className="w-full h-60 bg-gray-300" />
+				<Skeleton className="w-full h-60 bg-gray-300" />
+			</div></>
+		);
 	};
 
 	return (
@@ -100,110 +121,116 @@ const MyEvents = () => {
 					</TabsTrigger>
 				</TabsList>
 
-				<TabsContent value="all">
-					{filterEvents("all").length ? (
-						<div className="flex gap-10 flex-wrap">
-							{filterEvents("all").map((card: any) => (
-								<MyEventsCards
-									key={card.id}
-									id={card.id}
-									address={card.Address}
-									img={card.assets[0]?.url}
-									startDate={card.startDate}
-									title={card.title}
-								/>
-							))}
-						</div>
-					) : (
-						<p className="text-2xl font-semibold text-muted-foreground">
-							Oops... Parece que você não tem nenhum evento nessa categoria.
-						</p>
-					)}
-				</TabsContent>
+				{isLoading ? (
+					<LoadingComponent />
+				) : (
+					<div className="mb-14">
+						<TabsContent value="all">
+							{filterEvents("all").length ? (
+								<div className="flex gap-10 flex-wrap">
+									{filterEvents("all").map((card: any) => (
+										<MyEventsCards
+											key={card.id}
+											id={card.id}
+											address={card.Address}
+											img={card.assets[0]?.url}
+											startDate={card.startDate}
+											title={card.title}
+										/>
+									))}
+								</div>
+							) : (
+								<p className="text-2xl font-semibold text-muted-foreground">
+									Oops... Parece que você não tem nenhum evento nessa categoria.
+								</p>
+							)}
+						</TabsContent>
 
-				<TabsContent value="cancelled">
-					{filterEvents("cancelled").length ? (
-						<div className="flex gap-10 flex-wrap">
-							{filterEvents("cancelled").map((card: any) => (
-								<MyEventsCards
-									key={card.id}
-									id={card.id}
-									address={card.Address}
-									img={card.assets[0]?.url}
-									startDate={card.startDate}
-									title={card.title}
-								/>
-							))}
-						</div>
-					) : (
-						<p className="text-2xl font-semibold text-muted-foreground">
-							Oops... Parece que você não tem nenhum evento nessa categoria.
-						</p>
-					)}
-				</TabsContent>
+						<TabsContent value="cancelled">
+							{filterEvents("cancelled").length ? (
+								<div className="flex gap-10 flex-wrap">
+									{filterEvents("cancelled").map((card: any) => (
+										<MyEventsCards
+											key={card.id}
+											id={card.id}
+											address={card.Address}
+											img={card.assets[0]?.url}
+											startDate={card.startDate}
+											title={card.title}
+										/>
+									))}
+								</div>
+							) : (
+								<p className="text-2xl font-semibold text-muted-foreground">
+									Oops... Parece que você não tem nenhum evento nessa categoria.
+								</p>
+							)}
+						</TabsContent>
 
-				<TabsContent value="completed">
-					{filterEvents("completed").length ? (
-						<div className="flex gap-10 flex-wrap">
-							{filterEvents("completed").map((card: any) => (
-								<MyEventsCards
-									key={card.id}
-									id={card.id}
-									address={card.Address}
-									img={card.assets[0]?.url}
-									startDate={card.startDate}
-									title={card.title}
-								/>
-							))}
-						</div>
-					) : (
-						<p className="text-2xl font-semibold text-muted-foreground">
-							Oops... Parece que você não tem nenhum evento nessa categoria.
-						</p>
-					)}
-				</TabsContent>
+						<TabsContent value="completed">
+							{filterEvents("completed").length ? (
+								<div className="flex gap-10 flex-wrap">
+									{filterEvents("completed").map((card: any) => (
+										<MyEventsCards
+											key={card.id}
+											id={card.id}
+											address={card.Address}
+											img={card.assets[0]?.url}
+											startDate={card.startDate}
+											title={card.title}
+										/>
+									))}
+								</div>
+							) : (
+								<p className="text-2xl font-semibold text-muted-foreground">
+									Oops... Parece que você não tem nenhum evento nessa categoria.
+								</p>
+							)}
+						</TabsContent>
 
-				<TabsContent value="ongoing">
-					{filterEvents("ongoing").length ? (
-						<div className="flex gap-10 flex-wrap">
-							{filterEvents("ongoing").map((card: any) => (
-								<MyEventsCards
-									key={card.id}
-									id={card.id}
-									address={card.Address}
-									img={card.assets[0]?.url}
-									startDate={card.startDate}
-									title={card.title}
-								/>
-							))}
-						</div>
-					) : (
-						<p className="text-2xl font-semibold text-muted-foreground">
-							Oops... Parece que você não tem nenhum evento nessa categoria.
-						</p>
-					)}
-				</TabsContent>
+						<TabsContent value="ongoing">
+							{filterEvents("ongoing").length ? (
+								<div className="flex gap-10 flex-wrap">
+									{filterEvents("ongoing").map((card: any) => (
+										<MyEventsCards
+											key={card.id}
+											id={card.id}
+											address={card.Address}
+											img={card.assets[0]?.url}
+											startDate={card.startDate}
+											title={card.title}
+										/>
+									))}
+								</div>
+							) : (
+								<p className="text-2xl font-semibold text-muted-foreground">
+									Oops... Parece que você não tem nenhum evento nessa categoria.
+								</p>
+							)}
+						</TabsContent>
 
-				<TabsContent value="scheduled">
-					{filterEvents("scheduled").length ? (
-						<div className="flex gap-10 flex-wrap">
-							{filterEvents("scheduled").map((card: any) => (
-								<MyEventsCards
-									key={card.id}
-									id={card.id}
-									address={card.address}
-									img={card.assets[0]?.url}
-									startDate={card.startDate}
-									title={card.title}
-								/>
-							))}
-						</div>
-					) : (
-						<p className="text-2xl font-semibold text-muted-foreground">
-							Oops... Parece que você não tem nenhum evento nessa categoria.
-						</p>
-					)}
-				</TabsContent>
+						<TabsContent value="scheduled">
+							{filterEvents("scheduled").length ? (
+								<div className="flex gap-10 flex-wrap">
+									{filterEvents("scheduled").map((card: any) => (
+										<MyEventsCards
+											key={card.id}
+											id={card.id}
+											address={card.address}
+											img={card.assets[0]?.url}
+											startDate={card.startDate}
+											title={card.title}
+										/>
+									))}
+								</div>
+							) : (
+								<p className="text-2xl font-semibold text-muted-foreground">
+									Oops... Parece que você não tem nenhum evento nessa categoria.
+								</p>
+							)}
+						</TabsContent>
+					</div>
+				)}
 			</Tabs>
 		</div>
 	);

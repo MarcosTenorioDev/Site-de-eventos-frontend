@@ -1,11 +1,4 @@
 import { useState, useEffect } from "react";
-import {
-	Carousel,
-	CarouselContent,
-	CarouselItem,
-	CarouselNext,
-	CarouselPrevious,
-} from "@/components/ui/carousel";
 import MyEventsCards from "@/components/eventCards/MyEventsCards";
 import EventsService from "@/core/services/event.service";
 import {
@@ -81,7 +74,7 @@ const MyEvents = () => {
 			<div className="flex flex-col sm:flex-row justify-between items-center pt-10 pb-4">
 				<h1 className="text-4xl font-normal text-start">Meus Eventos</h1>
 				<Button
-					className="hidden sm:flex"
+					className="flex mt-6 sm:mt-0"
 					onClick={() => navigate("event/create")}
 				>
 					Criar evento <PlusIcon />
@@ -89,7 +82,7 @@ const MyEvents = () => {
 			</div>
 
 			<Tabs defaultValue="all">
-				<TabsList className="justify-between max-w-7xl items-center gap-0 overflow-x-auto h-12">
+				<TabsList className="justify-between max-w-7xl items-center gap-0 overflow-x-auto h-12 mb-10">
 					<TabsTrigger value="all" className="flex-1 justify-center mx-0">
 						Todos ({filterEvents("all").length})
 					</TabsTrigger>
@@ -109,28 +102,18 @@ const MyEvents = () => {
 
 				<TabsContent value="all">
 					{filterEvents("all").length ? (
-						<Carousel
-							className="mx-auto w-11/12 sm:w-10/12 xl:11/12 2xl:w-full max-w-7xl"
-							opts={{
-								loop: false,
-							}}
-						>
-							<CarouselContent className="p-4 flex">
-								{filterEvents("all").map((card: any) => (
-									<CarouselItem className="basis-auto" key={card.id}>
-										<MyEventsCards
-											id={card.id}
-											address={card.Address}
-											img={card.assets[0]?.url}
-											startDate={card.startDate}
-											title={card.title}
-										/>
-									</CarouselItem>
-								))}
-							</CarouselContent>
-							<CarouselNext className="hidden sm:flex" />
-							<CarouselPrevious className="hidden sm:flex" />
-						</Carousel>
+						<div className="flex gap-10 flex-wrap">
+							{filterEvents("all").map((card: any) => (
+								<MyEventsCards
+									key={card.id}
+									id={card.id}
+									address={card.Address}
+									img={card.assets[0]?.url}
+									startDate={card.startDate}
+									title={card.title}
+								/>
+							))}
+						</div>
 					) : (
 						<p className="text-2xl font-semibold text-muted-foreground">
 							Oops... Parece que você não tem nenhum evento nessa categoria.
@@ -140,28 +123,18 @@ const MyEvents = () => {
 
 				<TabsContent value="cancelled">
 					{filterEvents("cancelled").length ? (
-						<Carousel
-							className="mx-auto w-11/12 sm:w-10/12 xl:11/12 2xl:w-full max-w-7xl"
-							opts={{
-								loop: false,
-							}}
-						>
-							<CarouselContent className="p-4 flex">
-								{filterEvents("cancelled").map((card: any) => (
-									<CarouselItem className="basis-auto" key={card.id}>
-										<MyEventsCards
-											id={card.id}
-											address={card.address}
-											img={card.assets[0]?.url}
-											startDate={card.startDate}
-											title={card.title}
-										/>
-									</CarouselItem>
-								))}
-							</CarouselContent>
-							<CarouselNext className="hidden sm:flex" />
-							<CarouselPrevious className="hidden sm:flex" />
-						</Carousel>
+						<div className="flex gap-10 flex-wrap">
+							{filterEvents("cancelled").map((card: any) => (
+								<MyEventsCards
+									key={card.id}
+									id={card.id}
+									address={card.Address}
+									img={card.assets[0]?.url}
+									startDate={card.startDate}
+									title={card.title}
+								/>
+							))}
+						</div>
 					) : (
 						<p className="text-2xl font-semibold text-muted-foreground">
 							Oops... Parece que você não tem nenhum evento nessa categoria.
@@ -171,28 +144,18 @@ const MyEvents = () => {
 
 				<TabsContent value="completed">
 					{filterEvents("completed").length ? (
-						<Carousel
-							className="mx-auto w-11/12 sm:w-10/12 xl:11/12 2xl:w-full max-w-7xl"
-							opts={{
-								loop: false,
-							}}
-						>
-							<CarouselContent className="p-4 flex">
-								{filterEvents("completed").map((card: any) => (
-									<CarouselItem className="basis-auto" key={card.id}>
-										<MyEventsCards
-											id={card.id}
-											address={card.address}
-											img={card.assets[0]?.url}
-											startDate={card.startDate}
-											title={card.title}
-										/>
-									</CarouselItem>
-								))}
-							</CarouselContent>
-							<CarouselNext className="hidden sm:flex" />
-							<CarouselPrevious className="hidden sm:flex" />
-						</Carousel>
+						<div className="flex gap-10 flex-wrap">
+							{filterEvents("completed").map((card: any) => (
+								<MyEventsCards
+									key={card.id}
+									id={card.id}
+									address={card.Address}
+									img={card.assets[0]?.url}
+									startDate={card.startDate}
+									title={card.title}
+								/>
+							))}
+						</div>
 					) : (
 						<p className="text-2xl font-semibold text-muted-foreground">
 							Oops... Parece que você não tem nenhum evento nessa categoria.
@@ -202,28 +165,18 @@ const MyEvents = () => {
 
 				<TabsContent value="ongoing">
 					{filterEvents("ongoing").length ? (
-						<Carousel
-							className="mx-auto w-11/12 sm:w-10/12 xl:11/12 2xl:w-full max-w-7xl"
-							opts={{
-								loop: false,
-							}}
-						>
-							<CarouselContent className="p-4 flex">
-								{filterEvents("ongoing").map((card: any) => (
-									<CarouselItem className="basis-auto" key={card.id}>
-										<MyEventsCards
-											id={card.id}
-											address={card.address}
-											img={card.assets[0]?.url}
-											startDate={card.startDate}
-											title={card.title}
-										/>
-									</CarouselItem>
-								))}
-							</CarouselContent>
-							<CarouselNext className="hidden sm:flex" />
-							<CarouselPrevious className="hidden sm:flex" />
-						</Carousel>
+						<div className="flex gap-10 flex-wrap">
+							{filterEvents("ongoing").map((card: any) => (
+								<MyEventsCards
+									key={card.id}
+									id={card.id}
+									address={card.Address}
+									img={card.assets[0]?.url}
+									startDate={card.startDate}
+									title={card.title}
+								/>
+							))}
+						</div>
 					) : (
 						<p className="text-2xl font-semibold text-muted-foreground">
 							Oops... Parece que você não tem nenhum evento nessa categoria.
@@ -233,28 +186,18 @@ const MyEvents = () => {
 
 				<TabsContent value="scheduled">
 					{filterEvents("scheduled").length ? (
-						<Carousel
-							className="mx-auto w-11/12 sm:w-10/12 xl:11/12 2xl:w-full max-w-7xl"
-							opts={{
-								loop: false,
-							}}
-						>
-							<CarouselContent className="p-4 flex">
-								{filterEvents("scheduled").map((card: any) => (
-									<CarouselItem className="basis-auto" key={card.id}>
-										<MyEventsCards
-											id={card.id}
-											address={card.address}
-											img={card.assets[0]?.url}
-											startDate={card.startDate}
-											title={card.title}
-										/>
-									</CarouselItem>
-								))}
-							</CarouselContent>
-							<CarouselNext className="hidden sm:flex" />
-							<CarouselPrevious className="hidden sm:flex" />
-						</Carousel>
+						<div className="flex gap-10 flex-wrap">
+							{filterEvents("scheduled").map((card: any) => (
+								<MyEventsCards
+									key={card.id}
+									id={card.id}
+									address={card.address}
+									img={card.assets[0]?.url}
+									startDate={card.startDate}
+									title={card.title}
+								/>
+							))}
+						</div>
 					) : (
 						<p className="text-2xl font-semibold text-muted-foreground">
 							Oops... Parece que você não tem nenhum evento nessa categoria.
@@ -262,12 +205,6 @@ const MyEvents = () => {
 					)}
 				</TabsContent>
 			</Tabs>
-			<Button
-				className="sm:hidden my-10"
-				onClick={() => navigate("event/create")}
-			>
-				Criar evento <PlusIcon />
-			</Button>
 		</div>
 	);
 };

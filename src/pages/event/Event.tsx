@@ -57,6 +57,7 @@ import { IAddress } from "@/core/interfaces/Address";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { IEventById } from "@/core/interfaces/Event.interface";
+import placeholder from "@/assets/images/home/placeholderEventCard.png";
 
 const Event = () => {
 	const [api, setApi] = useState<CarouselApi>();
@@ -227,9 +228,11 @@ const Event = () => {
 					<div className="flex flex-col items-center justify-center w-full">
 						<div className="flex flex-col justify-start items-center w-full">
 							<img
-								src={event.assets[0]?.url}
+								src={event.assets[0]?.url ? event.assets[0]?.url : placeholder}
 								alt="banner do evento"
-								className="object-cover w-full h-full rounded-xl max-w-[1140px] max-h-[500px] aspect-video mt-4 sm:mt-8 lg:mt-20 shadow-md shadow-black hover:shadow-md hover:shadow-black"
+								className={`object-cover w-full h-full rounded-xl max-w-[1140px] max-h-[500px] aspect-video mt-4 sm:mt-8 lg:mt-20 shadow-md hover:shadow-lg ${
+									event.assets[0]?.url ? "" : "border"
+								}`}
 							/>
 							<div className="flex flex-col sm:flex-row sm:justify-start text-center sm:text-start px-0 w-full max-w-[1140px] justify-center items-center mt-5 rounded-lg shadow-sm shadow-gray-400 bg-white sm:px-10 py-5">
 								<div className="flex justify-start items-center gap-3 sm:flex-col sm:gap-0 sm:items-center sm:justify-start">
@@ -583,7 +586,9 @@ const Event = () => {
 							</div>
 							<div className="flex flex-col sm:flex-row justify-center items-center w-full max-w-[1140px] sm:justify-start text-center mt-12 sm:mt-8 font-primary gap-8 mb-16">
 								<div>
-									<h2 className="text-4xl font-semibold mb-5 text-center">Produtor</h2>
+									<h2 className="text-4xl font-semibold mb-5 text-center">
+										Produtor
+									</h2>
 									<img
 										src={event.producers?.imageUrl}
 										alt=""

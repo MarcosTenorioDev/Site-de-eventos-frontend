@@ -45,7 +45,7 @@ const MyTicketsCards = (props: {
 						{title}
 					</p>
 					<p className="text-xs text-muted-foreground text-start w-full overflow-hidden text-ellipsis whitespace-nowrap">
-						{address.street}
+					{address.street}, {address.city} Nº {address.number}
 					</p>
 					<Dialog>
 						<DialogTrigger asChild>

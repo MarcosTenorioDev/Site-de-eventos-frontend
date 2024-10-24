@@ -24,6 +24,7 @@ import CategoriesService from "@/core/services/categories.service";
 import EventsService from "@/core/services/event.service";
 import { formatDate } from "@/core/services/helper.service";
 import { Skeleton } from "@/components/ui/skeleton";
+import { IrecentEvents } from "@/core/interfaces/Event.interface";
 
 const Loading = () => {
 	return (
@@ -58,7 +59,7 @@ const Home = () => {
 	const [dateRangeValue, setDateRangeValue] = useState<DateRange | undefined>(
 		undefined
 	);
-	const [recentEvents, setRecentEvents] = useState<any>();
+	const [recentEvents, setRecentEvents] = useState<IrecentEvents[]>();
 	const [festivalEvents, setFestivalEvents] = useState<any>();
 	const [theaterEvents, setTheaterEvents] = useState<any>();
 	const [sportsEvents, setSportsEvents] = useState<any>();
@@ -311,12 +312,12 @@ const Home = () => {
 									}}
 								>
 									<CarouselContent className="p-4">
-										{recentEvents.map((card: any) => {
+										{recentEvents.map((card) => {
 											return (
 												<CarouselItem className="basis-auto" key={card.id}>
 													<DefaultCard
 														id={card.id}
-														address={card.location}
+														address={card.Address}
 														img={card.assets[0]?.url}
 														startDate={formatDate(card.startDate)}
 														title={card.title}

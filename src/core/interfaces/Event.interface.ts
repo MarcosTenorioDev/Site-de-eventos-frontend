@@ -5,8 +5,9 @@ import { IProducer } from "./Producer.interface";
 export interface IrecentEvents {
 	addressId: string;
 	assets: IAssets[];
+	Address:IAddress;
 	id: string;
-	startDate: Date;
+	startDate: string;
 	title: string;
 }
 

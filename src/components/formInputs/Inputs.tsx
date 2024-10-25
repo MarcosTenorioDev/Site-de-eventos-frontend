@@ -3,11 +3,7 @@ import { Field, ErrorMessage, Formik, Form } from "formik";
 import MaskedInput from "react-text-mask";
 import { cn } from "@/lib/utils";
 import { addDays, format } from "date-fns";
-import {
-	Calendar as CalendarIcon,
-	PlusIcon,
-	TrashIcon,
-} from "lucide-react";
+import { Calendar as CalendarIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import * as Yup from "yup";
 
@@ -21,6 +17,7 @@ import {
 import { useState } from "react";
 import {
 	Dialog,
+	DialogClose,
 	DialogContent,
 	DialogDescription,
 	DialogHeader,
@@ -394,7 +391,8 @@ export const AddressPicker = (props: {
 								<p>{address.city}</p>-<p>{address.state}</p>
 							</div>
 							<div className="flex gap-2">
-								<p>{address.neighborhood}</p>-<p>{address.street}</p><p>{address.number}</p>
+								<p>{address.neighborhood}</p>-<p>{address.street}</p>
+								<p>{address.number}</p>
 							</div>
 							<div className="flex gap-2">
 								<p>{address.complement}</p>
@@ -512,7 +510,9 @@ export const AddressPicker = (props: {
 										</div>
 
 										<div className="flex justify-end space-x-2 mt-4">
-											<Button variant="ghost">Cancelar</Button>
+											<DialogClose asChild>
+												<Button variant="ghost">Cancelar</Button>
+											</DialogClose>
 											<Button variant="default" type="submit">
 												Salvar
 											</Button>

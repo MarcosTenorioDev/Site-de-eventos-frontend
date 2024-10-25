@@ -19,7 +19,8 @@ export type TicketCard = {
 	ticketTypeId:string
 	ticketType?: {
 		description:string,
-		isActive:boolean
+		isActive:boolean,
+		price:number
 	}
 };
 

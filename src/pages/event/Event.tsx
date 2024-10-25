@@ -39,10 +39,9 @@ import { useToastContext } from "@/core/contexts/toasts.context";
 import { ToastType } from "@/core/contexts/toasts.context";
 import PurchaseOrderService from "@/core/services/purchaseOrder.service";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/clerk-react";
-import { PurchaseOrder } from "@/core/interfaces/PurchaseOrder";
 import UserService from "@/core/services/user.service";
 import { User } from "@/core/interfaces/User";
-import { TicketPurchaseOrder } from "@/core/interfaces/Ticket";
+import { TicketPurchaseOrder } from "@/core/interfaces/Ticket.interface";
 import { formatDate } from "@/core/services/helper.service";
 import {
 	Dialog,
@@ -167,7 +166,7 @@ const Event = () => {
 			setIsLoading(true);
 			values.tickets.map((ticket: TicketPurchaseOrder) => {
 				if (ticket.quantity <= 0) return;
-				const payload: PurchaseOrder = {
+				const payload: any = {
 					eventId: id,
 					participantEmail: user.email,
 					participantName: user.firstName + " " + user.lastName,

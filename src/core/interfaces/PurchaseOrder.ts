@@ -1,9 +1,11 @@
-export type PurchaseOrder = {
-    userId: string;
-    eventId: string;
-    ticketTypeId: string;
-    quantityTickets: number;
-    status: string;
-    participantName: string;
-    participantEmail: string;
+import { TicketCard } from "./Ticket.interface";
+
+export type IPurchaseOrder = {
+	id: string;
+	eventId: string;
+	status: string;
+	totalPrice: number;
+	createdAt: string;
+	quantityTickets: number;
+	tickets: TicketCard[];
 };

@@ -6,10 +6,11 @@ import {
 	CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
-import MyTicketsCards from "@/components/ticketsCards/TicketsCards";
+import PurchaseOrderCards from "@/components/ticketsCards/PurchaseOrderCards";
 import EventsService from "@/core/services/event.service";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToastType, useToastContext } from "@/core/contexts/toasts.context";
+import { IPurchaseOrder } from "@/core/interfaces/PurchaseOrder";
 
 const MyTickets = () => {
 	const [myEvents, setMyEvents] = useState<any[]>([]);
@@ -100,21 +101,23 @@ const MyTickets = () => {
 								>
 									<CarouselContent className="p-4 flex">
 										{ongoingEvents.map((event) =>
-											event.purchaseOrders.map((purchaseOrder: any) =>
-												purchaseOrder.tickets.map((ticket: any) => (
-													<CarouselItem className="basis-auto" key={ticket.id}>
-														<MyTicketsCards
-															key={ticket.id}
-															id={ticket.id}
-															address={event.Address}
-															img={event.assets[0]?.url}
-															startDate={event.startDate}
-															title={event.title}
-															ticket={ticket}
-														/>
-													</CarouselItem>
-												))
-											)
+											event.purchaseOrders.map((purchaseOrder: IPurchaseOrder) => (
+												<CarouselItem
+													className="basis-auto"
+													key={purchaseOrder.id}
+												>
+													<PurchaseOrderCards
+														key={purchaseOrder.id}
+														id={purchaseOrder.id}
+														address={event.Address}
+														img={event.assets[0]?.url}
+														startDate={event.startDate}
+														title={event.title}
+														status={event.status}
+														purchaseOrder={purchaseOrder}
+													/>
+												</CarouselItem>
+											))
 										)}
 									</CarouselContent>
 									<CarouselNext className="hidden sm:flex" />
@@ -138,21 +141,18 @@ const MyTickets = () => {
 								>
 									<CarouselContent className="p-4">
 										{pastEvents.map((event) =>
-											event.purchaseOrders.map((purchaseOrder: any) =>
-												purchaseOrder.tickets.map((ticket: any) => (
-													<CarouselItem className="basis-auto" key={ticket.id}>
-														<MyTicketsCards
-															key={ticket.id}
-															id={ticket.id}
-															address={event.Address}
-															img={event.assets[0]?.url}
-															startDate={event.startDate}
-															title={event.title}
-															ticket={ticket}
-														/>
-													</CarouselItem>
-												))
-											)
+											event.purchaseOrders.map((purchaseOrder: IPurchaseOrder) => (
+												<PurchaseOrderCards
+													key={purchaseOrder.id}
+													id={purchaseOrder.id}
+													address={event.Address}
+													img={event.assets[0]?.url}
+													startDate={event.startDate}
+													title={event.title}
+													status={event.status}
+													purchaseOrder={purchaseOrder}
+												/>
+											))
 										)}
 									</CarouselContent>
 									<CarouselNext className="hidden sm:flex" />

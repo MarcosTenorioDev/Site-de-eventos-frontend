@@ -27,7 +27,7 @@ export type TicketCard = {
 export type TicketPurchaseOrder = {
 	id: string;
 	description: string;
-	price: string;
-	quantity: number;
+	price: number;
+	quantityAvailablePerUser: number;
 };
 

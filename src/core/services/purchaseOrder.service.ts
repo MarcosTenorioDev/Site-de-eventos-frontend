@@ -1,5 +1,5 @@
 import { AxiosInterceptor } from "../interceptor/axios.interceptor";
-import { PurchaseOrder } from "../interfaces/PurchaseOrder";
+import { IPurchaseOrderCreate, IPurchaseOrderReserved } from "../interfaces/PurchaseOrder";
 
 class PurchaseOrderService{
     private axiosInterceptor: AxiosInterceptor = new AxiosInterceptor();
@@ -8,8 +8,8 @@ class PurchaseOrderService{
     constructor(){}
 
 
-    async PostPurchaseOrder(payload:PurchaseOrder) {
-        const response = await this.axios.post(`${import.meta.env.VITE_API_DEV_URL}/purchaseorder`, payload);
+    async PostPurchaseOrder(payload:IPurchaseOrderCreate):Promise<IPurchaseOrderReserved> {
+        const response = await this.axios.post(`${import.meta.env.VITE_API_DEV_URL}/purchaseorders`, payload);
         return response.data;
     }
 

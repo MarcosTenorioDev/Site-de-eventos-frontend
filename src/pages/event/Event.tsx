@@ -65,16 +65,11 @@ const Event = () => {
 					setCount(event.attractions.length);
 					setEndDate(new Date(event.startDate));
 					const tickets = event.ticketTypes.map(
-						(ticket: {
-							id: string;
-							description: string;
-							price: string;
-							quantity: number;
-						}) => ({
+						(ticket: TicketPurchaseOrder) => ({
 							id: ticket.id,
 							description: ticket.description,
 							price: ticket.price,
-							quantity: 0,
+							quantityAvailablePerUser: ticket.quantityAvailablePerUser,
 						})
 					);
 					setAddress(event.Address);
@@ -228,7 +223,7 @@ const Event = () => {
 									</CardContent>
 								</Card>
 
-								<EventPurchaseCard tickets={tickets} event={event} id={id} />
+								<EventPurchaseCard tickets={tickets} event={event}/>
 							</div>
 							<div className="flex flex-col sm:flex-row justify-center items-center w-full max-w-[1140px] sm:justify-start text-center mt-12 sm:mt-8 font-primary gap-8 mb-16">
 								<div>

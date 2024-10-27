@@ -1,287 +1,162 @@
-import { Field, Formik, Form } from "formik";
 import { MinusIcon, PlusIcon } from "@radix-ui/react-icons";
-import PurchaseOrderService from "@/core/services/purchaseOrder.service";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/clerk-react";
-import { User } from "@/core/interfaces/User";
-import { formatDate } from "@/core/services/helper.service";
-import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
 import { useState } from "react";
-import { useToastContext, ToastType } from "@/core/contexts/toasts.context";
 import { TicketPurchaseOrder } from "@/core/interfaces/Ticket.interface";
 import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
-import UserService from "@/core/services/user.service";
 import { IEventById } from "@/core/interfaces/Event.interface";
+import PurchaseOrderService from "@/core/services/purchaseOrder.service";
+import { useNavigate } from "react-router-dom";
 
 interface IEventPurchaseCard {
 	tickets: TicketPurchaseOrder[];
-    event: IEventById;
-    id?: string
+	event: IEventById;
 }
 
 const EventPurchaseCard = (props: IEventPurchaseCard) => {
-	const { tickets, event, id } = props;
-	const [total, setTotal] = useState<number>(0);
-	const initialValues = {
-		tickets,
-		promoCode: "",
-	};
-	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [user, setUser] = useState<User>();
+	const { tickets, event } = props;
 	const purchaseOrderService = new PurchaseOrderService();
-	const toastService = useToastContext();
-	const [selectedTickets, setSelectedTickets] =
-		useState<{ description: string; quantity: number }[]>();
-	const userService = new UserService();
-	const toast = useToastContext();
+	const [ticketCounts, setTicketCounts] = useState<Record<string, number>>(
+		tickets.reduce((acc, ticket) => {
+			acc[ticket.id] = 0;
+			return acc;
+		}, {} as Record<string, number>)
+	);
+	const [total, setTotal] = useState<number>(0);
+	const ticketSelectedCount = Object.values(ticketCounts).reduce(
+		(sum, count) => sum + count,
+		0
+	);
+	const [isLoading, setIsLoading] = useState(false);
+	const navigate = useNavigate();
 
-	const calculateTotal = (tickets: typeof initialValues.tickets) => {
-		const newTotal = tickets.reduce((acc, ticket) => {
-			return acc + parseFloat(ticket.price) * ticket.quantity;
-		}, 0);
-
-		setTotal(newTotal);
+	const handleIncrement = (ticketId: string, price: number) => {
+		setTicketCounts((prev) => ({
+			...prev,
+			[ticketId]: prev[ticketId] + 1,
+		}));
+		setTotal((prev) => prev + price);
 	};
 
-	const getTicketsSelected = (
-		tickets: { description: string; quantity: number }[]
-	) => {
-		const filteredTickets = tickets.filter((ticket) => ticket.quantity > 0);
-		setSelectedTickets(filteredTickets);
+	const handleDecrement = (ticketId: string, price: number) => {
+		setTicketCounts((prev) => ({
+			...prev,
+			[ticketId]: Math.max(prev[ticketId] - 1, 0),
+		}));
+		setTotal((prev) => (prev - price >= 0 ? prev - price : 0));
 	};
 
-	const onSubmit = async (values: any) => {
-		const hasTickets = values.tickets.find(
-			(ticket: any) => ticket.quantity !== 0
+	const handleSubmit = async () => {
+		const values = Object.entries(ticketCounts).flatMap(
+			([ticketId, quantity]) => Array(quantity).fill({ ticketTypeId: ticketId })
 		);
 
-		if (!hasTickets) {
-			toastService.showToast("Selecione um ingresso", ToastType.Error);
-			return;
-		}
+		const payload = {
+			eventId: event.id,
+			ticketTypes: values,
+		};
 
-		if (id && user) {
-			setIsLoading(true);
-			values.tickets.map((ticket: TicketPurchaseOrder) => {
-				if (ticket.quantity <= 0) return;
-				const payload: any = {
-					eventId: id,
-					participantEmail: user.email,
-					participantName: user.firstName + " " + user.lastName,
-					quantityTickets: ticket.quantity,
-					status: "pendente",
-					ticketTypeId: ticket.id,
-					userId: user.id,
-				};
-				purchaseOrderService
-					.PostPurchaseOrder(payload)
-					.then(() => {
-						toast.showToast("Incrição feita com sucesso", ToastType.Success);
-
-						setIsLoading(false);
-					})
-					.catch(() => {
-						toast.showToast(
-							`Houve um erro ao processar sua incrição para o ticket ${ticket.description}`,
-							ToastType.Error
-						);
-						setIsLoading(false);
-					});
-			});
-		}
+		setIsLoading(true);
+		await purchaseOrderService
+			.PostPurchaseOrder(payload)
+			.then((reserverdPurchaseOrder) =>
+				navigate(`/checkout/${reserverdPurchaseOrder.id}`)
+			)
+			.catch((err) => console.log(err))
+			.finally(() => setIsLoading(false));
 	};
 
-	userService.getUser().then((user) => {
-		if (user) {
-			setUser(user);
-		}
-	});
-
 	return (
-		<Formik
-			initialValues={initialValues}
-			onSubmit={onSubmit}
-			enableReinitialize={true}
-		>
-			{({ values, setFieldValue }) => (
-				<Form>
-					<Card className="min-w-[280px] md:min-w-[330px]">
-						<CardHeader className="bg-primary-dark text-white font-primary rounded-t-sm p-3">
-							Ingressos
-						</CardHeader>
-						{tickets.length ? (
-							<>
-								<CardContent className="p-4 min-w-64">
-									{values.tickets.map((ticket, index) => (
-										<div key={ticket.id} className="flex items-center">
-											<div className="w-full">
-												<p className="font-semibold text-lg">
-													{ticket.description}
-												</p>
-												<p className="mb-2 text-sm text-primary">
-													R$ {ticket.price}
-												</p>
-											</div>
-											<div>
-												<div className="flex">
-													<Button
-														variant={"ghost"}
-														className="p-0"
-														type="button"
-														onClick={() => {
-															const newQuantity = Math.max(
-																ticket.quantity - 1,
-																0
-															);
-															setFieldValue(
-																`tickets[${index}].quantity`,
-																newQuantity
-															);
-															const updatedTickets = [...values.tickets];
-															updatedTickets[index].quantity = newQuantity;
-															calculateTotal(updatedTickets);
-														}}
-													>
-														<MinusIcon />
-													</Button>
-													<Field
-														disabled={true}
-														type="number"
-														name={`tickets[${index}].quantity`}
-														className="max-w-8 text-center"
-													/>
-													<Button
-														variant={"ghost"}
-														className="p-0"
-														type="button"
-														onClick={() => {
-															const newQuantity = ticket.quantity + 1;
-															setFieldValue(
-																`tickets[${index}].quantity`,
-																newQuantity
-															);
-															const updatedTickets = [...values.tickets];
-															updatedTickets[index].quantity = newQuantity;
-															calculateTotal(updatedTickets);
-														}}
-													>
-														<PlusIcon />
-													</Button>
-												</div>
-											</div>
-										</div>
-									))}
-								</CardContent>
-								<CardFooter className="flex flex-col relative">
-									<div className="w-full">
-										<h3 className="text-md mt-4">Total</h3>
-										<h3 className="text-lg text-primary">
-											R$ {total.toFixed(2)}
-										</h3>
-									</div>
-									<SignedIn>
-										<Dialog>
-											<DialogTrigger asChild>
-												<Button
-													onClick={() => getTicketsSelected(values.tickets)}
-													className="absolute -bottom-5 mx-auto text-lg"
-												>
-													{isLoading ? "Carregando..." : "Comprar ingresso"}
-													<PlusIcon className="ml-2" />
-												</Button>
-											</DialogTrigger>
-											<DialogContent className="">
-												<DialogHeader>
-													<DialogTitle className="text-xl text-center">
-														Confirme sua compra abaixo
-													</DialogTitle>
-												</DialogHeader>
-												<div className="text-md">
-													<img
-														src={event.assets[0]?.url}
-														alt="imagem do evento"
-														className="rounded-sm aspect-video"
-													/>
-													<h2 className="text-2xl font-bold w-full text-center my-2">
-														{event.title}
-													</h2>
-
-													<div className="mt-5">
-														<div>
-															<h2 className="font-bold mb-1">
-																Dados do ingresso:
-															</h2>
-															<h3>
-																Data de início: {formatDate(event.startDate)}
-															</h3>
-															{selectedTickets?.map((ticket, index) => {
-																return (
-																	<>
-																		<h3 key={index}>
-																			{ticket.description} - {ticket.quantity}x
-																		</h3>
-																	</>
-																);
-															})}
-
-															<h3>Valor total: R$ {total}</h3>
-														</div>
-
-														<h2 className="font-bold mt-3 mb-1">
-															Dados do Comprador:
-														</h2>
-														<h3>Email: {user?.email}</h3>
-														<h3>
-															Nome: {user?.firstName + " " + user?.lastName}
-														</h3>
-													</div>
-												</div>
-												<DialogFooter>
-													<DialogClose className="text-md">
-														<Button variant={"outline"}>Cancel</Button>
-													</DialogClose>
-													<DialogClose
-														className="text-md"
-														onClick={() => onSubmit(values)}
-													>
-														<Button>Comprar ingresso</Button>
-													</DialogClose>
-												</DialogFooter>
-											</DialogContent>
-										</Dialog>
-									</SignedIn>
-									<SignedOut>
-										<Button
-											asChild
-											type="button"
-											className="absolute -bottom-5 mx-auto text-lg"
-										>
-											<SignInButton mode="modal">Comprar ingresso</SignInButton>
-										</Button>
-									</SignedOut>
-								</CardFooter>
-							</>
-						) : (
-							<CardContent className="p-4 w-64 mx-auto text-center">
-								<h3 className="w-full font-bold text-muted-foreground text-xl">
-									{" "}
-									Oops... Parece que ainda não há ingressos disponíveis para
-									venda
-								</h3>
-							</CardContent>
-						)}
-					</Card>
-				</Form>
+		<Card className="min-w-[280px] md:min-w-[330px]">
+			<CardHeader className="bg-primary-dark text-white font-primary rounded-t-sm p-3">
+				Ingressos
+			</CardHeader>
+			{tickets.length ? (
+				<>
+					<CardContent className="p-4 min-w-64">
+						{tickets.map((ticket) => (
+							<div key={ticket.id} className="flex items-center">
+								<div className="w-full">
+									<p className="font-semibold text-lg">{ticket.description}</p>
+									<p className="mb-2 text-sm text-primary">R$ {ticket.price}</p>
+								</div>
+								<div className="flex items-center">
+									<Button
+										variant="ghost"
+										className="p-0"
+										type="button"
+										onClick={() => handleDecrement(ticket.id, ticket.price)}
+									>
+										<MinusIcon />
+									</Button>
+									<span className="mx-2">{ticketCounts[ticket.id]}</span>
+									<Button
+										variant="ghost"
+										className="p-0"
+										type="button"
+										onClick={() => handleIncrement(ticket.id, ticket.price)}
+										disabled={
+											event.maxTicketsPerUser <= ticketSelectedCount ||
+											ticketCounts[ticket.id] >= ticket.quantityAvailablePerUser
+										}
+									>
+										<PlusIcon />
+									</Button>
+								</div>
+							</div>
+						))}
+					</CardContent>
+					<CardFooter className="flex flex-col relative border-t">
+						<div className="w-full">
+							<h3 className="text-md mt-4">Total</h3>
+							<h3 className="text-lg text-primary">R$ {total.toFixed(2)}</h3>
+						</div>
+						<SignedIn>
+							<Button
+								type="button"
+								className="absolute -bottom-5 mx-auto text-lg"
+								onClick={handleSubmit}
+								disabled={ticketSelectedCount === 0 || isLoading}
+							>
+								{ticketSelectedCount === 0 ? (
+									"Selecione um ingresso"
+								) : isLoading ? (
+									"Carregando..."
+								) : (
+									<>
+										Comprar ingresso
+										<PlusIcon className="ml-2" />
+									</>
+								)}
+							</Button>
+						</SignedIn>
+						<SignedOut>
+							<Button
+								asChild
+								type="button"
+								className="absolute -bottom-5 mx-auto text-lg"
+							>
+								<SignInButton
+									mode="modal"
+									forceRedirectUrl={`/event/${event.id}`}
+									fallbackRedirectUrl={`/event/${event.id}`}
+									signUpForceRedirectUrl={`/event/${event.id}`}
+									signUpFallbackRedirectUrl={`/event/${event.id}`}
+								>
+									Comprar ingresso
+								</SignInButton>
+							</Button>
+						</SignedOut>
+					</CardFooter>
+				</>
+			) : (
+				<CardContent className="p-4 w-64 mx-auto text-center">
+					<h3 className="w-full font-bold text-muted-foreground text-xl">
+						Oops... Parece que ainda não há ingressos disponíveis para venda
+					</h3>
+				</CardContent>
 			)}
-		</Formik>
+		</Card>
 	);
 };
 

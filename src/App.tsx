@@ -9,6 +9,7 @@ import MyEvents from "./pages/admin/myEvents/MyEvents";
 import { LayoutAdmin } from "./layout/sidebarComponents";
 import EventInfo from "./pages/admin/eventInfo/EventInfo";
 import CreateEvent from "./pages/admin/createEvent/CreateEvent";
+import Checkout from "./pages/checkoutPage/Checkout";
 
 function Layout({ children }: any) {
 	return (
@@ -49,6 +50,15 @@ const App = () => {
 								<Layout>
 									<MyTickets />
 								</Layout>
+							</>
+						}
+					/>
+					<Route
+						path="/checkout/:id"
+						element={
+							<>
+								<Navbar />
+								<Checkout />
 							</>
 						}
 					/>

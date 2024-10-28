@@ -1,3 +1,7 @@
+import { IAddress } from "./Address";
+import { IAssets } from "./Assets.interface";
+import { ICategory } from "./Categories.interface";
+import { IProducer } from "./Producer.interface";
 import { TicketCard } from "./Ticket.interface";
 
 export type IPurchaseOrder = {
@@ -27,3 +31,44 @@ export interface IPurchaseOrderReserved {
 	reservationExpiresAt:Date,
 	reservedTicketTypes:{ticketTypeId:string,purchaseOrderId:string, quantity:number}[]
 };
+
+export interface IPurchaseOrderReservedById {
+	id: string;
+	userId: string;
+	eventId: string;
+	totalPrice: number;
+	quantityTickets: number;
+	status: string;
+	createdAt: string;
+	updatedAt: string;
+	reservationExpiresAt: string;
+	reservedTicketTypes: ReservedTicketType[];
+	event: Event;
+  }
+  
+  interface ReservedTicketType {
+	ticketTypeId: string;
+	purchaseOrderId: string;
+	quantity: number;
+	ticketType: TicketType;
+  }
+  
+  interface TicketType {
+	description: string;
+	price: number;
+  }
+  
+  interface Event {
+	ageRating: number;
+	Address: IAddress;
+	producers: IProducer;
+	category: ICategory;
+	startDate: string;
+	endDate: string;
+	title: string;
+	assets: IAssets[];
+  }
+
+
+
+

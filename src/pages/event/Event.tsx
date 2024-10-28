@@ -90,17 +90,17 @@ const Event = () => {
 		return (
 			<>
 				<div className="flex flex-col justify-center items-center mt-10">
-					<Skeleton className="w-full max-w-[1140px] h-full max-h-[500px] aspect-video bg-slate-500 " />
+					<Skeleton className="w-full max-w-[1140px] h-full max-h-[500px] aspect-video bg-slate-300 " />
 					<div className="flex w-full max-w-[1140px] items-center gap-5 mt-10">
-						<Skeleton className="w-32 rounded-3xl h-48 max-h-[500px] aspect-video bg-slate-500 " />
+						<Skeleton className="w-32 rounded-3xl h-48 max-h-[500px] aspect-video bg-slate-300 " />
 						<div className="w-full flex flex-col gap-5 justify-center items-start">
-							<Skeleton className="w-11/12 md:w-7/12 rounded-3xl h-12 max-h-[500px] aspect-video bg-slate-500 " />
-							<Skeleton className="w-11/12 md:w-7/12 rounded-3xl h-12 max-h-[500px] aspect-video bg-slate-500 " />
+							<Skeleton className="w-11/12 md:w-7/12 rounded-3xl h-12 max-h-[500px] aspect-video bg-slate-300 " />
+							<Skeleton className="w-11/12 md:w-7/12 rounded-3xl h-12 max-h-[500px] aspect-video bg-slate-300 " />
 						</div>
 					</div>
 					<div className="flex flex-col md:flex-row w-full max-w-[1140px] mt-10 justify-between gap-10">
-						<Skeleton className="w-full md:w-6/12 max-w-[1140px] h-full max-h-[500px] aspect-video bg-slate-500  rounded-2xl" />
-						<Skeleton className="w-full md:w-4/12 max-w-[1140px] h-full max-h-[500px] aspect-video bg-slate-500  rounded-2xl" />
+						<Skeleton className="w-full md:w-6/12 max-w-[1140px] h-full max-h-[500px] aspect-video bg-slate-300  rounded-2xl" />
+						<Skeleton className="w-full md:w-4/12 max-w-[1140px] h-full max-h-[500px] aspect-video bg-slate-300  rounded-2xl" />
 					</div>
 				</div>
 			</>

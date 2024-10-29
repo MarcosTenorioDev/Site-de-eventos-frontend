@@ -1,22 +1,17 @@
 import { useState, useEffect } from "react";
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, MapPin, AlertTriangle } from "lucide-react";
 import { PersonIcon } from "@radix-ui/react-icons";
 import { formatDate } from "@/core/services/helper.service";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import placeholder from "@/assets/images/home/placeholderEventCard.png";
 import { IPurchaseOrderReservedById } from "@/core/interfaces/PurchaseOrder";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PurchaseOrderService from "@/core/services/purchaseOrder.service";
 import { Skeleton } from "@/components/ui/skeleton";
+import CheckoutForm from "@/components/formInputs/CheckoutForm/CheckoutForm";
+import CheckoutSuccess from "@/components/checkoutSuccess/CheckoutSuccess";
+import { TicketCard } from "@/core/interfaces/Ticket.interface";
 
 export default function Checkout() {
 	const [timeLeft, setTimeLeft] = useState(0);
@@ -26,6 +21,8 @@ export default function Checkout() {
 	const params = useParams();
 	const purchaseOrderService = new PurchaseOrderService();
 	const navigate = useNavigate();
+	const [isSuccessful, setIsSuccessful] = useState(false);
+	const [tickets, setTickets] = useState<TicketCard[]>([])
 
 	useEffect(() => {
 		const timer = setInterval(() => {
@@ -66,19 +63,37 @@ export default function Checkout() {
 		}
 	}, [params.id]);
 
+	const verifySuccessfull = (isSuccessful: boolean) => {
+		setIsSuccessful(isSuccessful);
+	};
+
 	const LoadingComponent = () => (
 		<div className="min-h-screen bg-gray-100 flex flex-col">
 			<div className="flex flex-col justify-center items-center gap-10">
 				<Skeleton className="w-full h-full max-h-[150px] md:max-h-[300px] aspect-video bg-slate-300 rounded-none" />
-				<div className="px-5 w-full flex flex-col gap-10">
+				<div className="px-5 w-full flex flex-col items-center gap-10">
 					<Skeleton className="w-full max-w-[1140px] h-full max-h-[100px] md:max-h-[150px] aspect-video bg-slate-300" />
+					<Skeleton className="w-full max-w-[1140px] h-full md:max-h-[400px] aspect-video bg-slate-300" />
 					<Skeleton className="w-full max-w-[1140px] h-full md:max-h-[400px] aspect-video bg-slate-300" />
 				</div>
 			</div>
 		</div>
 	);
 
-	if(isLoading) return LoadingComponent();
+	if (isLoading) return LoadingComponent();
+	if (isSuccessful && purchaseOrder)
+		return (
+			<CheckoutSuccess
+				address={purchaseOrder?.event.Address}
+				formatedStartDate={new Date(purchaseOrder?.event.startDate)}
+				img={
+					purchaseOrder.event.assets[0]?.url
+						? purchaseOrder.event.assets[0]?.url
+						: placeholder
+				}
+				tickets={tickets}
+			/>
+		);
 
 	return (
 		<>
@@ -214,72 +229,11 @@ export default function Checkout() {
 										</CardContent>
 									</Card>
 
-									<Card className="w-full">
-										<CardHeader>
-											<CardTitle className="text-primary-dark font-semibold text-xl">
-												Dados do participante
-											</CardTitle>
-										</CardHeader>
-										<CardContent className="p-6">
-											<div className="space-y-4">
-												{purchaseOrder.reservedTicketTypes.map((ticket) =>
-													Array.from({ length: ticket.quantity }).map(
-														(_, index) => (
-															<div
-																key={`${ticket.ticketTypeId}-${index}`}
-																className="space-y-2 bg-muted border-gray-300 border rounded-lg p-6"
-															>
-																<div className="flex items-center justify-between">
-																	<h3 className="text-md font-semibold">
-																		Participante Nº {index + 1} -{" "}
-																		{ticket.ticketType.description}
-																	</h3>
-																	<Badge
-																		className={`${
-																			ticket.ticketType.price === 0
-																				? "bg-muted-foreground hover:bg-gray-600"
-																				: "bg-green-500 hover:bg-green-300"
-																		} text-nowrap`}
-																	>
-																		{ticket.ticketType.price === 0
-																			? "Gratuito"
-																			: `R$ ${ticket.ticketType.price.toFixed(
-																					2
-																			  )}`}{" "}
-																	</Badge>
-																</div>
-																<Input
-																	type="text"
-																	placeholder="Nome do participante"
-																	className="w-full px-4 py-2 border rounded-md"
-																/>
-																<Input
-																	type="email"
-																	placeholder="Email do participante"
-																	className="w-full px-4 py-2 border rounded-md "
-																/>
-															</div>
-														)
-													)
-												)}
-											</div>
-										</CardContent>
-										<CardFooter className="flex justify-between items-center">
-											<p className="text-lg font-medium">
-												{purchaseOrder.reservedTicketTypes.reduce(
-													(acc, ticket) => acc + ticket.quantity,
-													0
-												)}{" "}
-												tickets selecionados
-											</p>
-											<Button
-												size="lg"
-												className="bg-green-500 hover:bg-green-600 text-white"
-											>
-												Complete Order
-											</Button>
-										</CardFooter>
-									</Card>
+									<CheckoutForm
+										purchaseOrder={purchaseOrder}
+										isSuccessfull={verifySuccessfull}
+										tickets={setTickets}
+									/>
 								</>
 							)}
 						</div>

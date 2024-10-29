@@ -67,7 +67,7 @@ const EventPurchaseCard = (props: IEventPurchaseCard) => {
 	};
 
 	return (
-		<Card className="min-w-[280px] md:min-w-[330px]">
+		<Card className="min-w-[280px] md:min-w-[330px] h-min">
 			<CardHeader className="bg-primary-dark text-white font-primary rounded-t-sm p-3">
 				Ingressos
 			</CardHeader>

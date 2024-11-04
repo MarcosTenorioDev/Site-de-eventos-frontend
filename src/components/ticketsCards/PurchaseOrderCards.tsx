@@ -1,7 +1,8 @@
-import { formatDate } from "@/core/services/helper.service";
-import { Card, CardContent, CardFooter } from "../ui/card";
+import placeholder from "@/assets/images/home/placeholderEventCard.png";
 import { IAddress } from "@/core/interfaces/Address";
 import { IPurchaseOrder } from "@/core/interfaces/PurchaseOrder";
+import { formatDate } from "@/core/services/helper.service";
+import { Card, CardContent, CardFooter } from "../ui/card";
 import PurchaseOrderDialogButton from "./PurchaseOrderDialogButton";
 
 const PurchaseOrderCards = (props: {
@@ -20,7 +21,7 @@ const PurchaseOrderCards = (props: {
 				<CardContent className="p-0 h-full overflow-hidden">
 					<div className="w-full h-full rounded-t-lg overflow-hidden relative">
 						<img
-							src={img}
+							src={img ? img : placeholder}
 							alt="Imagem"
 							className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 transform-gpu hover:scale-110"
 						/>
@@ -38,7 +39,15 @@ const PurchaseOrderCards = (props: {
 						{address.street}, {address.city} Nº {address.number}
 					</p>
 
-					<PurchaseOrderDialogButton address={address} img={img} purchaseOrder={purchaseOrder} startDate={startDate} status={status} title={title} key={purchaseOrder.id}/>
+					<PurchaseOrderDialogButton
+						address={address}
+						img={img}
+						purchaseOrder={purchaseOrder}
+						startDate={startDate}
+						status={status}
+						title={title}
+						key={purchaseOrder.id}
+					/>
 				</CardFooter>
 			</Card>
 		</>

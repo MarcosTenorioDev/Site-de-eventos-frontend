@@ -1,30 +1,30 @@
-import { Card, CardContent } from "@/components/ui/card";
-import {
-	CarouselApi,
-	Carousel,
-	CarouselContent,
-	CarouselItem,
-	CarouselPrevious,
-	CarouselNext,
-} from "@/components/ui/carousel";
-import { useState, useEffect } from "react";
-import Autoplay from "embla-carousel-autoplay";
-import { Input } from "@/components/ui/input";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useT } from "@/assets/i18n";
-import { Field, Form, Formik } from "formik";
-import * as Yup from "yup";
+import banner from "@/assets/images/home/Banner.png";
+import DefaultCard from "@/components/eventCards/DefaultCard";
 import { DateRangePicker, Select } from "@/components/formInputs/Inputs";
 import { Button } from "@/components/ui/button";
-import { FilterIcon } from "lucide-react";
-import { DateRange } from "react-day-picker";
-import DefaultCard from "@/components/eventCards/DefaultCard";
-import banner from "@/assets/images/home/Banner.png";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+	Carousel,
+	CarouselApi,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { IrecentEvents } from "@/core/interfaces/Event.interface";
 import CategoriesService from "@/core/services/categories.service";
 import EventsService from "@/core/services/event.service";
 import { formatDate } from "@/core/services/helper.service";
-import { Skeleton } from "@/components/ui/skeleton";
-import { IrecentEvents } from "@/core/interfaces/Event.interface";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import Autoplay from "embla-carousel-autoplay";
+import { Field, Form, Formik } from "formik";
+import { FilterIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { DateRange } from "react-day-picker";
+import * as Yup from "yup";
 
 const Loading = () => {
 	return (
@@ -47,7 +47,6 @@ const Loading = () => {
 	);
 };
 
-
 const Home = () => {
 	const t = useT();
 	const eventService = new EventsService();
@@ -55,7 +54,7 @@ const Home = () => {
 	const [api, setApi] = useState<CarouselApi>();
 	const [current, setCurrent] = useState(0);
 	const [count, setCount] = useState(0);
-	const [imagesBanner, setImagesBanner] = useState<string[]>([]);
+	const [imagesBanner, setImagesBanner] = useState<(string | undefined)[]>([]);
 	const [dateRangeValue, setDateRangeValue] = useState<DateRange | undefined>(
 		undefined
 	);
@@ -140,24 +139,27 @@ const Home = () => {
 				fetchCategoryEvents();
 			}
 		});
-		eventService.getRecentEvents().then((events) => {
-			setRecentEvents(events);
-			setIsLoadingComponent(false)
-			const images = events.map((event) => {
-				const mainAssets = event.assets?.find(
-					(asset) => asset.type === "image"
-				);
-				return mainAssets?.url;
+		eventService
+			.getRecentEvents()
+			.then((events) => {
+				setRecentEvents(events);
+				setIsLoadingComponent(false);
+				const images = events.map((event) => {
+					const mainAssets = event.assets?.find(
+						(asset) => asset.type === "image"
+					);
+					return mainAssets?.url;
+				});
+				const validImages = images.filter((url: any) => {
+					return typeof url === "string";
+				});
+				setImagesBanner(validImages);
+				setCount(validImages.length);
+			})
+			.catch((err) => {
+				console.error(err);
+				setIsLoadingComponent(false);
 			});
-			const validImages = images.filter((url: any) => {
-				return typeof url === "string";
-			});
-			setImagesBanner(validImages);
-			setCount(validImages.length);
-		}).catch((err) => {
-			console.error(err)
-			setIsLoadingComponent(false)
-		});
 	}, []);
 
 	return (

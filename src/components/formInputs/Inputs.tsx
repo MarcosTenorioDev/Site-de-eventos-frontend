@@ -1,10 +1,10 @@
-import { Label } from "@radix-ui/react-label";
-import { Field, ErrorMessage, Formik, Form } from "formik";
-import MaskedInput from "react-text-mask";
 import { cn } from "@/lib/utils";
+import { Label } from "@radix-ui/react-label";
 import { addDays, format } from "date-fns";
-import { Calendar as CalendarIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { ErrorMessage, Field, Form, Formik, useField } from "formik";
+import { Calendar as CalendarIcon, MapPin, TrashIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
+import MaskedInput from "react-text-mask";
 import * as Yup from "yup";
 
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,10 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
+import { IAddress } from "@/core/interfaces/Address";
+import AddressService from "@/core/services/address.service";
+import { formatCep } from "@/core/services/helper.service";
+import { useEffect, useState } from "react";
 import {
 	Dialog,
 	DialogClose,
@@ -24,10 +27,16 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "../ui/dialog";
-import AddressService from "@/core/services/address.service";
-import { IAddress } from "@/core/interfaces/Address";
-import { formatCep } from "@/core/services/helper.service";
-import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
+
+interface NumberInputProps {
+	control: string;
+	label?: string;
+	placeholder?: string;
+	min?: number;
+	max?: number;
+	step?: number;
+}
+
 //Input de texto default que pode receber uma máscara
 export const Input = (props: {
 	control: string;
@@ -45,7 +54,9 @@ export const Input = (props: {
 	};
 	return (
 		<>
-			<Label htmlFor={props.control}>{props.label}</Label>
+			<Label htmlFor={props.control} className="font-primary font-medium">
+				{props.label}
+			</Label>
 			{props.mask ? (
 				<Field name={props.control}>
 					{({ field }: any) => (
@@ -55,7 +66,7 @@ export const Input = (props: {
 							type={props.type ? props.type : "text"}
 							mask={props.mask}
 							placeholder={props.placeholder}
-							className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-primary focus-visible:ring-1 focus-visible:to-primary disabled:cursor-not-allowed disabled:opacity-50"
+							className="flex h-9 w-full rounded-md border text-primary-dark border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-primary focus-visible:ring-1 focus-visible:to-primary disabled:cursor-not-allowed disabled:opacity-50"
 							onBlur={(value: any) => handleBlur(value)}
 						/>
 					)}
@@ -67,7 +78,7 @@ export const Input = (props: {
 					name={props.control}
 					type={props.type ? props.type : "text"}
 					placeholder={props.placeholder}
-					className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-primary focus-visible:ring-1 focus-visible:to-primary disabled:cursor-not-allowed disabled:opacity-50"
+					className="flex h-9 w-full rounded-md border text-primary-dark border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-primary focus-visible:ring-1 focus-visible:to-primary disabled:cursor-not-allowed disabled:opacity-50"
 				/>
 			)}
 
@@ -120,7 +131,7 @@ export const Select = (props: {
 				id={control}
 				name={control}
 				className={cn(
-					"flex h-12 w-full font-primary font-medium items-center justify-between whitespace-nowrap rounded-md border border-input bg-white px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus-visible:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+					"flex h-12 w-full font-primary text-primary-dark font-medium items-center justify-between whitespace-nowrap rounded-md border border-input bg-white px-3 py-2 text-sm shadow-sm ring-offset-background focus-visible:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
 					className
 				)}
 			>
@@ -128,7 +139,7 @@ export const Select = (props: {
 					<option
 						key={option.value}
 						value={option.value}
-						className={`font-medium text-xl font-primary`}
+						className={`font-medium text-xl text-primary-dark font-primary`}
 					>
 						{option.label}
 					</option>
@@ -292,11 +303,14 @@ export const DatePicker = (props: {
 	);
 };
 
-export const AddressPicker = (props: {
+interface IAddressPickerProps {
 	onAddressSave: (address: IAddress) => void;
 	control: string;
-}) => {
-	const { onAddressSave, control } = props;
+	addressId: string;
+}
+
+export const AddressPicker = (props: IAddressPickerProps) => {
+	const { onAddressSave, control, addressId } = props;
 	const initialValues = {
 		id: "",
 		street: "",
@@ -325,7 +339,7 @@ export const AddressPicker = (props: {
 	const [defaultDisabled, setDefaultDisabled] = useState(true);
 	const [addressValues, setAddressValues] = useState(initialValues);
 	const addressService = new AddressService();
-
+	const [isLoading, setIsLoading] = useState(false);
 	const searchAddress = async (cep: string) => {
 		const formatedCep = cep.replace(".", "").replace("-", "");
 		if (!/^\d{2}\.\d{3}-\d{3}$/.test(cep)) {
@@ -367,6 +381,7 @@ export const AddressPicker = (props: {
 			zipCode: values.zipCode.replace(".", "").replace("-", ""),
 		};
 
+		setIsLoading(true);
 		try {
 			const result = await addressService.postAddress(payload);
 			if (result && result.id) {
@@ -375,59 +390,73 @@ export const AddressPicker = (props: {
 			}
 		} catch (error) {
 			console.error("Erro ao salvar o endereço:", error);
+		} finally {
+			setIsLoading(false);
 		}
 	};
+
+	useEffect(() => {
+		if (addressId) {
+			addressService.getAddressById(addressId).then((address) => {
+				setAddress(address);
+			});
+		}
+	}, [addressId]);
 	return (
 		<div className="flex flex-col w-full items-center sm:items-start">
+			<Label className="mb-2 text-start w-full font-medium">Endereço</Label>
 			{address ? (
 				<>
 					{" "}
-					<Card className="w-full max-w-[450px] bg-transparent">
-						<CardHeader>
-							<Label className="text-primary">Endereço</Label>
-						</CardHeader>
-						<CardContent>
-							<div className="flex gap-2">
-								<p>{address.city}</p>-<p>{address.state}</p>
-							</div>
-							<div className="flex gap-2">
-								<p>{address.neighborhood}</p>-<p>{address.street}</p>
-								<p>{address.number}</p>
-							</div>
-							<div className="flex gap-2">
-								<p>{address.complement}</p>
-							</div>
-
-							<p>{formatCep(address.zipCode)}</p>
-						</CardContent>
-						<CardFooter className="flex gap-5 w-full justify-end">
-							<Button
-								variant={"destructive"}
-								onClick={() => {
-									setAddress(undefined);
-									onAddressSave(initialValues);
-								}}
-							>
-								{" "}
-								<TrashIcon />
-							</Button>
-						</CardFooter>
-					</Card>
+					<div
+						className={cn(
+							"w-full flex text-black text-wrap text-xs sm:text-sm justify-start py-2 rounded-md shadow-sm ring-offset-transparent focus-visible:ring-0 focus-visible:ring-transparent border border-input hover:bg-accent hover:text-accent-foreground items-center pl-3",
+							!address && "text-muted-foreground"
+						)}
+					>
+						<div className="flex items-center">
+							<MapPin className="mr-2 h-4 w-4 min-h-4 min-w-4" />
+							<p>
+								{address.neighborhood} - {address.street} Nº {address.number},{" "}
+								{address.city} / {formatCep(address.zipCode)}
+							</p>
+						</div>
+						<Button
+							onClick={() => {
+								setAddress(undefined);
+								onAddressSave(initialValues);
+							}}
+							className="bg-transparent text-red-500 shadow-none  h-4 w-4 min-h-4 min-w-4 mx-2 hover:bg-red-500 hover:text-accent p-3"
+						>
+							{" "}
+							<TrashIcon className=" h-4 w-4 min-h-4 min-w-4" />
+						</Button>
+					</div>
 				</>
 			) : (
 				<>
-					<Label className="mb-2 text-start w-full">Endereço</Label>
 					<Dialog>
 						<DialogTrigger
 							onClick={() => {
 								setDefaultDisabled(true);
 								setAddressValues(initialValues);
 							}}
-							className="h-56 w-64 bg-muted p-8 hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+							className="w-full lg:w-6/12 justify-start"
+							asChild
 						>
-							<PlusIcon className="w-full h-full" strokeWidth={1} />
+							<Button
+								variant={"outline"}
+								type="button"
+								className={cn(
+									"w-full flex text-wrap text-xs sm:text-sm justify-start py-2 rounded-md shadow-sm ring-offset-transparent focus-visible:ring-0 focus-visible:ring-transparent",
+									!address && "text-muted-foreground"
+								)}
+							>
+								<MapPin className="mr-2 h-4 w-4 min-h-4 min-w-4" />
+								Selecione o endereço do evento
+							</Button>
 						</DialogTrigger>
-						<DialogContent>
+						<DialogContent className="max-h-screen overflow-y-scroll custom-scroll">
 							<DialogHeader>
 								<DialogTitle>Endereço</DialogTitle>
 								<DialogDescription>
@@ -513,8 +542,12 @@ export const AddressPicker = (props: {
 											<DialogClose asChild>
 												<Button variant="ghost">Cancelar</Button>
 											</DialogClose>
-											<Button variant="default" type="submit">
-												Salvar
+											<Button
+												variant="default"
+												type="submit"
+												disabled={isLoading}
+											>
+												{isLoading ? "Carregando..." : "Salvar"}
 											</Button>
 										</div>
 									</Form>
@@ -549,5 +582,133 @@ export const AddressPicker = (props: {
 				</>
 			)}
 		</div>
+	);
+};
+
+export const NumberInput: React.FC<NumberInputProps> = ({
+	control,
+	label,
+	placeholder = "999",
+	min = 0,
+	max = 999,
+	step = 1,
+}) => {
+	const [field, meta, helpers] = useField(control);
+	const [value, setValue] = useState<number>(field.value || min);
+
+	const handleIncrement = () => {
+		if (value < max) {
+			const newValue = value + step;
+			setValue(newValue);
+			helpers.setValue(newValue);
+		}
+	};
+
+	const handleDecrement = () => {
+		if (value > min) {
+			const newValue = value - step;
+			setValue(newValue);
+			helpers.setValue(newValue);
+		}
+	};
+
+	return (
+		<>
+			{label && (
+				<Label className="font-primary font-medium flex-grow" htmlFor={control}>
+					{label}
+				</Label>
+			)}
+			<div className="relative flex items-center max-w-[8rem]">
+				<Button
+					type="button"
+					onClick={handleDecrement}
+					disabled={value <= min}
+					className="bg-gray-100 rounded-r-none hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 focus:ring-2 focus:outline-none"
+				>
+					<svg
+						className="w-3 h-3 text-gray-900 dark:text-white"
+						aria-hidden="true"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 18 2"
+					>
+						<path
+							stroke="currentColor"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeWidth="2"
+							d="M1 1h16"
+						/>
+					</svg>
+				</Button>
+
+				<Field name={control}>
+					{() => (
+						<input
+							type="text"
+							id={`${control}-input`}
+							className="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm block w-full py-2.5"
+							placeholder={placeholder}
+							value={value}
+							onChange={(e) => {
+								const newValue = Math.max(
+									min,
+									Math.min(max, Number(e.target.value) || min)
+								);
+								setValue(newValue);
+								helpers.setValue(newValue);
+							}}
+						/>
+					)}
+				</Field>
+
+				<Button
+					type="button"
+					onClick={handleIncrement}
+					disabled={value >= max}
+					className="bg-gray-100 rounded-l-none hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 focus:ring-2 focus:outline-none"
+				>
+					<svg
+						className="w-3 h-3 text-gray-900"
+						aria-hidden="true"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 18 18"
+					>
+						<path
+							stroke="currentColor"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeWidth="2"
+							d="M9 1v16M1 9h16"
+						/>
+					</svg>
+				</Button>
+			</div>
+
+			{meta.touched && meta.error ? (
+				<ErrorMessage name={control}>
+					{(message) => (
+						<div className="flex items-center mt-1 text-red-500 text-sm">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 14 14"
+								className="w-4 h-4 mr-1"
+							>
+								<path
+									fill="red"
+									fillRule="evenodd"
+									d="M13.4 7A6.4 6.4 0 1 1 .6 7a6.4 6.4 0 0 1 12.8 0Zm-5.6 3.2a.8.8 0 1 1-1.6 0 .8.8 0 0 1 1.6 0ZM7 3a.8.8 0 0 0-.8.8V7a.8.8 0 0 0 1.6 0V3.8A.8.8 0 0 0 7 3Z"
+									clipRule="evenodd"
+								></path>
+							</svg>
+							{message}
+						</div>
+					)}
+				</ErrorMessage>
+			) : null}
+		</>
 	);
 };

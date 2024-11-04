@@ -1,32 +1,31 @@
-import { Card, CardContent } from "@/components/ui/card";
+import ageRatingIcon from "@/assets/icons/ageRatingIcon.svg";
 import Attraction from "@/components/attractions/attraction";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
 	Carousel,
+	CarouselApi,
 	CarouselContent,
 	CarouselItem,
-	CarouselPrevious,
 	CarouselNext,
-	CarouselApi,
+	CarouselPrevious,
 } from "@/components/ui/carousel";
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import ageRatingIcon from "@/assets/icons/ageRatingIcon.svg";
-import { MapPinIcon } from "lucide-react";
-import Autoplay from "embla-carousel-autoplay";
-import EventsService from "@/core/services/event.service";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ToastType, useToastContext } from "@/core/contexts/toasts.context";
+import EventsService from "@/core/services/event.service";
+import Autoplay from "embla-carousel-autoplay";
+import { MapPinIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Params, useNavigate, useParams } from "react-router-dom";
-import { useToastContext } from "@/core/contexts/toasts.context";
-import { ToastType } from "@/core/contexts/toasts.context";
 
 import { TicketPurchaseOrder } from "@/core/interfaces/Ticket.interface";
 
-import { IAddress } from "@/core/interfaces/Address";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { IEventById } from "@/core/interfaces/Event.interface";
 import placeholder from "@/assets/images/home/placeholderEventCard.png";
 import EventPurchaseCard from "@/components/eventPurchaseCard/eventPurchaseCard";
+import { IAddress } from "@/core/interfaces/Address";
+import { IEventById } from "@/core/interfaces/Event.interface";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const Event = () => {
 	const [api, setApi] = useState<CarouselApi>();
@@ -223,7 +222,7 @@ const Event = () => {
 									</CardContent>
 								</Card>
 
-								<EventPurchaseCard tickets={tickets} event={event}/>
+								<EventPurchaseCard tickets={tickets} event={event} />
 							</div>
 							<div className="flex flex-col sm:flex-row justify-center items-center w-full max-w-[1140px] sm:justify-start text-center mt-12 sm:mt-8 font-primary gap-8 mb-16">
 								<div>

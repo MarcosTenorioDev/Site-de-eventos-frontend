@@ -103,4 +103,18 @@
 	background-color: #f1f1f1;
 	border-radius: 4px;
   }
+
+.w-md-editor-toolbar {
+	background-color: #5576d8; /* Cor primária da aplicação */
+	border-bottom: px solid #ddd;
+  }
+
+  .wmde-markdown {
+	background-color: transparent;
+	color: black
+  }
+
+  .w-md-editor-text-input {
+	-webkit-text-fill-color: black
+  }
   

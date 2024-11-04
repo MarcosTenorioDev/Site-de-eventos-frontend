@@ -5,10 +5,25 @@ import { IProducer } from "./Producer.interface";
 export interface IrecentEvents {
 	addressId: string;
 	assets: IAssets[];
-	Address:IAddress;
+	Address: IAddress;
 	id: string;
 	startDate: string;
 	title: string;
+}
+
+export interface IEventPayload {
+	title: string;
+	description: string;
+	capacity: number;
+	categoryId: string;
+	startDate: Date;
+	endDate: Date;
+	format: string;
+	ageRating: number;
+	maxTicketsPerUser: number;
+	additionalDetails: string;
+	producerId: string;
+	addressId: string;
 }
 
 export interface IEventById {
@@ -46,5 +61,5 @@ export interface IEventsCreated {
 	format: string;
 	assets: IAssets[];
 	Address: IAddress;
-    status:string
+	status: string;
 }

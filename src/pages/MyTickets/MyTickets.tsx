@@ -1,3 +1,4 @@
+import PurchaseOrderCards from "@/components/ticketsCards/PurchaseOrderCards";
 import {
 	Carousel,
 	CarouselContent,
@@ -5,12 +6,11 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui/carousel";
-import { useState, useEffect } from "react";
-import PurchaseOrderCards from "@/components/ticketsCards/PurchaseOrderCards";
-import EventsService from "@/core/services/event.service";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToastType, useToastContext } from "@/core/contexts/toasts.context";
 import { IPurchaseOrder } from "@/core/interfaces/PurchaseOrder";
+import EventsService from "@/core/services/event.service";
+import { useEffect, useState } from "react";
 
 const MyTickets = () => {
 	const [myEvents, setMyEvents] = useState<any[]>([]);
@@ -101,23 +101,25 @@ const MyTickets = () => {
 								>
 									<CarouselContent className="p-4 flex">
 										{ongoingEvents.map((event) =>
-											event.purchaseOrders.map((purchaseOrder: IPurchaseOrder) => (
-												<CarouselItem
-													className="basis-auto"
-													key={purchaseOrder.id}
-												>
-													<PurchaseOrderCards
+											event.purchaseOrders.map(
+												(purchaseOrder: IPurchaseOrder) => (
+													<CarouselItem
+														className="basis-auto"
 														key={purchaseOrder.id}
-														id={purchaseOrder.id}
-														address={event.Address}
-														img={event.assets[0]?.url}
-														startDate={event.startDate}
-														title={event.title}
-														status={event.status}
-														purchaseOrder={purchaseOrder}
-													/>
-												</CarouselItem>
-											))
+													>
+														<PurchaseOrderCards
+															key={purchaseOrder.id}
+															id={purchaseOrder.id}
+															address={event.Address}
+															img={event.assets[0]?.url}
+															startDate={event.startDate}
+															title={event.title}
+															status={event.status}
+															purchaseOrder={purchaseOrder}
+														/>
+													</CarouselItem>
+												)
+											)
 										)}
 									</CarouselContent>
 									<CarouselNext className="hidden sm:flex" />
@@ -139,20 +141,27 @@ const MyTickets = () => {
 										loop: false,
 									}}
 								>
-									<CarouselContent className="p-4">
+									<CarouselContent className="p-4 flex">
 										{pastEvents.map((event) =>
-											event.purchaseOrders.map((purchaseOrder: IPurchaseOrder) => (
-												<PurchaseOrderCards
-													key={purchaseOrder.id}
-													id={purchaseOrder.id}
-													address={event.Address}
-													img={event.assets[0]?.url}
-													startDate={event.startDate}
-													title={event.title}
-													status={event.status}
-													purchaseOrder={purchaseOrder}
-												/>
-											))
+											event.purchaseOrders.map(
+												(purchaseOrder: IPurchaseOrder) => (
+													<CarouselItem
+														className="basis-auto"
+														key={purchaseOrder.id}
+													>
+														<PurchaseOrderCards
+															key={purchaseOrder.id}
+															id={purchaseOrder.id}
+															address={event.Address}
+															img={event.assets[0]?.url}
+															startDate={event.startDate}
+															title={event.title}
+															status={event.status}
+															purchaseOrder={purchaseOrder}
+														/>
+													</CarouselItem>
+												)
+											)
 										)}
 									</CarouselContent>
 									<CarouselNext className="hidden sm:flex" />

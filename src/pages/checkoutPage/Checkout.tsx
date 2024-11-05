@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Calendar, Clock, MapPin, AlertTriangle } from "lucide-react";
-import { PersonIcon } from "@radix-ui/react-icons";
-import { formatDate } from "@/core/services/helper.service";
 import placeholder from "@/assets/images/home/placeholderEventCard.png";
-import { IPurchaseOrderReservedById } from "@/core/interfaces/PurchaseOrder";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import PurchaseOrderService from "@/core/services/purchaseOrder.service";
-import { Skeleton } from "@/components/ui/skeleton";
-import CheckoutForm from "@/components/formInputs/CheckoutForm/CheckoutForm";
 import CheckoutSuccess from "@/components/checkoutSuccess/CheckoutSuccess";
+import CheckoutForm from "@/components/formInputs/CheckoutForm/CheckoutForm";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { IPurchaseOrderReservedById } from "@/core/interfaces/PurchaseOrder";
 import { TicketCard } from "@/core/interfaces/Ticket.interface";
+import { formatDate } from "@/core/services/helper.service";
+import PurchaseOrderService from "@/core/services/purchaseOrder.service";
+import { PersonIcon } from "@radix-ui/react-icons";
+import { AlertTriangle, Calendar, Clock, MapPin } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 export default function Checkout() {
 	const [timeLeft, setTimeLeft] = useState(0);
@@ -22,7 +22,7 @@ export default function Checkout() {
 	const purchaseOrderService = new PurchaseOrderService();
 	const navigate = useNavigate();
 	const [isSuccessful, setIsSuccessful] = useState(false);
-	const [tickets, setTickets] = useState<TicketCard[]>([])
+	const [tickets, setTickets] = useState<TicketCard[]>([]);
 
 	useEffect(() => {
 		const timer = setInterval(() => {
@@ -102,11 +102,11 @@ export default function Checkout() {
 					<div
 						className="relative h-64 bg-cover bg-center"
 						style={{
-							backgroundImage: `url(${
+							backgroundImage: `url('${
 								purchaseOrder.event.assets[0]?.url
 									? purchaseOrder.event.assets[0]?.url
 									: placeholder
-							})`,
+							}')`,
 						}}
 					>
 						<div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">

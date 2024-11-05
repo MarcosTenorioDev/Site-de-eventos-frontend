@@ -1,20 +1,22 @@
-import { MinusIcon, PlusIcon } from "@radix-ui/react-icons";
-import { SignInButton, SignedIn, SignedOut } from "@clerk/clerk-react";
-import { useState } from "react";
-import { TicketPurchaseOrder } from "@/core/interfaces/Ticket.interface";
-import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
-import { Button } from "../ui/button";
 import { IEventById } from "@/core/interfaces/Event.interface";
+import { TicketPurchaseOrder } from "@/core/interfaces/Ticket.interface";
 import PurchaseOrderService from "@/core/services/purchaseOrder.service";
+import { SignInButton, SignedIn, SignedOut } from "@clerk/clerk-react";
+import { InfoCircledIcon, MinusIcon, PlusIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 
 interface IEventPurchaseCard {
 	tickets: TicketPurchaseOrder[];
 	event: IEventById;
+	ticketsPurchased: number;
+	isLoadedTicketsPurchased: boolean;
 }
 
 const EventPurchaseCard = (props: IEventPurchaseCard) => {
-	const { tickets, event } = props;
+	const { tickets, event, ticketsPurchased, isLoadedTicketsPurchased } = props;
 	const purchaseOrderService = new PurchaseOrderService();
 	const [ticketCounts, setTicketCounts] = useState<Record<string, number>>(
 		tickets.reduce((acc, ticket) => {
@@ -96,8 +98,11 @@ const EventPurchaseCard = (props: IEventPurchaseCard) => {
 										type="button"
 										onClick={() => handleIncrement(ticket.id, ticket.price)}
 										disabled={
-											event.maxTicketsPerUser <= ticketSelectedCount ||
-											ticketCounts[ticket.id] >= ticket.quantityAvailablePerUser
+											event.maxTicketsPerUser <=
+												ticketSelectedCount + ticketsPurchased ||
+											ticketCounts[ticket.id] >=
+												ticket.quantityAvailablePerUser ||
+											!isLoadedTicketsPurchased
 										}
 									>
 										<PlusIcon />
@@ -105,6 +110,12 @@ const EventPurchaseCard = (props: IEventPurchaseCard) => {
 								</div>
 							</div>
 						))}
+						{event.maxTicketsPerUser <= ticketsPurchased && (
+							<p className="text-muted-foreground text-sm sm:text-xs flex items-center justify-start gap-2">
+								<InfoCircledIcon className="w-4 h-4 min-w-4 min-h-4" />
+								Você atingiu o limite de tickets para este evento.
+							</p>
+						)}
 					</CardContent>
 					<CardFooter className="flex flex-col relative border-t">
 						<div className="w-full">
@@ -116,7 +127,11 @@ const EventPurchaseCard = (props: IEventPurchaseCard) => {
 								type="button"
 								className="absolute -bottom-5 mx-auto text-lg"
 								onClick={handleSubmit}
-								disabled={ticketSelectedCount === 0 || isLoading}
+								disabled={
+									ticketSelectedCount === 0 ||
+									isLoading ||
+									event.maxTicketsPerUser <= ticketsPurchased
+								}
 							>
 								{ticketSelectedCount === 0 ? (
 									"Selecione um ingresso"

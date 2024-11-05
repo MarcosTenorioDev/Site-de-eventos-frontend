@@ -25,6 +25,7 @@ import EventPurchaseCard from "@/components/eventPurchaseCard/eventPurchaseCard"
 import EditorView from "@/components/MarkdownEditor/EditorView";
 import { IAddress } from "@/core/interfaces/Address";
 import { IEventById } from "@/core/interfaces/Event.interface";
+import PurchaseOrderService from "@/core/services/purchaseOrder.service";
 
 const Event = () => {
 	const [api, setApi] = useState<CarouselApi>();
@@ -33,6 +34,10 @@ const Event = () => {
 	const [attractions, setAttractions] = useState<
 		{ id: string; description: string; imageUrl: string; name: string }[]
 	>([]);
+	const [countAlreadyPurchased, setCountAlreadyPurchased] = useState<number>(0);
+	const [isLoadedTicketsPurchased, setIsLoadedTicketsPurchased] =
+		useState<boolean>(false);
+	const purchaseOrderService = new PurchaseOrderService();
 	const [tickets, setTickets] = useState<TicketPurchaseOrder[]>([]);
 	const eventService = new EventsService();
 	const [event, setEvent] = useState<IEventById>();
@@ -72,6 +77,14 @@ const Event = () => {
 					);
 					setAddress(event.Address);
 					setTickets(tickets);
+					purchaseOrderService
+						.GetTicketsQuantityPurchasedByEventId(id)
+						.then((ticketsPurchased) => {
+							setCountAlreadyPurchased(ticketsPurchased.ticketsPurchased);
+						})
+						.finally(() => {
+							setIsLoadedTicketsPurchased(true);
+						});
 					return event;
 				})
 				.catch(() => {
@@ -221,7 +234,12 @@ const Event = () => {
 									</CardContent>
 								</Card>
 
-								<EventPurchaseCard tickets={tickets} event={event} />
+								<EventPurchaseCard
+									tickets={tickets}
+									event={event}
+									ticketsPurchased={countAlreadyPurchased}
+									isLoadedTicketsPurchased={isLoadedTicketsPurchased}
+								/>
 							</div>
 							<div className="flex flex-col sm:flex-row justify-center items-center w-full max-w-[1140px] sm:justify-start text-center mt-12 sm:mt-8 font-primary gap-8 mb-16">
 								<div>

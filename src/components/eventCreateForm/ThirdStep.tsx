@@ -6,9 +6,12 @@ import {
 	CardFooter,
 	CardHeader,
 } from "@/components/ui/card";
+import { ToastType, useToastContext } from "@/core/contexts/toasts.context";
 import { IAddress } from "@/core/interfaces/Address";
 import { IEventPayload } from "@/core/interfaces/Event.interface";
 import AddressService from "@/core/services/address.service";
+import AssetsService from "@/core/services/assets.service";
+import EventsService from "@/core/services/event.service";
 import {
 	DownloadIcon,
 	MapPinIcon,
@@ -21,26 +24,80 @@ import EditorView from "../MarkdownEditor/EditorView";
 import { useStepper } from "../stepper/use-stepper";
 
 interface IThirdStepProps {
-	tickets: TicketTypeCreate[];
+	tickets: TicketTypePayload[];
 	event: IEventPayload;
 }
 
 const ThirdStep = (props: IThirdStepProps) => {
 	const { event, tickets } = props;
-	const [imageBanner, setImageBanner] = useState<string>("");
-	/* const eventService = new EventsService();
-	const ticketTypeService = new TicketTypeService();
-	const assetsService = new AssetsService(); */
+	const [imageBanner, setImageBanner] = useState<File>();
+	const eventService = new EventsService();
+	const assetsService = new AssetsService();
 	const [address, setAddress] = useState<IAddress>();
 	const addressService = new AddressService();
-	const [isLoading /* setIsLoading */] = useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const { prevStep, nextStep } = useStepper();
 
+	const toast = useToastContext();
 	const handleImageUpload = (event: any) => {
 		const file = event.target.files[0];
 		if (file) {
-			setImageBanner(URL.createObjectURL(file));
+			setImageBanner(file);
 		}
+	};
+
+	const onSubmit = () => {
+		try {
+			setIsLoading(true);
+			const payload = { ...event, ticketTypes: tickets };
+			eventService
+				.postEvent(payload)
+				.then((event) => {
+					if (imageBanner) {
+						const payload = new FormData();
+
+						payload.append("image", imageBanner);
+						payload.append("eventId", event.id);
+						payload.append("type", "image");
+						payload.append("description", "main");
+
+						assetsService
+							.postAssets(payload)
+							.then((asset) => {
+								console.log(asset);
+								toast.showToast(
+									"Parabéns! O seu evento está pronto!🎉",
+									ToastType.Success
+								);
+								nextStep();
+								return;
+							})
+							.catch(() => {
+								toast.showToast(
+									"Parabéns! O seu evento está pronto🎉 - Mas houve um problema ao adicionar a imagem de banner, por favor, verificar!",
+									ToastType.Warning
+								);
+								nextStep();
+							});
+						return;
+					}
+
+					toast.showToast(
+						"Parabéns! O seu evento está pronto!🎉",
+						ToastType.Success
+					);
+					nextStep();
+				})
+				.catch(() => {
+					toast.showToast(
+						"Houve um erro ao criar o seu evento, por favor, tente novamente ou contate o suporte técnico!",
+						ToastType.Error
+					);
+				})
+				.finally(() => {
+					setIsLoading(false);
+				});
+		} catch (err) {}
 	};
 
 	useEffect(() => {
@@ -53,14 +110,6 @@ const ThirdStep = (props: IThirdStepProps) => {
 				console.error("Houve um erro ao buscar endereço do evento", err);
 			});
 	}, []);
-
-	const LoadingComponent = () => {
-		return <div></div>;
-	};
-
-	if (isLoading) {
-		return <LoadingComponent />;
-	}
 
 	return (
 		<div className="flex flex-col w-full px-5 sm:px-10 max-w-7xl my-10">
@@ -75,14 +124,14 @@ const ThirdStep = (props: IThirdStepProps) => {
 							<div
 								className="w-full h-full max-w-[1140px] max-h-[500px] aspect-video relative rounded-xl overflow-hidden"
 								style={{
-									backgroundImage: `url(${imageBanner})`,
+									backgroundImage: `url(${URL.createObjectURL(imageBanner)})`,
 									backgroundSize: "cover",
 									backgroundPosition: "center",
 								}}
 							>
 								{/* Imagem com sobreposição */}
 								<img
-									src={imageBanner}
+									src={URL.createObjectURL(imageBanner)}
 									alt="banner do evento"
 									className="opacity-0 w-full h-full object-cover rounded-xl"
 								/>
@@ -90,7 +139,7 @@ const ThirdStep = (props: IThirdStepProps) => {
 								<Button
 									className="absolute top-0 right-0 text-white w-max h-max hover:bg-slate-300 hover:bg-opacity-15 hover:text-white z-10"
 									variant={"ghost"}
-									onClick={() => setImageBanner("")}
+									onClick={() => setImageBanner(undefined)}
 								>
 									<XCircleIcon className="w-10 h-10" />
 								</Button>
@@ -313,9 +362,10 @@ const ThirdStep = (props: IThirdStepProps) => {
 					size="lg"
 					className="bg-green-500 hover:bg-green-300 text-xl"
 					type="submit"
-					onClick={nextStep}
+					onClick={onSubmit}
+					disabled={isLoading}
 				>
-					Criar evento
+					{isLoading ? "Carregando..." : "Criar evento"}
 				</Button>
 			</div>
 		</div>

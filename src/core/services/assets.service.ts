@@ -6,7 +6,7 @@ class AssetsService {
 
 	constructor() {}
 
-	async uploadAssets(payload: any) {
+	async postAssets(payload: FormData) {
 		const response = await this.axios.post(
 			`${import.meta.env.VITE_API_DEV_URL}/assets/upload`,
 			payload
@@ -14,20 +14,7 @@ class AssetsService {
 		return response.data;
 	}
 
-	async postAssets(payload: {
-		eventId: string;
-		type: string;
-		url: string;
-		description: string;
-	}) {
-		const response = await this.axios.post(
-			`${import.meta.env.VITE_API_DEV_URL}/assets`,
-			payload
-		);
-		return response.data;
-	}
-
-    async deleteAssetById(id:string) {
+	async deleteAssetById(id: string) {
 		const response = await this.axios.delete(
 			`${import.meta.env.VITE_API_DEV_URL}/assets/${id}`
 		);

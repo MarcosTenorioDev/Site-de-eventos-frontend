@@ -17,11 +17,13 @@ import { useStepper } from "../stepper/use-stepper";
 import { Card, CardDescription, CardFooter, CardHeader } from "../ui/card";
 
 interface ISecondStepProps {
-	onChangeTicketTypes: (payload: TicketTypeCreate[]) => void;
-	ticketTypes: TicketTypeCreate[];
+	onChangeTicketTypes: (payload: TicketTypePayload[]) => void;
+	ticketTypes: TicketTypePayload[];
 }
 const SecondStep = (props: ISecondStepProps) => {
-	const [tickets, setTickets] = useState<TicketTypeCreate[]>(props.ticketTypes);
+	const [tickets, setTickets] = useState<TicketTypePayload[]>(
+		props.ticketTypes
+	);
 	const { prevStep, nextStep } = useStepper();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const initialValues = {
@@ -49,9 +51,8 @@ const SecondStep = (props: ISecondStepProps) => {
 		isActive: Yup.boolean(),
 	});
 
-	const onSubmit = async (values: TicketTypeCreate) => {
+	const onSubmit = async (values: TicketTypePayload) => {
 		const payload = {
-			eventId: "",
 			description: values.description,
 			price: values.price,
 			quantity: values.quantity,
@@ -113,7 +114,7 @@ const SecondStep = (props: ISecondStepProps) => {
 						<DialogTrigger asChild>
 							<Button
 								variant="outline"
-								className="p-6 h-14 flex items-center justify-center gap-5 w-min"
+								className="p-6 h-14 flex items-center justify-center gap-5 w-min border-primary"
 							>
 								<h2 className="text-primary font-semibold text-xl text-nowrap pb-1">
 									Criar ingresso

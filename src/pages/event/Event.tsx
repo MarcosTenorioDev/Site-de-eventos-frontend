@@ -22,10 +22,9 @@ import { TicketPurchaseOrder } from "@/core/interfaces/Ticket.interface";
 
 import placeholder from "@/assets/images/home/placeholderEventCard.png";
 import EventPurchaseCard from "@/components/eventPurchaseCard/eventPurchaseCard";
+import EditorView from "@/components/MarkdownEditor/EditorView";
 import { IAddress } from "@/core/interfaces/Address";
 import { IEventById } from "@/core/interfaces/Event.interface";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
 const Event = () => {
 	const [api, setApi] = useState<CarouselApi>();
@@ -156,9 +155,9 @@ const Event = () => {
 							</div>
 							<div className="flex flex-col gap-12 md:gap-4 md:flex-row w-full max-w-[1140px] justify-between mt-8 font-primary">
 								<Card className="w-full md:w-8/12 h-min">
-									<ReactMarkdown className="p-5" remarkPlugins={[remarkGfm]}>
-										{event.description}
-									</ReactMarkdown>
+									<div className="p-5">
+										<EditorView content={event.description} />
+									</div>
 									<CardContent className="">
 										{attractions.length ? (
 											<>

@@ -1,11 +1,11 @@
 type TicketType = {
-	id:string;
+	id: string;
 	eventId?: string;
 	description: string;
 	price?: number;
 	quantity: number;
-	salesStartDate:string;
-	salesEndDate:string;
+	salesStartDate: string;
+	salesEndDate: string;
 	isActive: boolean;
 };
 
@@ -14,7 +14,16 @@ type TicketTypeCreate = {
 	description: string;
 	price: number;
 	quantity: number;
-	salesStartDate:string;
-	salesEndDate:string;
+	salesStartDate: string;
+	salesEndDate: string;
+	isActive: boolean;
+};
+
+type TicketTypePayload = {
+	description: string;
+	price: number;
+	quantity: number;
+	salesStartDate: string;
+	salesEndDate: string;
 	isActive: boolean;
 };

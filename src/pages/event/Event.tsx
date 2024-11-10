@@ -248,7 +248,7 @@ const Event = () => {
 									</h2>
 									<img
 										src={event.producers?.imageUrl}
-										alt=""
+										alt="imagem do produtor do evento"
 										className="w-full aspect-video sm:w-48 mx-auto"
 									/>
 								</div>

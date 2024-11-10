@@ -1,17 +1,17 @@
-import {
-	SignedOut,
-	SignedIn,
-	SignInButton,
-	SignUpButton,
-	SignOutButton,
-} from "@clerk/clerk-react";
-import { Link } from "react-router-dom";
-import { Button } from "../components/ui/button";
-import Hamburger from "hamburger-react";
-import { useState } from "react";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import { useT } from "@/assets/i18n";
 import CustomClerkUserButton from "@/components/customClerkUserButton";
+import {
+	SignedIn,
+	SignedOut,
+	SignInButton,
+	SignOutButton,
+	SignUpButton,
+} from "@clerk/clerk-react";
+import { Cross2Icon } from "@radix-ui/react-icons";
+import Hamburger from "hamburger-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "../components/ui/button";
 
 const Navbar = () => {
 	const t = useT();
@@ -139,7 +139,13 @@ const Navbar = () => {
 							<div className="text-white font-primary">
 								{/* TODO: Retirar botão em volta de SignInButton */}
 								<div className="h-9 px-4 py-2 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
-									<SignInButton mode="modal">
+									<SignInButton
+										mode="modal"
+										forceRedirectUrl={`/`}
+										fallbackRedirectUrl={`/`}
+										signUpForceRedirectUrl={`/`}
+										signUpFallbackRedirectUrl={`/`}
+									>
 										{t("application.components.navbar.login")}
 									</SignInButton>
 								</div>
@@ -179,7 +185,13 @@ const Navbar = () => {
 							<div className="flex flex-col gap-3 mt-8">
 								<div className="text-white font-primary">
 									<Button variant={"default"} className="w-full">
-										<SignInButton mode="modal">
+										<SignInButton
+											mode="modal"
+											forceRedirectUrl={`/`}
+											fallbackRedirectUrl={`/`}
+											signUpForceRedirectUrl={`/`}
+											signUpFallbackRedirectUrl={`/`}
+										>
 											{t("application.components.navbar.login")}
 										</SignInButton>
 									</Button>

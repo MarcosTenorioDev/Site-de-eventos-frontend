@@ -263,9 +263,10 @@ export const DatePicker = (props: {
 	label?: string;
 	control: string;
 	onSelect?: (date: Date | undefined) => void;
+	value?: Date;
 }) => {
-	const { className, placeHolder, label, control, onSelect } = props;
-	const [date, setDate] = useState<Date | undefined>();
+	const { className, placeHolder, label, control, onSelect, value } = props;
+	const [date, setDate] = useState<Date | undefined>(value);
 
 	const handleDateChange = (selectedDate: Date | undefined) => {
 		setDate(selectedDate);

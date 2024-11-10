@@ -1,6 +1,7 @@
 import { IAddress } from "./Address";
 import { IAssets } from "./Assets.interface";
 import { IProducer } from "./Producer.interface";
+import { TicketType } from "./TicketType";
 
 export interface IrecentEvents {
 	addressId: string;
@@ -24,6 +25,42 @@ export interface IEventPayload {
 	additionalDetails: string;
 	producerId: string;
 	addressId: string;
+}
+
+export interface IEventEditPayload {
+	title: string;
+	description: string;
+	capacity: number;
+	categoryId: string;
+	startDate: Date;
+	endDate: Date;
+	status: string;
+	format: string;
+	ageRating: number;
+	maxTicketsPerUser: number;
+	additionalDetails: string;
+	producerId: string;
+	addressId: string;
+}
+
+export interface IEventDetails {
+	id: string;
+	title: string;
+	description: string;
+	capacity: number;
+	categoryId: string;
+	startDate: Date;
+	endDate: Date;
+	status: string;
+	format: string;
+	ageRating: number;
+	maxTicketsPerUser: number;
+	additionalDetails: string;
+	producerId: string;
+	addressId: string;
+	Address: IAddress;
+	ticketTypes: TicketType[];
+	assets: IAssets[];
 }
 
 export interface IEventById {

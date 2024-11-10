@@ -2,6 +2,8 @@ import { Params } from "react-router-dom";
 import { AxiosInterceptor } from "../interceptor/axios.interceptor";
 import {
 	IEventById,
+	IEventDetails,
+	IEventEditPayload,
 	IEventsCreated,
 	IrecentEvents,
 } from "../interfaces/Event.interface";
@@ -53,6 +55,23 @@ class EventsService {
 	async getUserEvents() {
 		const response = await this.axios.get(
 			`${import.meta.env.VITE_API_DEV_URL}/users/events`
+		);
+		return response.data;
+	}
+	async getEventDetails(id: string): Promise<IEventDetails> {
+		const response = await this.axios.get(
+			`${import.meta.env.VITE_API_DEV_URL}/events/details/${id}`
+		);
+		return response.data;
+	}
+
+	async updateEvent(
+		payload: IEventEditPayload,
+		id: string
+	): Promise<IEventDetails> {
+		const response = await this.axios.put(
+			`${import.meta.env.VITE_API_DEV_URL}/events/${id}`,
+			payload
 		);
 		return response.data;
 	}

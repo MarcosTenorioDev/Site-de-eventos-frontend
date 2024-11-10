@@ -9,6 +9,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { TicketTypePayload } from "@/core/interfaces/TicketType";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { TicketIcon, TrashIcon } from "lucide-react";
 import { useEffect, useState } from "react";

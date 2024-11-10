@@ -1,7 +1,7 @@
 import FirstStep from "@/components/eventCreateForm/FirstStep";
 import SecondStep from "@/components/eventCreateForm/SecondStep";
 import ThirdStep from "@/components/eventCreateForm/ThirdStep";
-import { Step, type StepItem, Stepper, useStepper } from "@/components/stepper";
+import { Step, Stepper, useStepper, type StepItem } from "@/components/stepper";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -12,6 +12,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { IEventPayload } from "@/core/interfaces/Event.interface";
+import { TicketTypePayload } from "@/core/interfaces/TicketType";
 import { Check, TicketIcon } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";

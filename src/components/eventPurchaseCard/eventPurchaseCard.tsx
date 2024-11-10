@@ -77,10 +77,18 @@ const EventPurchaseCard = (props: IEventPurchaseCard) => {
 				<>
 					<CardContent className="p-4 min-w-64">
 						{tickets.map((ticket) => (
-							<div key={ticket.id} className="flex items-center">
+							<div
+								key={ticket.id}
+								className={`flex items-center border-b last:border-b-0 last:pb-0 py-2 ${
+									ticket.quantityAvailablePerUser === 0 ? "opacity-50" : ""
+								}`}
+							>
 								<div className="w-full">
 									<p className="font-semibold text-lg">{ticket.description}</p>
-									<p className="mb-2 text-sm text-primary">R$ {ticket.price}</p>
+									<p className="text-sm text-primary">R$ {ticket.price}</p>
+									{ticket.quantityAvailablePerUser === 0 && (
+										<p className="text-xs text-gray-500 italic">Esgotado</p>
+									)}
 								</div>
 								<div className="flex items-center">
 									<Button
@@ -88,6 +96,7 @@ const EventPurchaseCard = (props: IEventPurchaseCard) => {
 										className="p-0"
 										type="button"
 										onClick={() => handleDecrement(ticket.id, ticket.price)}
+										disabled={ticket.quantityAvailablePerUser === 0}
 									>
 										<MinusIcon />
 									</Button>
@@ -98,6 +107,7 @@ const EventPurchaseCard = (props: IEventPurchaseCard) => {
 										type="button"
 										onClick={() => handleIncrement(ticket.id, ticket.price)}
 										disabled={
+											ticket.quantityAvailablePerUser === 0 ||
 											event.maxTicketsPerUser <=
 												ticketSelectedCount + ticketsPurchased ||
 											ticketCounts[ticket.id] >=
@@ -110,6 +120,7 @@ const EventPurchaseCard = (props: IEventPurchaseCard) => {
 								</div>
 							</div>
 						))}
+
 						{event.maxTicketsPerUser <= ticketsPurchased && (
 							<p className="text-muted-foreground text-sm sm:text-xs flex items-center justify-start gap-2">
 								<InfoCircledIcon className="w-4 h-4 min-w-4 min-h-4" />

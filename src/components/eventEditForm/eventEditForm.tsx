@@ -244,7 +244,7 @@ const EventEditForm = (props: IEditEventFormProps) => {
 												{" "}
 												Status do evento:
 											</Label>
-											<div className="flex justify-start items-center gap-8 pt-1">
+											<div className="flex justify-start items-center gap-8 pt-1 w-full">
 												<Badge
 													className={` text-xl rounded-full ${
 														values.status === "Ativo"
@@ -265,7 +265,7 @@ const EventEditForm = (props: IEditEventFormProps) => {
 												/>
 											</div>
 											<span className="text-sm flex text-muted-foreground items-center gap-2 font-semibold mt-2">
-												<InfoCircledIcon className="w-5 h-5" />
+												<InfoCircledIcon className="w-5 min-w-5 min-h-5 h-5" />
 												Obs: o status do seu evento afetará a visibilidade do
 												mesmo para os usuários .
 											</span>

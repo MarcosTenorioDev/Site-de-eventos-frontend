@@ -4,6 +4,7 @@ import {
 	IEventById,
 	IEventDetails,
 	IEventEditPayload,
+	IEventSearch,
 	IEventsCreated,
 	IrecentEvents,
 } from "../interfaces/Event.interface";
@@ -72,6 +73,13 @@ class EventsService {
 		const response = await this.axios.put(
 			`${import.meta.env.VITE_API_DEV_URL}/events/${id}`,
 			payload
+		);
+		return response.data;
+	}
+
+	async getEventByName(searchTerm: string): Promise<IEventSearch[]> {
+		const response = await this.axios.get(
+			`${import.meta.env.VITE_API_DEV_URL}/events/title/${searchTerm}`
 		);
 		return response.data;
 	}

@@ -33,6 +33,7 @@ const EventInfo = () => {
 
 	useEffect(() => {
 		if (id) {
+			setLoading(true);
 			categoriesService.getCategories().then((results) => {
 				if (results) {
 					const categoriesResult = results.map((categorie) => {
@@ -82,6 +83,7 @@ const EventInfo = () => {
 				});
 			return;
 		}
+		navigate("/managment");
 	}, [id]);
 
 	if (loading) {
@@ -119,14 +121,6 @@ const EventInfo = () => {
 						</AccordionItem>
 					</Accordion>
 				</div>
-			</>
-		);
-	}
-
-	if (!event) {
-		return (
-			<>
-				<h1>sem evento</h1>
 			</>
 		);
 	}

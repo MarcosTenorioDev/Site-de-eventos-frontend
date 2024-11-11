@@ -1,9 +1,10 @@
-import { cn } from "@/lib/utils";
-import { MobileSidebar } from "@/layout/sidebarComponents/Mobile-sidebar";
 import managment from "@/assets/icons/management.svg";
-import { Link, useNavigate } from "react-router-dom";
+import { SearchEventModal } from "@/components/SearchEventModal/SearchEventModal";
 import CustomClerkUserButton from "@/components/customClerkUserButton";
 import { Button } from "@/components/ui/button";
+import { MobileSidebar } from "@/layout/sidebarComponents/Mobile-sidebar";
+import { cn } from "@/lib/utils";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Header() {
 	const navigate = useNavigate();
@@ -19,12 +20,17 @@ export default function Header() {
 						alt="icone de organizadores de eventos"
 						className="w-7"
 					/>
-					<h1 className="text-lg font-semibold">Área do organizador</h1>
+					<span className="text-lg font-semibold text-nowrap">
+						Área do organizador
+					</span>
 				</Link>
 				<div className={cn("md:!hidden w-full flex")}>
 					<MobileSidebar />
 				</div>
-				<div className="flex items-center justify-center gap-10">
+				<div className="flex items-center justify-end gap-10 flex-grow">
+					<div className="hidden md:flex w-full max-w-[700px] ml-[50px]">
+						<SearchEventModal />
+					</div>
 					<Button
 						variant={"link"}
 						className="hidden items-center justify-between gap-2 md:flex text-primary"

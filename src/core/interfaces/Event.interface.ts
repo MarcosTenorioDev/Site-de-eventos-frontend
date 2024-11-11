@@ -100,3 +100,10 @@ export interface IEventsCreated {
 	Address: IAddress;
 	status: string;
 }
+
+export interface IEventSearch {
+	id: string;
+	title: string;
+	status: string;
+	assets: IAssets[];
+}

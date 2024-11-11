@@ -1,21 +1,17 @@
-import { useState, useEffect } from "react";
-import { MenuIcon } from "lucide-react";
-import {
-	Sheet,
-	SheetContent,
-	SheetTrigger,
-} from "@/components/ui/sheet";
-import { SideNav } from "@/layout/sidebarComponents/Sidenav";
 import { NavItems } from "@/components/constants/adminNavItems";
 import CustomClerkUserButton from "@/components/customClerkUserButton";
-import { SignOutButton } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { SideNav } from "@/layout/sidebarComponents/Sidenav";
+import { SignOutButton } from "@clerk/clerk-react";
+import { MenuIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const MobileSidebar = () => {
 	const [open, setOpen] = useState(false);
 	const [isMounted, setIsMounted] = useState(false);
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		setIsMounted(true);
@@ -59,7 +55,7 @@ export const MobileSidebar = () => {
 						<Button
 							variant={"outline"}
 							className="w-full text-primary border-primary hover:text-primary"
-							onClick={() => navigate('/')}
+							onClick={() => navigate("/")}
 						>
 							Área do participante
 						</Button>

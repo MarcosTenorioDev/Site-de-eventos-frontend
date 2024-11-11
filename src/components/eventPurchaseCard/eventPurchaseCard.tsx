@@ -80,7 +80,10 @@ const EventPurchaseCard = (props: IEventPurchaseCard) => {
 							<div
 								key={ticket.id}
 								className={`flex items-center border-b last:border-b-0 last:pb-0 py-2 ${
-									ticket.quantityAvailablePerUser === 0 ? "opacity-50" : ""
+									ticket.quantityAvailablePerUser === 0 ||
+									event.maxTicketsPerUser <= ticketsPurchased
+										? "opacity-50"
+										: ""
 								}`}
 							>
 								<div className="w-full">
@@ -122,7 +125,7 @@ const EventPurchaseCard = (props: IEventPurchaseCard) => {
 						))}
 
 						{event.maxTicketsPerUser <= ticketsPurchased && (
-							<p className="text-muted-foreground text-sm sm:text-xs flex items-center justify-start gap-2">
+							<p className="text-muted-foreground text-sm sm:text-xs flex items-center justify-start gap-2 mt-3">
 								<InfoCircledIcon className="w-4 h-4 min-w-4 min-h-4" />
 								Você atingiu o limite de tickets para este evento.
 							</p>

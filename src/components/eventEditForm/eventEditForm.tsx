@@ -12,7 +12,6 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ToastType, useToastContext } from "@/core/contexts/toasts.context";
 import { IAddress } from "@/core/interfaces/Address";
@@ -22,6 +21,7 @@ import {
 } from "@/core/interfaces/Event.interface";
 import AssetsService from "@/core/services/assets.service";
 import EventsService from "@/core/services/event.service";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { Label } from "@radix-ui/react-label";
 import {
 	ErrorMessage,
@@ -33,7 +33,9 @@ import {
 import { UploadIcon } from "lucide-react";
 import { useState } from "react";
 import * as Yup from "yup";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { Switch } from "../ui/switch";
 
 interface IEditEventFormProps {
 	event: IEventDetails;
@@ -191,21 +193,18 @@ const EventEditForm = (props: IEditEventFormProps) => {
 			onSubmit={onSubmit}
 			validationSchema={validationSchema}
 		>
-			{({ setFieldValue }) => (
+			{({ setFieldValue, values }) => (
 				<Form className="flex flex-col gap-4">
-					<div className="flex items-center justify-start mb-6">
+					<div className="flex items-center justify-between mb-6">
 						<h1 className="font-bold text-2xl text-start">
 							Informações gerais do evento
 						</h1>
-						<Badge className="bg-green-500 hover:bg-green-300 text-xl ml-4">
-							{event.status}
-						</Badge>
 					</div>
 
 					<Accordion type="single" collapsible>
 						<AccordionItem value="Event Details">
 							<AccordionTrigger className="border border-b-0 rounded-md rounded-b-none px-8 font-bold text-xl text-start">
-								Detalhes do evento
+								Detalhes do evento{" "}
 							</AccordionTrigger>
 							<AccordionContent>
 								<Card className="border border-t-0 rounded-t-none text-primary">
@@ -240,6 +239,37 @@ const EventEditForm = (props: IEditEventFormProps) => {
 											/>
 										</label>
 
+										<div className="pt-8 text-start">
+											<Label className="text-primary font-medium">
+												{" "}
+												Status do evento:
+											</Label>
+											<div className="flex justify-start items-center gap-8 pt-1">
+												<Badge
+													className={` text-xl rounded-full ${
+														values.status === "Ativo"
+															? "bg-green-500 hover:bg-green-300"
+															: "bg-gray-500 hover:bg-gray-300"
+													}`}
+												>
+													{values.status}
+												</Badge>
+												<Switch
+													checked={values.status === "Ativo"}
+													onCheckedChange={(checked) =>
+														setFieldValue(
+															"status",
+															checked ? "Ativo" : "Inativo"
+														)
+													}
+												/>
+											</div>
+											<span className="text-sm flex text-muted-foreground items-center gap-2 font-semibold mt-2">
+												<InfoCircledIcon className="w-5 h-5" />
+												Obs: o status do seu evento afetará a visibilidade do
+												mesmo para os usuários .
+											</span>
+										</div>
 										<div className="flex flex-col text-start pt-4">
 											<Input
 												control="title"

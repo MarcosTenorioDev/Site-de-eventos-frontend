@@ -1,6 +1,6 @@
-import { ToastType, useToastContext } from "@/core/contexts/toasts.context";
 import { EditTicketType, ITicketTypeForm } from "@/core/interfaces/TicketType";
 import TicketTypeService from "@/core/services/ticketType.service";
+import ToastService from "@/core/services/toast.service";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { Label } from "@radix-ui/react-label";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -26,7 +26,6 @@ interface ITicketTypeFormProps {
 export const TicketTypeForm = (props: ITicketTypeFormProps) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const ticketTypeService = new TicketTypeService();
-	const toast = useToastContext();
 	const [isLoadingCreate, setIsLoadingCreate] = useState<boolean>(false);
 	const { mode, ticket, eventId } = props;
 
@@ -93,16 +92,13 @@ export const TicketTypeForm = (props: ITicketTypeFormProps) => {
 		ticketTypeService
 			.postTicketType(payload)
 			.then(() => {
-				toast.showToast(
-					"Ticket do evento criado com sucesso",
-					ToastType.Success
-				);
-				window.location.reload();
+				ToastService.showSuccess("Ticket do evento criado com sucesso", () => {
+					window.location.reload();
+				});
 			})
 			.catch(() => {
-				toast.showToast(
-					"Houve um erro ao criar o seu ticket, por favor, contatar o suporte técnico",
-					ToastType.Error
+				ToastService.showError(
+					"Houve um erro ao criar o seu ticket, por favor, contatar o suporte técnico"
 				);
 			})
 			.finally(() => {
@@ -129,13 +125,13 @@ export const TicketTypeForm = (props: ITicketTypeFormProps) => {
 		ticketTypeService
 			.updateTicketType(payload, id)
 			.then(() => {
-				toast.showToast("Ticket editado com sucesso", ToastType.Success);
-				window.location.reload();
+				ToastService.showSuccess("Ticket editado com sucesso", () => {
+					window.location.reload();
+				});
 			})
 			.catch(() => {
-				toast.showToast(
-					"Houve um erro ao editar o seu ticket, por favor, contatar o suporte técnico",
-					ToastType.Error
+				ToastService.showError(
+					"Houve um erro ao editar o seu ticket, por favor, contatar o suporte técnico"
 				);
 			})
 			.finally(() => {});

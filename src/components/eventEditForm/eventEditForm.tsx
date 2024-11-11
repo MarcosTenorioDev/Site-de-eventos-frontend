@@ -13,7 +13,6 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { ToastType, useToastContext } from "@/core/contexts/toasts.context";
 import { IAddress } from "@/core/interfaces/Address";
 import {
 	IEventDetails,
@@ -21,6 +20,7 @@ import {
 } from "@/core/interfaces/Event.interface";
 import AssetsService from "@/core/services/assets.service";
 import EventsService from "@/core/services/event.service";
+import ToastService from "@/core/services/toast.service";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { Label } from "@radix-ui/react-label";
 import {
@@ -53,7 +53,6 @@ const EventEditForm = (props: IEditEventFormProps) => {
 	const [newBannerImage, setNewBannerImage] = useState<File>();
 	const eventService = new EventsService();
 	const assetsService = new AssetsService();
-	const toast = useToastContext();
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const initialValues: IEventEditPayload = {
@@ -160,26 +159,28 @@ const EventEditForm = (props: IEditEventFormProps) => {
 					assetsService
 						.postAssets(payload)
 						.then(() => {
-							toast.showToast("Evento editado com sucesso", ToastType.Success);
-							window.location.reload();
+							ToastService.showSuccess("Evento editado com sucesso", () => {
+								window.location.reload();
+							});
 						})
 						.catch(() => {
-							toast.showToast(
+							ToastService.showError(
 								"Houve um erro ao editar a imagem do seu evento, por favor, contate o suporte técnico",
-								ToastType.Error
+								() => {
+									window.location.reload();
+								}
 							);
-							window.location.reload();
 						});
 					return;
 				}
 
-				toast.showToast("Evento editado com sucesso", ToastType.Success);
-				window.location.reload();
+				ToastService.showSuccess("Evento editado com sucesso", () => {
+					window.location.reload();
+				});
 			})
 			.catch(() => {
-				toast.showToast(
-					"Houve um erro ao editar o seu evento, por favor, contate o suporte técnico",
-					ToastType.Error
+				ToastService.showError(
+					"Houve um erro ao editar o seu evento, por favor, contate o suporte técnico"
 				);
 			})
 			.finally(() => {

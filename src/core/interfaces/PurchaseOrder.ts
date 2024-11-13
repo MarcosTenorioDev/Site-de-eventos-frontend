@@ -35,7 +35,7 @@ export interface IPurchaseOrderReserved {
 	}[];
 }
 
-export interface IPurchaseOrderCompleted{
+export interface IPurchaseOrderCompleted {
 	id: string;
 	eventId: string;
 	totalPrice: number;
@@ -44,8 +44,20 @@ export interface IPurchaseOrderCompleted{
 	createdAt: Date;
 	updatedAt: Date;
 	reservationExpiresAt: Date;
-	reservedTicketTypes:[];
-	tickets:TicketCard[]
+	reservedTicketTypes: [];
+	tickets: TicketCard[];
+}
+
+export interface PurchaseOrdersByEvent {
+	createdAt: Date;
+	id: string;
+	user: {
+		firstName: string;
+		lastName: string;
+	};
+	quantityTickets: number;
+	totalPrice: number;
+	status: string;
 }
 
 export interface IPurchaseOrderReservedById {
@@ -87,5 +99,9 @@ interface Event {
 
 export interface ReservePurchaseOrderPayload {
 	eventId: string;
-	ticketTypes: { participantName: string; participantEmail: string; ticketTypeId: string }[];
+	ticketTypes: {
+		participantName: string;
+		participantEmail: string;
+		ticketTypeId: string;
+	}[];
 }

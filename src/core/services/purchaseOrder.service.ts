@@ -4,6 +4,7 @@ import {
 	IPurchaseOrderCreate,
 	IPurchaseOrderReserved,
 	IPurchaseOrderReservedById,
+	PurchaseOrdersByEvent,
 	ReservePurchaseOrderPayload,
 } from "../interfaces/PurchaseOrder";
 
@@ -48,6 +49,19 @@ class PurchaseOrderService {
 		const response = await this.axios.put(
 			`${import.meta.env.VITE_API_DEV_URL}/purchaseorders/reserved/${id}`,
 			payload
+		);
+		return response.data;
+	}
+
+	async GetPurchaseOrdersByEventId(
+		eventId: string,
+		itemsPerPage: number,
+		page: number
+	): Promise<{ total: number; purchaseOrders: PurchaseOrdersByEvent[] }> {
+		const response = await this.axios.get(
+			`${
+				import.meta.env.VITE_API_DEV_URL
+			}/purchaseorders/event/${eventId}?itemsPerPage=${itemsPerPage}&page=${page}`
 		);
 		return response.data;
 	}

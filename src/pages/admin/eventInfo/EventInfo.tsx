@@ -1,5 +1,6 @@
 import EventEditForm from "@/components/eventEditForm/eventEditForm";
 import TicketsEditForm from "@/components/eventEditForm/TicketsEditForm";
+import { EventPurchaseOrderTable } from "@/components/eventPurchaseOrderTable/EventPurchaseOrderTable";
 import {
 	Accordion,
 	AccordionContent,
@@ -139,6 +140,8 @@ const EventInfo = () => {
 						ticketTypesProps={event.ticketTypes}
 						eventId={event.id}
 					/>
+
+					<EventPurchaseOrderTable eventId={event.id} />
 				</>
 			) : (
 				<></>

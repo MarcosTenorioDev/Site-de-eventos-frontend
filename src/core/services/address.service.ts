@@ -22,6 +22,13 @@ class AddressService {
 		return response.data;
 	}
 
+	async getCities(): Promise<{ city: string }[]> {
+		const response = await this.axios.get(
+			`${import.meta.env.VITE_API_DEV_URL}/address/cities`
+		);
+		return response.data;
+	}
+
 	async getApiGovAddress(cep: string) {
 		const response = await this.axios.get(
 			`https://viacep.com.br/ws/${cep}/json/`

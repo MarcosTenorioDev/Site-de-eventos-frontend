@@ -107,3 +107,9 @@ export interface IEventSearch {
 	status: string;
 	assets: IAssets[];
 }
+
+export interface IEventFilter {
+    cities: string;
+    categoryId?: string;
+    dateRange?: { to?: string | Date; from?: string | Date };
+  }

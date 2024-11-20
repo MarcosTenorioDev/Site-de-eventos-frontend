@@ -807,7 +807,7 @@ export const FormikMultiSelect = (props: FormikMultiSelectProps) => {
         animation={animation}
         isEmptyMessage={isEmptyMessage}
         className={
-          "flex w-full font-primary min-h-12 text-primary-dark font-medium items-center justify-between whitespace-nowrap rounded-md border border-input bg-white px-3 py-2 text-sm shadow-sm ring-offset-background focus-visible:border-primary focus:outline-none focus:ring-1 hover:bg-white focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+          "flex w-full font-primary min-h-12 text-primary-dark font-medium items-center justify-between whitespace-nowrap rounded-md border border-input bg-white py-2 text-sm shadow-sm ring-offset-background focus-visible:border-primary focus:outline-none focus:ring-1 hover:bg-white focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
         }
         disabled={disabled}
       />

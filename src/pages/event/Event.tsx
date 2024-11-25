@@ -125,7 +125,7 @@ const Event = () => {
 					<div
 						className="absolute max-w-[100vw] bg-center -inset-5 bg-cover bg-no-repeat blur-[10px] -z-10 mt-[70px] bg-[100% 100%] max-h-[700px]"
 						style={{
-							backgroundImage: `url(${encodeURI(event.assets[0]?.url)})`,
+							backgroundImage: `url('${encodeURI(event.assets[0]?.url)}')`,
 						}}
 					/>
 					<div className="flex flex-col items-center justify-center w-full">

@@ -216,7 +216,7 @@ const MyEvents = () => {
 										<MyEventsCards
 											key={card.id}
 											id={card.id}
-											address={card.address}
+											address={card.Address}
 											img={card.assets[0]?.url}
 											startDate={card.startDate}
 											title={card.title}

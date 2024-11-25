@@ -43,15 +43,16 @@ const MyEvents = () => {
 		const now = new Date();
 		return myEvents.filter((event) => {
 			const eventStartDate = new Date(event.startDate);
+			const eventEndDate = new Date(event.endDate);
 			switch (status) {
 				case "all":
 					return true;
 				case "cancelled":
-					return event.status === "Cancelado";
+					return event.status === "Inativo";
 				case "completed":
-					return eventStartDate <= now;
+					return eventStartDate <= now  && event.status === "Ativo";
 				case "ongoing":
-					return eventStartDate > now;
+					return eventStartDate <= now && eventEndDate >= now && event.status === "Ativo";
 				case "scheduled":
 					return eventStartDate > now && event.status === "Ativo";
 				default:

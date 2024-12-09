@@ -124,7 +124,7 @@ const Navbar = () => {
               to={"/"}
               className="font-primary text-white text-2xl font-normal"
             >
-              <img src={logo} alt="logo" />
+              <img src={logo} alt="logo" className="w-14 min-w-14 max-w-14 md:w-16 md:min-w-16 md:max-w-16"/>
             </Link>
             <div className={`sm:hidden`}>
               <Hamburger

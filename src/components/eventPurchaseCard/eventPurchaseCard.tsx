@@ -73,7 +73,12 @@ const EventPurchaseCard = (props: IEventPurchaseCard) => {
 			<CardHeader className="bg-primary-dark text-white font-primary rounded-t-sm p-3">
 				Ingressos
 			</CardHeader>
-			{tickets.length ? (
+
+			{new Date(event.endDate) < new Date() ? <CardContent className="p-4 w-64 mx-auto text-center">
+					<h3 className="w-full font-bold text-muted-foreground text-xl py-10">
+						Evento Encerrado
+					</h3>
+				</CardContent> : tickets.length ? (
 				<>
 					<CardContent className="p-4 min-w-64">
 						{tickets.map((ticket) => (
@@ -185,6 +190,7 @@ const EventPurchaseCard = (props: IEventPurchaseCard) => {
 					</h3>
 				</CardContent>
 			)}
+			
 		</Card>
 	);
 };

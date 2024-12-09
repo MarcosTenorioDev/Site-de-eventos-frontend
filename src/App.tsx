@@ -1,6 +1,5 @@
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./layout/Navbar";
-import Footer from "./layout/Footer";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/home/Home";
 import Event from "./pages/event/Event";
@@ -16,7 +15,6 @@ function Layout({ children }: any) {
 		<>
 			<Navbar />
 			{children}
-			<Footer />
 		</>
 	);
 }

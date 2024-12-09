@@ -219,7 +219,7 @@ const Home = () => {
                         <CarouselItem className="basis-auto" key={card.id}>
                           <DefaultCard
                             id={card.id}
-                            address={card.location}
+                            address={card.Address}
                             img={card.assets[0]?.url}
                             startDate={formatDate(card.startDate)}
                             title={card.title}
@@ -277,7 +277,7 @@ const Home = () => {
                         <CarouselItem className="basis-auto" key={card.id}>
                           <DefaultCard
                             id={card.id}
-                            address={card.location}
+                            address={card.Address}
                             img={card.assets[0]?.url}
                             startDate={formatDate(card.startDate)}
                             title={card.title}
@@ -313,7 +313,7 @@ const Home = () => {
                         <CarouselItem className="basis-auto" key={card.id}>
                           <DefaultCard
                             id={card.id}
-                            address={card.location}
+                            address={card.Address}
                             img={card.assets[0]?.url}
                             startDate={formatDate(card.startDate)}
                             title={card.title}

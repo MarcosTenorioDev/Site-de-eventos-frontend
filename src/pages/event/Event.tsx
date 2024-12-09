@@ -47,6 +47,10 @@ const Event = () => {
 	const toast = useToastContext();
 
 	useEffect(() => {
+		window.scrollTo({ top: 0})
+	}, []);
+
+	useEffect(() => {
 		if (!api) {
 			return;
 		}

@@ -57,6 +57,10 @@ const Home = () => {
   >([]);
 
   useEffect(() => {
+		window.scrollTo({ top: 0})
+	}, []);
+
+  useEffect(() => {
     categoriesService.getCategories().then((results) => {
       if (results) {
         const categoriesResult = results.map((categorie) => {

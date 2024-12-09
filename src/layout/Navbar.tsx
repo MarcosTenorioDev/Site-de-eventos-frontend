@@ -12,6 +12,7 @@ import Hamburger from "hamburger-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
+import logo from "@/assets/images/logo.png";
 
 const Navbar = () => {
   const t = useT();
@@ -30,7 +31,7 @@ const Navbar = () => {
               to={"/"}
               className="font-primary text-white text-2xl font-normal"
             >
-              {t("application.global.applicationName")}
+              <img src={logo} alt="logo" className="w-14 min-w-14 max-w-14 md:w-16 md:min-w-16 md:max-w-16"/>
             </Link>
             <div className={`lg:hidden`}>
               <Hamburger
@@ -123,7 +124,7 @@ const Navbar = () => {
               to={"/"}
               className="font-primary text-white text-2xl font-normal"
             >
-              {t("application.global.applicationName")}
+              <img src={logo} alt="logo" />
             </Link>
             <div className={`sm:hidden`}>
               <Hamburger
